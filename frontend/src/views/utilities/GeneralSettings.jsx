@@ -43,19 +43,14 @@ const GeneralSettings = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const updatedValues = { ...tempValues };
     console.log(updatedValues);
-    try {
-      const response = await dispatch(updateGeneralSettings(updatedValues));
-
-      if (response.meta.requestStatus === 'fulfilled') {
-        setModal(false);
-      }
-    } catch (error) {
-      console.error('Error updating general settings:', error);
-    }
+    dispatch(updateGeneralSettings(updatedValues)).unwrap().then(() => {
+      // The Redux store will automatically update with the new values
+      setModal(false);
+    })
   };
 
   return (
