@@ -15,11 +15,10 @@ const GeneralSettings = () => {
     // Fetch general settings data if it's still pending
     if (generalSettingsStatus === API_STATUS.PENDING) {
       dispatch(fetchGeneralSettings());
-    }else if (generalSettingsStatus === API_STATUS.REJECTED) {
-      // If the API call to fetch general settings fails, you can handle the error here
-      console.log('General settings data fetch failed');
+    }else if(generalSettingsStatus === API_STATUS.REJECTED) {
+      console.log('data failed');
     }
-  }, [dispatch, generalSettingsStatus,generalSettingsStatus]);
+  }, [dispatch, generalSettingsStatus]);
   
 
   useEffect(() => {
