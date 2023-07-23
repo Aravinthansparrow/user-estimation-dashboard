@@ -1,9 +1,15 @@
-
 import {Http} from './Http'
 import { getBaseEndpointUrl } from './config';
+
+//Login user's
 export const loginUser =  (email, password) => {
   const baseURL = getBaseEndpointUrl();
   return Http.post(baseURL + '/user' , {email, password})
+};
+
+export const updateUserPassword = (userId, newPassword) => {
+  const baseURL = getBaseEndpointUrl();
+  return Http.put(baseURL + `/user/${userId}`, { newPassword });
 };
 
 //CLients
@@ -50,4 +56,15 @@ export const workItemsSubmit =  (workItem) => {
   console.log(workItem)
   const baseURL = getBaseEndpointUrl();
   return Http.post(baseURL + '/workitems' , workItem)
+};
+
+//GeneralSetings
+export const getGeneralSettingsAPI = () => {
+  const baseURL = getBaseEndpointUrl();
+  return Http.get(baseURL + '/generalsettings');
+};
+
+export const updateGeneralSettingsAPI = (updatedValues) => {
+  const baseURL = getBaseEndpointUrl();
+  return Http.put(baseURL + '/generalsettings', updatedValues);
 };

@@ -4,14 +4,14 @@ import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
 
 // routing
-import Routes from 'routes';
+import ControlRoutes from 'routes';
 
 // defaultTheme
 import themes from 'themes';
 
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
-
+// import WorkItem from 'views/utilities/WorkItemTable';
 // ==============================|| APP ||============================== //
 
 const App = () => {
@@ -22,7 +22,7 @@ const App = () => {
       <ThemeProvider theme={themes(customization)}>
         <CssBaseline />
         <NavigationScroll>
-          <Routes />
+          <ControlRoutes />
         </NavigationScroll>
       </ThemeProvider>
     </StyledEngineProvider>

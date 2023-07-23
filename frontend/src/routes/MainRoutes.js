@@ -9,11 +9,12 @@ const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')))
 
 // utilities routing
 const Estimation = Loadable(lazy(() => import('views/utilities/Estimation')));
-const WorkItemTable = Loadable(lazy(() => import('views/utilities/WorkItemTable')));
+const WorkItem = Loadable(lazy(() => import('views/utilities/WorkItemTable')));
 const EstimationList = Loadable(lazy(() => import('views/utilities/EstimationList')));
 const ComplexityLevel = Loadable(lazy(() => import('views/utilities/ComplexityLevel')));
 const ComponentType = Loadable(lazy(() => import('views/utilities/ComponentType')));
-
+const GeneralSettings = Loadable(lazy(() => import('views/utilities/GeneralSettings')));
+const ForgotPassword = Loadable(lazy(() => import('views/utilities/ForgotPassword')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -38,17 +39,12 @@ const MainRoutes = {
       path: 'utils',
       children: [
         {
+          path: 'generate-estimation/:clientId',
+          element: <WorkItem />
+        },
+        {
           path: 'generate-estimation',
           element: <Estimation />
-        }
-      ]
-    },
-    {
-      path: 'utils',
-      children: [
-        {
-          path: 'workitem',
-          element: <WorkItemTable />
         }
       ]
     },
@@ -76,6 +72,24 @@ const MainRoutes = {
         {
           path: 'complexity-level',
           element: <ComplexityLevel />
+        }
+      ]
+    },
+    {
+      path: 'master',
+      children: [
+        {
+          path: 'general-settings',
+          element: <GeneralSettings />
+        }
+      ]
+    },
+    {
+      path: 'utils',
+      children: [
+        {
+          path: 'forgot-password',
+          element: <ForgotPassword />
         }
       ]
     },

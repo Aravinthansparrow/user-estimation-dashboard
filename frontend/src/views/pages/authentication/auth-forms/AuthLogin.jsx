@@ -3,7 +3,6 @@ import { useDispatch,useSelector } from "react-redux";
 // import Joi from 'joi';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from 'react-router-dom';
-// import ErrorIcon from '@mui/icons-material/Error';
 import {
   doLogin,
   loginSelector,
@@ -25,13 +24,6 @@ import {
   Stack,
   Typography
 } from '@mui/material';
-
-// third party
-// import * as Yup from 'yup';
-// import { Formik } from 'formik';
-
-// project imports
-// import useScriptRef from 'hooks/useScriptRef';
 
 // assets
 import Visibility from '@mui/icons-material/Visibility';

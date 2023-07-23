@@ -1,14 +1,30 @@
-import React, { useState, useEffect } from "react";
-
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import MainCard from 'ui-component/cards/MainCard';
+import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from "react-redux";
-import { fetchComplexity, complexitySelector } from "../../store/reducers/complexityReducer";
-import { API_STATUS } from "../../utils/constants";
-import { componentSelector, fetchComponents } from "../../store/reducers/componentReducer";
-import { submitWorkItem, workItemSelector} from "../../store/reducers/workitemReducer"
-const WorkItem = ( ) => {
+import '../../../src/assets/scss/style.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchComplexity, complexitySelector } from '../../store/reducers/complexityReducer';
+import { API_STATUS } from '../../utils/constants';
+import { componentSelector, fetchComponents } from '../../store/reducers/componentReducer';
+import { submitWorkItem, workItemSelector } from '../../store/reducers/workitemReducer';
+import {
+  Table,
+  TableContainer,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  Button,
+  Paper,
+  Select,
+  MenuItem,
+  TextField,
+  TextareaAutosize
+} from '@mui/material';
+
+const WorkItem = () => {
   const { clientId } = useParams();
   const [rows, setRows] = useState([{}]);
 
@@ -19,90 +35,69 @@ const WorkItem = ( ) => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const complexityloading = useSelector(complexitySelector).complexityloading
-  const componentloading = useSelector(componentSelector).componentloading
-  const workitemloading = useSelector(workItemSelector).workitemloading
-  const data = useSelector(complexitySelector).loadData
-  const componentData = useSelector(componentSelector).loadData
- 
-  
+  const complexityloading = useSelector(complexitySelector).complexityloading;
+  const componentloading = useSelector(componentSelector).componentloading;
+  const workitemloading = useSelector(workItemSelector).workitemloading;
+  const data = useSelector(complexitySelector).loadData;
+  const componentData = useSelector(componentSelector).loadData;
 
   useEffect(() => {
     dispatch(fetchComponents());
     dispatch(fetchComplexity());
-    
   }, [dispatch]);
- 
+
   useEffect(() => {
-    console.log(componentloading, "loading")
+    console.log(componentloading, 'loading');
     if (componentloading === API_STATUS.FULFILLED) {
-      
-      console.log("Component data got Successfully!");
-      setComponentTypes(componentData)
-      
-      console.log(componentTypes)
-    
+      console.log('Component data got Successfully!');
+      setComponentTypes(componentData);
+
+      console.log(componentTypes);
     }
     if (componentloading === API_STATUS.REJECTED) {
-      
       console.log('Component data got failed');
     }
 
-    console.log(complexityloading, "loading")
+    console.log(complexityloading, 'loading');
     if (complexityloading === API_STATUS.FULFILLED) {
-      
-      console.log("data got Successfully!");
-      setComplexities(
-            data)
-          console.log(complexities)
-             
-    
+      console.log('data got Successfully!');
+      setComplexities(data);
+      console.log(complexities);
     }
     if (complexityloading === API_STATUS.REJECTED) {
-      
       console.log('data got failed');
     }
 
-    console.log(workitemloading, "loading")
+    console.log(workitemloading, 'loading');
     if (workitemloading === API_STATUS.FULFILLED) {
-      
-      console.log("workitem data submitted got Successfully!");
-       
+      console.log('workitem data submitted got Successfully!');
 
-     
-        setRows([]);
-        navigate(`/estimate-summary/${clientId}`);
-         setShowEstimateSummary(true);
+      setRows([]);
+      navigate(`/estimate-summary/${clientId}`);
+      setShowEstimateSummary(true);
       // }
-    
-    
     }
     if (workitemloading === API_STATUS.REJECTED) {
-      
       console.log('data got failed');
     }
   }, [componentloading, complexityloading, workitemloading]);
 
   useEffect(() => {
-    const defaultComponentData = componentTypes.find(
-      (component) => component.default === 'default'
-    );
+    const defaultComponentData = componentTypes.find((component) => component.default === 'default');
 
     if (defaultComponentData && defaultComponentData.name) {
       setDefaultComponent(defaultComponentData.name);
       console.log(defaultComponentData.name);
     }
   }, [componentTypes]);
-      
 
-  const selectedComplexity =
-    complexities.length > 0 ? complexities[0].complexity : "";
-  const selectedBuildEffort = selectedComplexity? complexities[0].days: "0"
+  const selectedComplexity = complexities.length > 0 ? complexities[0].complexity : '';
+  const selectedBuildEffort = selectedComplexity ? complexities[0].days : '0';
 
   const addRow = () => {
     setRows([...rows, {}]);
   };
-  useEffect(()=> console.log(selectedBuildEffort))
+  useEffect(() => console.log(selectedBuildEffort));
 
   const deleteRow = () => {
     setRows((prevRows) => {
@@ -112,312 +107,301 @@ const WorkItem = ( ) => {
       return prevRows;
     });
   };
-
+  
   const handleChange = (event, index) => {
     const { name, value } = event.target;
     setRows((prevRows) => {
       const updatedRows = [...prevRows];
       updatedRows[index][name] = value;
 
-      if (name === "complexity") {
-
+      if (name === 'complexity') {
         const selectedComplexity = value;
-        
-        const selectedBuildEffort =
-          selectedComplexity === "simple"
-            ? "1"
-            : selectedComplexity === "medium"
-              ? "2"
-              : selectedComplexity === "complex"
-                ? "3"
-                : "";
 
-        updatedRows[index]["buildEffort"] = selectedBuildEffort;
-        
+        const selectedBuildEffort =
+          selectedComplexity === 'simple' ? '1' : selectedComplexity === 'medium' ? '2' : selectedComplexity === 'complex' ? '3' : '';
+
+        updatedRows[index]['buildEffort'] = selectedBuildEffort;
       }
 
       return updatedRows;
-      
     });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    
-      let isFormValid = true;
 
-      for (const row of rows) {
-     
-        const finalEffort =
-          row.effortOverride || row.buildEffort || selectedBuildEffort;
+    let isFormValid = true;
 
-        const workItem = {
-          module: row.module || "",
-          userType: row.userType || "",
-          appType: row.appType || "",
-          componentName: row.componentName || "",
-          comments: row.comments || "must",
-          description: row.description || "",
-          componentType: row.componentType || defaultComponent,
-          complexity: selectedComplexity || row.complexity,
-          buildEffort: row.buildEffort || selectedBuildEffort,
-          effortOverride: row.effortOverride || "0",
-          finalEffort: finalEffort, // Use the calculated finalEffort
-          clientId: clientId,
-        };
-        console.log(workItem);
-        console.log(finalEffort)
+    for (const row of rows) {
+      const finalEffort = row.effortOverride || row.buildEffort || selectedBuildEffort;
 
-        // Check if any of the required fields are empty
-        const requiredFields = [
-          "module",
-          "userType",
-          "appType",
-          "componentName",
-          "comments",
-          "description",
-          "componentType",
-          "complexity",
-          "buildEffort",
-        ];
+      const workItem = {
+        module: row.module || '',
+        userType: row.userType || '',
+        appType: row.appType || '',
+        componentName: row.componentName || '',
+        comments: row.comments || 'must',
+        description: row.description || '',
+        componentType: row.componentType || defaultComponent,
+        complexity: selectedComplexity || row.complexity,
+        buildEffort: row.buildEffort || selectedBuildEffort,
+        effortOverride: row.effortOverride || '0',
+        finalEffort: finalEffort, // Use the calculated finalEffort
+        clientId: clientId
+      };
+      console.log(workItem);
+      console.log(finalEffort);
 
-        for (const field of requiredFields) {
-          if (!workItem[field]) {
-            isFormValid = false;
-            // Handle the validation error appropriately (e.g., display error messages to the user)
-            console.error(`${field} is required`);
-          }
-        }
+      // Check if any of the required fields are empty
+      const requiredFields = [
+        'module',
+        'userType',
+        'appType',
+        'componentName',
+        'comments',
+        'description',
+        'componentType',
+        'complexity',
+        'buildEffort'
+      ];
 
-        if (isFormValid) {
-          dispatch(submitWorkItem({workItem}))
-          
+      for (const field of requiredFields) {
+        if (!workItem[field]) {
+          isFormValid = false;
+          // Handle the validation error appropriately (e.g., display error messages to the user)
+          console.error(`${field} is required`);
         }
       }
 
-   
+      if (isFormValid) {
+        dispatch(submitWorkItem({ workItem }));
+      }
+    }
   };
   useEffect(() => {
     // Update finalEffort when buildEffort changes
     setRows((prevRows) =>
       prevRows.map((row) => ({
         ...row,
-        finalEffort: row.effortOverride || selectedBuildEffort,
+        finalEffort: row.effortOverride || selectedBuildEffort
       }))
     );
   }, [selectedBuildEffort]);
 
   const renderTableHeader = () => {
     const headers = [
-      "S.No",
-      "Module",
-      "User Type",
-      "App Type",
-      "Component Name",
-      "Comments",
-      "Description",
-      "Component Type",
-      "Complexity",
-      "Build Effort (in days)",
-      "Effort Override (in days)",
-      "Final Effort (in days",
-      "Action",
+      'S.No',
+      'Module',
+      'User Type',
+      'App Type',
+      'Component Name',
+      'Comments',
+      'Description',
+      'Component Type',
+      'Complexity',
+      'Build Effort (in days)',
+      'Effort Override (in days)',
+      'Final Effort (in days)',
+      'Action'
     ];
 
-    return headers.map((header, index) => <th key={index}>{header}</th>);
+    return headers.map((header, index) => <TableCell key={index}>{header}</TableCell>);
   };
 
   const renderTableBody = () => {
     return rows.map((row, index) => {
-      
       const effortOverride = parseFloat(row.effortOverride) || 0;
-      const finalEffort = effortOverride ? effortOverride : row.buildEffort || selectedBuildEffort; 
-      
+      const finalEffort = effortOverride ? effortOverride : row.buildEffort || selectedBuildEffort;
+
       const showDeleteButton = index !== 0; // Show delete button for all rows except the first row
-    
 
       return (
-       
-          
-       
-        <tr className="items-row" key={index}>
-          <td className="workitem-data">
-            <div className="col-1">{index + 1}</div>
-          </td>
-          <td className="workitem-data">
-            <input
-              className="col-2"
+        <TableRow key={index}>
+          <TableCell>{index + 1}</TableCell>
+
+          <TableCell className="workitem-data">
+            <TextField
+              fullWidth
+              style={{ minWidth: '145px' }}
               type="text"
               name="module"
               value={row.module}
               onChange={(e) => handleChange(e, index)}
               required
             />
-          </td>
-          <td className="workitem-data">
-            <input
-              className="col-2"
+          </TableCell>
+          <TableCell className="workitem-data">
+            <TextField
+              fullWidth
+              style={{ minWidth: '125px' }}
               type="text"
               name="userType"
               value={row.userType}
               onChange={(e) => handleChange(e, index)}
               required
             />
-          </td>
-          <td className="workitem-data">
-            <input
-              className="col-3"
+          </TableCell>
+          <TableCell className="workitem-data">
+            <TextField
+              fullWidth
+              style={{ minWidth: '125px' }}
               type="text"
               name="appType"
               value={row.appType}
               onChange={(e) => handleChange(e, index)}
               required
             />
-          </td>
-          <td className="workitem-data">
-            <input
+          </TableCell>
+          <TableCell className="workitem-data">
+            <TextField
+              fullWidth
               type="text"
-              className="col-4"
+              style={{ minWidth: '140px' }}
               name="componentName"
               value={row.componentName}
               onChange={(e) => handleChange(e, index)}
               required
             />
-          </td>
-          <td className="workitem-data">
-            <select
+          </TableCell>
+          <TableCell className="workitem-data">
+            <Select
               name="comments"
-              className="col-5"
-              value={row.comments || "must"}
+              style={{ minWidth: '120px' }}
+              value={row.comments || 'must'}
               onChange={(e) => handleChange(e, index)}
               required
+              fullWidth
             >
-              <option value="must">Must to have</option>
-              <option value="good">Good to have</option>
-              <option value="nice">Nice to have</option>
-            </select>
-          </td>
-          <td className="workitem-data">
-            <textarea
+              <MenuItem value="must">Must to have</MenuItem>
+              <MenuItem value="good">Good to have</MenuItem>
+              <MenuItem value="nice">Nice to have</MenuItem>
+            </Select>
+          </TableCell>
+          <TableCell className="workitem-data">
+            <TextareaAutosize
               value={row.description}
               onChange={(e) => handleChange(e, index)}
-              className="col-6"
               name="description"
               required
-              cols=""
-              rows=""
-            ></textarea>
-          </td>
-          <td className="workitem-data">
-          <select
-              name="componentType"
-              className="col-7"
-              value={row.componentType || ""}
-              onChange={(e) => handleChange(e, index)}
-              required
-            >
-              {defaultComponent && (
-                <option value={defaultComponent}>{defaultComponent}</option>
-              )}
+              placeholder="Enter description"
+              sx={{
+                
+              }}
+              style={{
+                width: '100%',
+                minWidth: '175px',
+                resize: 'none',
+                height: '61px',
+                overflow: 'visible',
+                padding: '8px',
+                border: '1px solid darkgrey',
+                borderRadius:"10px",
+              }}
+            />
+          </TableCell>
+          <TableCell className="workitem-data">
+            <Select name="componentType"  style={{ minWidth: '120px' }} value={row.componentType || ''} onChange={(e) => handleChange(e, index)} required fullWidth>
+              {defaultComponent && <MenuItem value={defaultComponent}>{defaultComponent}</MenuItem>}
               {componentTypes
                 .filter((type) => type.name !== defaultComponent)
                 .map((type) => (
-                  <option key={type.id} value={type.name}>
+                  <MenuItem key={type.id} value={type.name}>
                     {type.name}
-                  </option>
+                  </MenuItem>
                 ))}
-            </select>
-          </td>
-          <td className="workitem-data">
-            <select
+            </Select>
+          </TableCell>
+          <TableCell className="workitem-data">
+            <Select
               name="complexity"
-              className="col-8"
+              style={{ minWidth: '100px' }}
               value={row.complexity || selectedComplexity}
               onChange={(e) => handleChange(e, index)}
               required
+              fullWidth
             >
               {complexities.map((complexity) => (
-                <option
-                  key={complexity.id}
-                  value={
-                    complexity.complexity === row.complexity
-                      ? complexity.complexity
-                      : selectedComplexity
-                  }
-                >
-                  {complexity.complexity === row.complexity
-                    ? complexity.complexity
-                    : selectedComplexity}
-                </option>
+                <MenuItem key={complexity.id} value={complexity.complexity === row.complexity ? complexity.complexity : selectedComplexity}>
+                  {complexity.complexity === row.complexity ? complexity.complexity : selectedComplexity}
+                </MenuItem>
               ))}
-              {selectedComplexity !== "simple" && (
-                <option value="simple">Simple</option>
-              )}
-              {selectedComplexity !== "medium" && (
-                <option value="medium">Medium</option>
-              )}
-              {selectedComplexity !== "complex" && (
-                <option value="complex">Complex</option>
-              )}
-            </select>
-          </td>
-          <td className="workitem-data">
-            <input
-              type="text"
-              className="col-9"
-              name="buildEffort"
-              value={row.buildEffort || selectedBuildEffort}
-              readOnly
-            />
-          </td>
-          <td className="workitem-data">
-            <input
+              {selectedComplexity !== 'simple' && <MenuItem value="simple">Simple</MenuItem>}
+              {selectedComplexity !== 'medium' && <MenuItem value="medium">Medium</MenuItem>}
+              {selectedComplexity !== 'complex' && <MenuItem value="complex">Complex</MenuItem>}
+            </Select>
+          </TableCell>
+          <TableCell className="workitem-data">
+            <TextField  style={{ minWidth: '90px' }} fullWidth type="text" className="col-9" name="buildEffort" value={row.buildEffort || selectedBuildEffort} readOnly />
+          </TableCell>
+          <TableCell className="workitem-data">
+            <TextField
+              fullWidth
+              style={{ minWidth: '100px' }}
               type="number"
-              className="col-10"
               name="effortOverride"
-              value={row.effortOverride || ""}
+              value={row.effortOverride || ''}
               onChange={(e) => handleChange(e, index)}
             />
-          </td>
-          <td className="workitem-data">
-            <div className="col-10">{finalEffort}</div>
-          </td>
-          <td className="workitem-data">
+          </TableCell>
+          <TableCell className="workitem-data">
+            <div style={{ minWidth: '80px' }}>{finalEffort}</div>
+          </TableCell>
+          <TableCell className="workitem-data">
             {showDeleteButton ? (
               <button className="delete-row-button col-11" onClick={deleteRow}>
                 <DeleteIcon />
               </button>
             ) : (
               <div className="disable-delete">
-                <DeleteIcon />{" "}
+                <DeleteIcon />{' '}
               </div>
             )}
-          </td>
-        </tr>
+          </TableCell>
+        </TableRow>
       );
     });
   };
 
   return (
-    <div className="work-item-container">
+    <div>
       {!showEstimateSummary && (
-        <div>
-          <h2 className="workitem-title">Workitem Table</h2>
-          <table className="work-item-table">
-            <thead>
-              <tr>{renderTableHeader()}</tr>
-            </thead>
-            <tbody>{renderTableBody()}</tbody>
-          </table>
-          <button className="add-row-button" onClick={addRow}>
+        <MainCard style={{ height: '100%' }} className="" title="Workitem Table">
+          <TableContainer className="work-item-container " component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>{renderTableHeader()} </TableRow>
+              </TableHead>
+              <TableBody >{renderTableBody()}</TableBody>
+              
+              
+            </Table>
+          </TableContainer>
+          <Button
+            variant="contained"
+            onClick={addRow}
+            style={{
+              margin: '20px 12px 0px 0px',
+              borderRadius: '20px',
+              backgroundColor: 'rgba(189, 232, 233, 0.7)',
+              color: 'rgb(0, 168, 171)'
+            }}
+          >
             Add Row
-          </button>
-          <button className="submit-button" onClick={handleSubmit}>
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            style={{
+              margin: '20px 0px 0px 0px',
+              borderRadius: '20px',
+              backgroundColor: 'rgba(189, 232, 233, 0.7)',
+              color: 'rgb(0, 168, 171)'
+            }}
+          >
             Submit
-          </button>
-        </div>
+          </Button>
+        </MainCard>
       )}
-      
     </div>
   );
 };

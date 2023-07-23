@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Joi from 'joi';
 import { Grid, Button, TextField, Box, InputAdornment } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
@@ -7,26 +7,28 @@ import SubCard from 'ui-component/cards/SubCard';
 import ErrorIcon from '@mui/icons-material/Error';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useDispatch, useSelector } from 'react-redux';
-import { clientDetails,estimateListSelector } from '../../store/reducers/clientReducer';
+import { clientDetails, estimateListSelector } from '../../store/reducers/clientReducer';
 import { API_STATUS } from '../../utils/constants';
 import { useNavigate } from 'react-router-dom';
+import WorkItem from '../utilities/WorkItemTable';
 
 const ClientForm = () => {
   const dispatch = useDispatch();
   const username = useSelector((state) => state.login.username);
-  const clientdetails = useSelector(estimateListSelector).submitclients
-  const id = useSelector(estimateListSelector).id
-  
+  const clientdetails = useSelector(estimateListSelector).submitclients;
+  const id = useSelector(estimateListSelector).id;
+
   const [formData, setFormData] = useState({
     clientName: '',
     clientAddress: '',
     email: '',
-    createdBy: username,
+    createdBy: username
   });
 
   const navigate = useNavigate();
 
   const [showPopup, setShowPopup] = useState(false);
+  const [showWorkItem, setShowWorkItem] = useState(false);
   const [clientId, setClientId] = useState(null);
   const [errors, setErrors] = useState({
     clientName: '',
@@ -75,15 +77,15 @@ const ClientForm = () => {
     // Hide the popup
     setShowPopup(false);
     // Show the WorkItem component
+    setShowWorkItem(true);
     setFormData({
       clientName: '',
       clientAddress: '',
       email: '',
       createdBy: ''
-      
-      
     });
-    navigate(`/generate-estimation/${clientId}`)
+
+    navigate(`/utils/generate-estimation/${clientId}`);
   };
 
   const handleSubmit = (event) => {
@@ -123,102 +125,110 @@ const ClientForm = () => {
       setIsSubmitted(true);
     }
   };
-
+  
   return (
     <MainCard style={{ height: '100%' }} title="Generate Estimation">
-      <Grid style={{ maxWidth: '550px', margin: 'auto' }} item xs={12} sm={6}>
-        <SubCard>
-          <form onSubmit={handleSubmit}>
-            <FormControl fullWidth>
-              <div>
-                <span style={{ display: 'block', marginBottom: '10px' }}>Client Name</span>
-                <TextField
-                  fullWidth
-                  type="text"
-                  variant="outlined"
-                  name="clientName"
-                  value={formData.clientName}
-                  onChange={handleInputChange}
-                  error={!!errors.clientName}
-                  helperText={errors.clientName}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        {isSubmitted && !errors.clientName && <CheckCircleIcon style={{ color: 'green' }} />}
-                        {errors.clientName && <ErrorIcon color="error" />}
-                      </InputAdornment>
-                    )
-                  }}
-                  style={{ marginBottom: '10px', borderColor: isSubmitted && !errors.clientName ? 'green' : '' }}
-                />
-              </div>
-              <div>
-                <span style={{ display: 'block', marginBottom: '10px' }}>Client Address</span>
-                <TextField
-                  fullWidth
-                  type="text"
-                  variant="outlined"
-                  name="clientAddress"
-                  value={formData.clientAddress}
-                  onChange={handleInputChange}
-                  error={!!errors.clientAddress}
-                  helperText={errors.clientAddress}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        {isSubmitted && !errors.clientAddress && <CheckCircleIcon style={{ color: 'green' }} />}
-                        {errors.clientAddress && <ErrorIcon color="error" />}
-                      </InputAdornment>
-                    )
-                  }}
-                  style={{ marginBottom: '10px', borderColor: isSubmitted && !errors.clientAddress ? 'green' : '' }}
-                />
-              </div>
-              <div>
-                <span style={{ display: 'block', marginBottom: '10px' }}>Email ID</span>
-                <TextField
-                  type="email"
-                  fullWidth
-                  variant="outlined"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  error={!!errors.email}
-                  helperText={errors.email}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        {isSubmitted && !errors.email && <CheckCircleIcon style={{ color: 'green' }} />}
-                        {errors.email && <ErrorIcon color="error" />}
-                      </InputAdornment>
-                    )
-                  }}
-                  style={{ marginBottom: '10px', borderColor: isSubmitted && !errors.email ? 'green' : '' }}
-                />
-              </div>
-              <Box sx={{ mt: 2, textAlign: 'center' }}>
-                <Button
-                  size="large"
-                  type="submit"
-                  variant="contained"
-                  style={{ color: 'white', background: 'rgb(0, 168, 171)', borderRadius: '20px' }}
-                >
-                  Save
-                </Button>
-              </Box>
-            </FormControl>
-          </form>
-
-        </SubCard>
-      </Grid>
-      {showPopup && (
+    <Grid style={{ maxWidth: '550px', margin: 'auto' }} item xs={12} sm={6}>
+      {!showWorkItem && (
+        <div style={{ height: '100%' }} title="Generate Estimation">
+          <Grid style={{ maxWidth: '550px', margin: 'auto' }} item xs={12} sm={6}>
+            <SubCard>
+              <form onSubmit={handleSubmit}>
+                <FormControl fullWidth>
+                  <div>
+                    <span style={{ display: 'block', marginBottom: '10px' }}>Client Name</span>
+                    <TextField
+                      fullWidth
+                      type="text"
+                      variant="outlined"
+                      name="clientName"
+                      value={formData.clientName}
+                      onChange={handleInputChange}
+                      error={!!errors.clientName}
+                      helperText={errors.clientName}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            {isSubmitted && !errors.clientName && <CheckCircleIcon style={{ color: 'green' }} />}
+                            {errors.clientName && <ErrorIcon color="error" />}
+                          </InputAdornment>
+                        )
+                      }}
+                      style={{ marginBottom: '10px', borderColor: isSubmitted && !errors.clientName ? 'green' : '' }}
+                    />
+                  </div>
+                  <div>
+                    <span style={{ display: 'block', marginBottom: '10px' }}>Client Address</span>
+                    <TextField
+                      fullWidth
+                      type="text"
+                      variant="outlined"
+                      name="clientAddress"
+                      value={formData.clientAddress}
+                      onChange={handleInputChange}
+                      error={!!errors.clientAddress}
+                      helperText={errors.clientAddress}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            {isSubmitted && !errors.clientAddress && <CheckCircleIcon style={{ color: 'green' }} />}
+                            {errors.clientAddress && <ErrorIcon color="error" />}
+                          </InputAdornment>
+                        )
+                      }}
+                      style={{ marginBottom: '10px', borderColor: isSubmitted && !errors.clientAddress ? 'green' : '' }}
+                    />
+                  </div>
+                  <div>
+                    <span style={{ display: 'block', marginBottom: '10px' }}>Email ID</span>
+                    <TextField
+                      type="email"
+                      fullWidth
+                      variant="outlined"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      error={!!errors.email}
+                      helperText={errors.email}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            {isSubmitted && !errors.email && <CheckCircleIcon style={{ color: 'green' }} />}
+                            {errors.email && <ErrorIcon color="error" />}
+                          </InputAdornment>
+                        )
+                      }}
+                      style={{ marginBottom: '10px', borderColor: isSubmitted && !errors.email ? 'green' : '' }}
+                    />
+                  </div>
+                  <Box sx={{ mt: 2, textAlign: 'center' }}>
+                    <Button
+                      size="large"
+                      type="submit"
+                      variant="contained"
+                      style={{ color: 'white', background: 'rgb(0, 168, 171)', borderRadius: '20px' }}
+                    >
+                      Save
+                    </Button>
+                  </Box>
+                </FormControl>
+              </form>
+            </SubCard>
+          </Grid>
+          {showPopup && (
             <div className="popup">
               <div className="popup-content">
                 <p>Client Details Updated</p>
-                <button className="popup-button" onClick={handlePopupClose}>OK</button>
+                <button className="popup-button" onClick={handlePopupClose}>
+                  OK
+                </button>
               </div>
             </div>
+          )}
+        </div>
       )}
+      {showWorkItem && <WorkItem clientId={clientId} />}
+      </Grid>
     </MainCard>
   );
 };

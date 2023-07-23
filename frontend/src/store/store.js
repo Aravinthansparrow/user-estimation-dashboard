@@ -5,6 +5,8 @@ import authReducer from './reducers/authReducer';
 import complexityReducer from './reducers/complexityReducer';
 import componentReducer from './reducers/componentReducer';
 import workitemReducer from './reducers/workitemReducer';
+import generalReducer from './reducers/generalReducer';
+
 const store = configureStore({
   reducer: { 
     estimateList: clientReducer, 
@@ -13,6 +15,7 @@ const store = configureStore({
     complexity: complexityReducer,
     component: componentReducer, 
     workitem: workitemReducer,
+    generalSetting:generalReducer,
   }
 });
 

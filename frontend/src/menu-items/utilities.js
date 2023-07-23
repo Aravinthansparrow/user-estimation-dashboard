@@ -1,19 +1,18 @@
 // assets
-import { IconTypography, IconPalette, IconShadow, IconWindmill } from '@tabler/icons';
+import { IconWindmill } from '@tabler/icons';
 
 import TableChartIcon from "@mui/icons-material/TableChart";
 import TableViewIcon from '@mui/icons-material/TableView';
 import ViewWeekIcon from "@mui/icons-material/ViewWeek";
+import KeyIcon from '@mui/icons-material/Key';
 
 // constant
 const icons = {
-  IconTypography,
-  IconPalette,
-  IconShadow,
   IconWindmill,
   TableChartIcon,
   TableViewIcon,
-  ViewWeekIcon
+  ViewWeekIcon,
+  KeyIcon
 };
 
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
@@ -32,19 +31,19 @@ const utilities = {
       breadcrumbs: false
     },
     {
-      id: 'workitem-table',
-      title: 'Workitem Table',
-      type: 'item',
-      url: '/utils/workitem',
-      icon: icons.TableViewIcon,
-      breadcrumbs: false
-    },
-    {
       id: 'estimation-list',
       title: 'Estimation List',
       type: 'item',
       url: '/utils/estimation-list',
       icon: icons.ViewWeekIcon,
+      breadcrumbs: false
+    },
+    {
+      id: 'forgot-password',
+      title: 'Forgot Password',
+      type: 'item',
+      url: '/utils/forgot-password',
+      icon: icons.KeyIcon,
       breadcrumbs: false
     },
     {
@@ -65,6 +64,13 @@ const utilities = {
           title: 'Complexity Level',
           type: 'item',
           url: '/master/complexity-level',
+          breadcrumbs: false
+        },
+        {
+          id: 'general-settings',
+          title: 'General Settings',
+          type: 'item',
+          url: '/master/general-settings',
           breadcrumbs: false
         }
       ]
