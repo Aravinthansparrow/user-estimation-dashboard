@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { useDispatch, useSelector } from 'react-redux';
@@ -60,7 +60,7 @@ const ChangePassword = () => {
   return (
     <MainCard style={{ height: '100%' }} className="" title="Change Password">
       <SubCard>
-        <p className="pwd-hint">Hint : Password should contain Numbers with Lower and Upper character</p>
+      <Typography variant='h4' className="pwd-hint" color="error">Hint : Password should contain Numbers with Lower and Upper character</Typography>
         <Box>
           <TextField
             label="New Password"

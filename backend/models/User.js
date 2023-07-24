@@ -48,7 +48,7 @@ User.prototype.changePassword = async function (newPassword) {
 //     // Insert initial values with hashed passwords
 //     const users = [
 //       { username: "aravinthan", email: 'admin001@gmail.com', password: '@Admin001', role: 'admin' },
-//       { username: "rhoshan", email: 'developer001@gmail.com', password: '@Developer2002', role: 'developer' },
+//       { username: "rhoshan", email: 'developer001@gmail.com', password: '@Developer001', role: 'developer' },
 //       { username: "elonmusk", email: 'admin002@gmail.com', password: '@Admin002', role: 'admin' },
 //       { username: "karthick", email: 'developer002@gmail.com', password: '@Developer002', role: 'developer' },
 //       { username: "harshini", email: 'admin003@gmail.com', password: '@Admin003', role: 'admin' },

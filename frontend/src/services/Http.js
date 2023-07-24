@@ -16,4 +16,8 @@ export class Http{
     console.log('url--->', url)
     return _axios.put(url,body, options);
   }
+  static delete(url, options={}){
+    console.log('url--->', url)
+    return _axios.delete(url, options);
+  }
 }

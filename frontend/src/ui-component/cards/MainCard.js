@@ -39,6 +39,7 @@ const MainCard = forwardRef(
         sx={{
           border: border ? '1px solid' : 'none',
           height:"100%",
+          
           borderColor: theme.palette.primary[200] + 25,
           ':hover': {
             boxShadow: boxShadow ? shadow || '0 2px 14px 0 rgb(32 40 45 / 8%)' : 'inherit'
@@ -47,7 +48,7 @@ const MainCard = forwardRef(
         }}
       >
         {/* card header and action */}
-        {title && <CardHeader sx={headerSX} title={darkTitle ? <Typography variant="h3">{title}</Typography> : title} action={secondary} />}
+        {title && <CardHeader sx={headerSX} style={{padding: "15px 24px"}} title={darkTitle ? <Typography variant="h3">{title}</Typography> : title} action={secondary} />}
 
         {/* content & header divider */}
         {title && <Divider />}

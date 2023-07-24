@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import Joi from 'joi';
-import { Grid, Button, TextField, Box, InputAdornment } from '@mui/material';
+import { Grid, Button, TextField, Box, InputAdornment, DialogContent, DialogActions } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import MainCard from 'ui-component/cards/MainCard';
 import SubCard from 'ui-component/cards/SubCard';
 import ErrorIcon from '@mui/icons-material/Error';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { clientDetails, estimateListSelector } from '../../store/reducers/clientReducer';
 import { API_STATUS } from '../../utils/constants';
-import { useNavigate } from 'react-router-dom';
+import Modal from 'react-modal';
 import WorkItem from '../utilities/WorkItemTable';
+
 
 const ClientForm = () => {
   const dispatch = useDispatch();
+
   const username = useSelector((state) => state.login.username);
   const clientdetails = useSelector(estimateListSelector).submitclients;
   const id = useSelector(estimateListSelector).id;
@@ -24,19 +27,16 @@ const ClientForm = () => {
     email: '',
     createdBy: username
   });
-
-  const navigate = useNavigate();
-
-  const [showPopup, setShowPopup] = useState(false);
-  const [showWorkItem, setShowWorkItem] = useState(false);
-  const [clientId, setClientId] = useState(null);
   const [errors, setErrors] = useState({
     clientName: '',
     clientAddress: '',
     email: ''
   });
-
+  const [showPopup, setShowPopup] = useState(false);
+  const [showWorkItem, setShowWorkItem] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [clientId, setClientId] = useState(null);
+  const navigate = useNavigate();
 
   const schema = Joi.object({
     clientName: Joi.string().required().label('client name'),
@@ -51,49 +51,35 @@ const ClientForm = () => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
-
   const validateEmailFormat = (email) => {
     // Regular expression for email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+
   useEffect(() => {
     console.log(clientdetails, clientdetails);
     if (clientdetails === API_STATUS.FULFILLED) {
       console.log('client submission successful');
       console.log(id);
       setClientId(id);
-
-      // Show the popup
-
-      // Reset the form after submission
+      setShowPopup(true); // Show the popup after successful submission
     }
     if (clientdetails === API_STATUS.REJECTED) {
       console.log('client submission failed');
+      setShowPopup(false);
     }
-  }, [clientdetails]);
+  }, [clientdetails, id]);
 
   const handlePopupClose = () => {
-    // Hide the popup
     setShowPopup(false);
-    // Show the WorkItem component
-    setShowWorkItem(true);
-    setFormData({
-      clientName: '',
-      clientAddress: '',
-      email: '',
-      createdBy: ''
-    });
-
+    setShowWorkItem(true); // Show the WorkItem component
     navigate(`/utils/generate-estimation/${clientId}`);
   };
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     console.log(formData);
-    dispatch(clientDetails({ formData }));
-    setShowPopup(true);
     // Check for empty fields and mark them as errors
     const newErrors = {};
     Object.keys(formData).forEach((field) => {
@@ -123,13 +109,13 @@ const ClientForm = () => {
       });
     } else {
       setIsSubmitted(true);
+      dispatch(clientDetails({ formData }));
     }
   };
-  
+
   return (
     <MainCard style={{ height: '100%' }} title="Generate Estimation">
-    <Grid style={{ maxWidth: '550px', margin: 'auto' }} item xs={12} sm={6}>
-      {!showWorkItem && (
+      <Grid style={{ maxWidth: '550px', margin: 'auto' }} item xs={12} sm={6}>
         <div style={{ height: '100%' }} title="Generate Estimation">
           <Grid style={{ maxWidth: '550px', margin: 'auto' }} item xs={12} sm={6}>
             <SubCard>
@@ -215,20 +201,17 @@ const ClientForm = () => {
               </form>
             </SubCard>
           </Grid>
-          {showPopup && (
-            <div className="popup">
-              <div className="popup-content">
-                <p>Client Details Updated</p>
-                <button className="popup-button" onClick={handlePopupClose}>
-                  OK
-                </button>
-              </div>
-            </div>
-          )}
         </div>
-      )}
-      {showWorkItem && <WorkItem clientId={clientId} />}
       </Grid>
+     
+      <Modal isOpen={showPopup} onRequestClose={handlePopupClose} shouldCloseOnOverlayClick={false} overlayClassName="modal-overlay" className="modal-content">
+        <DialogContent style={{fontSize:"16px"}} >Client Details Updated Successfully !</DialogContent>
+        <DialogActions>
+          <Button className='primary-btn' onClick={handlePopupClose}>OK</Button>
+        </DialogActions>
+      </Modal>
+      
+      {showWorkItem && clientId && <WorkItem clientId={clientId} />}
     </MainCard>
   );
 };

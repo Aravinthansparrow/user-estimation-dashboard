@@ -38,9 +38,11 @@ export const getComplexity =  () => {
   return Http.get(baseURL + '/complexity' )
 };
 
-export const complexitySubmit = (selectedDays, selectedValue) => {
+export const complexitySubmit = (complexityId,complexity , days) => {
   const baseURL = getBaseEndpointUrl();
-  return Http.post(baseURL + '/complexity', {selectedDays, selectedValue})
+ 
+  
+  return Http.put(baseURL + '/complexity', {complexityId, complexity, days})
 }
 
 //components
@@ -49,6 +51,23 @@ export const getComponents =  () => {
   const baseURL = getBaseEndpointUrl();
   return Http.get(baseURL + '/components' )
 };
+
+export const addingComponent = (name, isDefault) =>{
+ 
+  const baseURL = getBaseEndpointUrl();
+  return Http.post(baseURL + '/components', {name, isDefault})
+}
+
+export const deletingComponent = (id) =>{
+ 
+  const baseURL = getBaseEndpointUrl();
+  return Http.delete(baseURL + `/components/${id}`)
+}
+
+export const updateComponentName = (id, name, isDefault) =>{
+  const baseURL = getBaseEndpointUrl();
+  return Http.put(baseURL + `/components/${id}`, {name, isDefault})
+}
 
 //workitems
 

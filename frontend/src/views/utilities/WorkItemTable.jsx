@@ -21,13 +21,14 @@ import {
   Select,
   MenuItem,
   TextField,
-  TextareaAutosize
+  TextareaAutosize,
+  Tooltip
 } from '@mui/material';
 
 const WorkItem = () => {
   const { clientId } = useParams();
   const [rows, setRows] = useState([{}]);
-
+  const [tooltipOpen, setTooltipOpen] = useState(false); // State to control tooltip visibility
   const [showEstimateSummary, setShowEstimateSummary] = useState(false);
   const [componentTypes, setComponentTypes] = useState([]);
   const [complexities, setComplexities] = useState([]);
@@ -107,7 +108,7 @@ const WorkItem = () => {
       return prevRows;
     });
   };
-  
+
   const handleChange = (event, index) => {
     const { name, value } = event.target;
     setRows((prevRows) => {
@@ -131,7 +132,8 @@ const WorkItem = () => {
     event.preventDefault();
 
     let isFormValid = true;
-
+    // Create an array to store the unfilled field names
+    const unfilledFields = [];
     for (const row of rows) {
       const finalEffort = row.effortOverride || row.buildEffort || selectedBuildEffort;
 
@@ -169,12 +171,15 @@ const WorkItem = () => {
         if (!workItem[field]) {
           isFormValid = false;
           // Handle the validation error appropriately (e.g., display error messages to the user)
+          unfilledFields.push(field); // Add the unfilled field to the array
           console.error(`${field} is required`);
         }
       }
 
       if (isFormValid) {
         dispatch(submitWorkItem({ workItem }));
+      } else {
+        setTooltipOpen(true); // Show the tooltips for unfilled fields
       }
     }
   };
@@ -205,7 +210,11 @@ const WorkItem = () => {
       'Action'
     ];
 
-    return headers.map((header, index) => <TableCell key={index}>{header}</TableCell>);
+    return headers.map((header, index) => (
+      <TableCell className="workitem-data" key={index}>
+        {header}
+      </TableCell>
+    ));
   };
 
   const renderTableBody = () => {
@@ -216,143 +225,251 @@ const WorkItem = () => {
       const showDeleteButton = index !== 0; // Show delete button for all rows except the first row
 
       return (
-        <TableRow key={index}>
+        <TableRow className="table-rows" key={index}>
           <TableCell>{index + 1}</TableCell>
 
           <TableCell className="workitem-data">
-            <TextField
-              fullWidth
-              style={{ minWidth: '145px' }}
-              type="text"
-              name="module"
-              value={row.module}
-              onChange={(e) => handleChange(e, index)}
-              required
-            />
-          </TableCell>
-          <TableCell className="workitem-data">
-            <TextField
-              fullWidth
-              style={{ minWidth: '125px' }}
-              type="text"
-              name="userType"
-              value={row.userType}
-              onChange={(e) => handleChange(e, index)}
-              required
-            />
-          </TableCell>
-          <TableCell className="workitem-data">
-            <TextField
-              fullWidth
-              style={{ minWidth: '125px' }}
-              type="text"
-              name="appType"
-              value={row.appType}
-              onChange={(e) => handleChange(e, index)}
-              required
-            />
-          </TableCell>
-          <TableCell className="workitem-data">
-            <TextField
-              fullWidth
-              type="text"
-              style={{ minWidth: '140px' }}
-              name="componentName"
-              value={row.componentName}
-              onChange={(e) => handleChange(e, index)}
-              required
-            />
-          </TableCell>
-          <TableCell className="workitem-data">
-            <Select
-              name="comments"
-              style={{ minWidth: '120px' }}
-              value={row.comments || 'must'}
-              onChange={(e) => handleChange(e, index)}
-              required
-              fullWidth
+            <Tooltip
+              open={tooltipOpen && !row.module}
+              title="Module is required"
+              arrow
+              placement="top"
+              PopperProps={{
+                style: { transform: 'translateX(10px)',zIndex:"0" }
+              }}
             >
-              <MenuItem value="must">Must to have</MenuItem>
-              <MenuItem value="good">Good to have</MenuItem>
-              <MenuItem value="nice">Nice to have</MenuItem>
-            </Select>
+              <TextField
+                fullWidth
+                style={{ minWidth: '145px' }}
+                type="text"
+                name="module"
+                value={row.module}
+                onChange={(e) => handleChange(e, index)}
+                required
+              />
+            </Tooltip>
           </TableCell>
           <TableCell className="workitem-data">
-            <TextareaAutosize
-              value={row.description}
-              onChange={(e) => handleChange(e, index)}
-              name="description"
-              required
-              placeholder="Enter description"
-              sx={{
-                
+            <Tooltip
+              open={tooltipOpen && !row.userType}
+              title="UserType is required"
+              arrow
+              placement="top"
+              PopperProps={{
+                style: { transform: 'translateX(10px)' ,zIndex:"0" }
               }}
-              style={{
-                width: '100%',
-                minWidth: '175px',
-                resize: 'none',
-                height: '61px',
-                overflow: 'visible',
-                padding: '8px',
-                border: '1px solid darkgrey',
-                borderRadius:"10px",
-              }}
-            />
+            >
+              <TextField
+                fullWidth
+                style={{ minWidth: '125px' }}
+                type="text"
+                name="userType"
+                value={row.userType}
+                onChange={(e) => handleChange(e, index)}
+                required
+              />
+            </Tooltip>
           </TableCell>
           <TableCell className="workitem-data">
-            <Select name="componentType"  style={{ minWidth: '120px' }} value={row.componentType || ''} onChange={(e) => handleChange(e, index)} required fullWidth>
-              {defaultComponent && <MenuItem value={defaultComponent}>{defaultComponent}</MenuItem>}
-              {componentTypes
-                .filter((type) => type.name !== defaultComponent)
-                .map((type) => (
-                  <MenuItem key={type.id} value={type.name}>
-                    {type.name}
+            <Tooltip
+              open={tooltipOpen && !row.appType}
+              title="AppType is required"
+              arrow
+              placement="top"
+              PopperProps={{
+                style: { transform: 'translateX(10px)' ,zIndex:"0" }
+              }}
+            >
+              <TextField
+                fullWidth
+                style={{ minWidth: '125px' }}
+                type="text"
+                name="appType"
+                value={row.appType}
+                onChange={(e) => handleChange(e, index)}
+                required
+              />
+            </Tooltip>
+          </TableCell>
+          <TableCell className="workitem-data">
+            <Tooltip
+              open={tooltipOpen && !row.componentName}
+              title="Component is required"
+              arrow
+              placement="top"
+              PopperProps={{
+                style: { transform: 'translateX(10px)' ,zIndex:"0" }
+              }}
+            >
+              <TextField
+                fullWidth
+                type="text"
+                style={{ minWidth: '140px' }}
+                name="componentName"
+                value={row.componentName}
+                onChange={(e) => handleChange(e, index)}
+                required
+              />
+            </Tooltip>
+          </TableCell>
+          <TableCell className="workitem-data">
+            <Tooltip
+              open={tooltipOpen && !row.comments}
+              title="Comment is required"
+              arrow
+              placement="top"
+              PopperProps={{
+                style: { transform: 'translateX(10px)' ,zIndex:"0" }
+              }}
+            >
+              <Select
+                name="comments"
+                style={{ minWidth: '120px' }}
+                value={row.comments || 'must'}
+                onChange={(e) => handleChange(e, index)}
+                required
+                fullWidth
+              >
+                <MenuItem value="must">Must to have</MenuItem>
+                <MenuItem value="good">Good to have</MenuItem>
+                <MenuItem value="nice">Nice to have</MenuItem>
+              </Select>
+            </Tooltip>
+          </TableCell>
+          <TableCell className="workitem-data">
+            <Tooltip
+              open={tooltipOpen && !row.description}
+              title="Desription is required"
+              arrow
+              placement="top"
+              PopperProps={{
+                style: { transform: 'translateX(10px)' ,zIndex:"0" }
+              }}
+            >
+              <TextareaAutosize
+                value={row.description}
+                onChange={(e) => handleChange(e, index)}
+                name="description"
+                required
+                placeholder="Enter description"
+                sx={{}}
+                style={{
+                  width: '100%',
+                  minWidth: '175px',
+                  resize: 'none',
+                  height: '61px',
+                  overflow: 'visible',
+                  padding: '8px',
+                  border: '1px solid darkgrey',
+                  borderRadius: '10px'
+                }}
+              />
+            </Tooltip>
+          </TableCell>
+          <TableCell className="workitem-data">
+            <Tooltip
+              open={tooltipOpen && !row.componentType}
+              title="ComponentType is required"
+              arrow
+              placement="top"
+              PopperProps={{
+                style: { transform: 'translateX(10px)' ,zIndex:"0" }
+              }}
+            >
+              <Select
+                name="componentType"
+                style={{ minWidth: '120px' }}
+                value={row.componentType || ''}
+                onChange={(e) => handleChange(e, index)}
+                required
+                fullWidth
+              >
+                {defaultComponent && <MenuItem value={defaultComponent}>{defaultComponent}</MenuItem>}
+                {componentTypes
+                  .filter((type) => type.name !== defaultComponent)
+                  .map((type) => (
+                    <MenuItem key={type.id} value={type.name}>
+                      {type.name}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </Tooltip>
+          </TableCell>
+          <TableCell className="workitem-data">
+            <Tooltip
+              open={tooltipOpen && !row.complexity}
+              title="Complexity is required"
+              arrow
+              placement="top"
+              PopperProps={{
+                style: { transform: 'translateX(10px)' ,zIndex:"0" }
+              }}
+            >
+              <Select
+                name="complexity"
+                style={{ minWidth: '100px' }}
+                value={row.complexity || selectedComplexity}
+                onChange={(e) => handleChange(e, index)}
+                required
+                fullWidth
+              >
+                {complexities.map((complexity) => (
+                  <MenuItem
+                    key={complexity.id}
+                    value={complexity.complexity === row.complexity ? complexity.complexity : selectedComplexity}
+                  >
+                    {complexity.complexity === row.complexity ? complexity.complexity : selectedComplexity}
                   </MenuItem>
                 ))}
-            </Select>
+                {selectedComplexity !== 'simple' && <MenuItem value="simple">Simple</MenuItem>}
+                {selectedComplexity !== 'medium' && <MenuItem value="medium">Medium</MenuItem>}
+                {selectedComplexity !== 'complex' && <MenuItem value="complex">Complex</MenuItem>}
+              </Select>
+            </Tooltip>
           </TableCell>
           <TableCell className="workitem-data">
-            <Select
-              name="complexity"
-              style={{ minWidth: '100px' }}
-              value={row.complexity || selectedComplexity}
-              onChange={(e) => handleChange(e, index)}
-              required
-              fullWidth
+            
+              <TextField
+                style={{ minWidth: '90px' }}
+                fullWidth
+                type="text"
+                className="col-9"
+                name="buildEffort"
+                value={row.buildEffort || selectedBuildEffort}
+                readOnly
+              />
+            
+          </TableCell>
+          <TableCell className="workitem-data">
+          <Tooltip
+              open={tooltipOpen && !row.effortOverride}
+              title="effortOverride is required"
+              arrow
+              placement="top"
+              PopperProps={{
+                style: { transform: 'translateX(10px)' ,zIndex:"0" }
+              }}
             >
-              {complexities.map((complexity) => (
-                <MenuItem key={complexity.id} value={complexity.complexity === row.complexity ? complexity.complexity : selectedComplexity}>
-                  {complexity.complexity === row.complexity ? complexity.complexity : selectedComplexity}
-                </MenuItem>
-              ))}
-              {selectedComplexity !== 'simple' && <MenuItem value="simple">Simple</MenuItem>}
-              {selectedComplexity !== 'medium' && <MenuItem value="medium">Medium</MenuItem>}
-              {selectedComplexity !== 'complex' && <MenuItem value="complex">Complex</MenuItem>}
-            </Select>
-          </TableCell>
-          <TableCell className="workitem-data">
-            <TextField  style={{ minWidth: '90px' }} fullWidth type="text" className="col-9" name="buildEffort" value={row.buildEffort || selectedBuildEffort} readOnly />
-          </TableCell>
-          <TableCell className="workitem-data">
-            <TextField
-              fullWidth
-              style={{ minWidth: '100px' }}
-              type="number"
-              name="effortOverride"
-              value={row.effortOverride || ''}
-              onChange={(e) => handleChange(e, index)}
-            />
+              <TextField
+                fullWidth
+                style={{ minWidth: '100px' }}
+                type="number"
+                name="effortOverride"
+                value={row.effortOverride || ''}
+                onChange={(e) => handleChange(e, index)}
+              />
+            </Tooltip>
           </TableCell>
           <TableCell className="workitem-data">
             <div style={{ minWidth: '80px' }}>{finalEffort}</div>
           </TableCell>
           <TableCell className="workitem-data">
             {showDeleteButton ? (
-              <button className="delete-row-button col-11" onClick={deleteRow}>
+              <button className="delete-row-button" onClick={deleteRow}>
                 <DeleteIcon />
               </button>
             ) : (
-              <div className="disable-delete">
+              <div className="disable-delete delete-row-button">
                 <DeleteIcon />{' '}
               </div>
             )}
@@ -371,33 +488,13 @@ const WorkItem = () => {
               <TableHead>
                 <TableRow>{renderTableHeader()} </TableRow>
               </TableHead>
-              <TableBody >{renderTableBody()}</TableBody>
-              
-              
+              <TableBody className="table-body-container">{renderTableBody()}</TableBody>
             </Table>
           </TableContainer>
-          <Button
-            variant="contained"
-            onClick={addRow}
-            style={{
-              margin: '20px 12px 0px 0px',
-              borderRadius: '20px',
-              backgroundColor: 'rgba(189, 232, 233, 0.7)',
-              color: 'rgb(0, 168, 171)'
-            }}
-          >
+          <Button variant="contained" onClick={addRow} className="primary-btn" style={{ margin: '20px 12px 0px 0px' }}>
             Add Row
           </Button>
-          <Button
-            variant="contained"
-            onClick={handleSubmit}
-            style={{
-              margin: '20px 0px 0px 0px',
-              borderRadius: '20px',
-              backgroundColor: 'rgba(189, 232, 233, 0.7)',
-              color: 'rgb(0, 168, 171)'
-            }}
-          >
+          <Button variant="contained" onClick={handleSubmit} className="primary-btn" style={{ margin: '20px 0px 0px 0px' }}>
             Submit
           </Button>
         </MainCard>
