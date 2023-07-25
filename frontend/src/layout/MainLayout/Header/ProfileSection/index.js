@@ -30,11 +30,15 @@ import {
 // third-party
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
+//Selector imports
+import { loginSelector } from 'store/reducers/authReducer';
+
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
 import UpgradePlanCard from './UpgradePlanCard';
 import User1 from 'assets/images/users/user-round.svg';
+import GreetingMessage from "./GreetingMessage"
 
 // assets
 import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons';
@@ -45,6 +49,13 @@ const ProfileSection = () => {
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
+
+  // Getting values from useSelector
+  const username = useSelector(loginSelector).username;
+  const user = username.charAt(0).toUpperCase() + username.slice(1);
+
+  const roledomain = useSelector((state) => state.login.role);
+  const role = roledomain.charAt(0).toUpperCase() + roledomain.slice(1);
 
   const [sdm, setSdm] = useState(true);
   const [value, setValue] = useState('');
@@ -157,12 +168,14 @@ const ProfileSection = () => {
                   <Box sx={{ p: 2 }}>
                     <Stack>
                       <Stack direction="row" spacing={0.5} alignItems="center">
-                        <Typography variant="h4">Good Morning,</Typography>
+                        <Typography variant="h4">
+                          <GreetingMessage/>
+                        </Typography>
                         <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                          Johne Doe
+                          {user}
                         </Typography>
                       </Stack>
-                      <Typography variant="subtitle2">Project Admin</Typography>
+                      <Typography variant="subtitle2">Project {role}</Typography>
                     </Stack>
                     <OutlinedInput
                       sx={{ width: '100%', pr: 1, pl: 2, my: 2 }}

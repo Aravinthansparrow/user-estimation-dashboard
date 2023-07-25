@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import Joi from 'joi';
-import { Grid, Button, TextField, Box, InputAdornment, DialogContent, DialogActions } from '@mui/material';
+import { Grid, Button, TextField, Box, InputAdornment } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import MainCard from 'ui-component/cards/MainCard';
 import SubCard from 'ui-component/cards/SubCard';
 import ErrorIcon from '@mui/icons-material/Error';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { clientDetails, estimateListSelector } from '../../store/reducers/clientReducer';
 import { API_STATUS } from '../../utils/constants';
-import Modal from 'react-modal';
 import WorkItem from '../utilities/WorkItemTable';
 
 
@@ -32,7 +33,7 @@ const ClientForm = () => {
     clientAddress: '',
     email: ''
   });
-  const [showPopup, setShowPopup] = useState(false);
+
   const [showWorkItem, setShowWorkItem] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [clientId, setClientId] = useState(null);
@@ -57,25 +58,37 @@ const ClientForm = () => {
     return emailRegex.test(email);
   };
 
+  const handleNavigation = () => {
+    if (clientId !== null) {
+      setShowWorkItem(true);
+      navigate(`/utils/generate-estimation/${clientId}`);
+    }
+  };
+
   useEffect(() => {
-    console.log(clientdetails, clientdetails);
     if (clientdetails === API_STATUS.FULFILLED) {
-      console.log('client submission successful');
-      console.log(id);
       setClientId(id);
-      setShowPopup(true); // Show the popup after successful submission
+
+      // Show success toast when clientId is updated
+      toast.success('Client Details Updated Successfully !', {
+        autoClose: 5000, // 6 seconds
+      });
     }
     if (clientdetails === API_STATUS.REJECTED) {
-      console.log('client submission failed');
-      setShowPopup(false);
+      toast.error('Client submission failed');
     }
   }, [clientdetails, id]);
 
-  const handlePopupClose = () => {
-    setShowPopup(false);
-    setShowWorkItem(true); // Show the WorkItem component
-    navigate(`/utils/generate-estimation/${clientId}`);
-  };
+  // Call the handleNavigation function with a time delay after clientId is updated
+  useEffect(() => {
+    if (clientId !== null) {
+      const timer = setTimeout(handleNavigation, 2000); // Adjust the time delay as per your requirement
+
+      // Clear the timer if the component unmounts before the time delay is reached
+      return () => clearTimeout(timer);
+    }
+  }, [clientId]);
+ 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -203,13 +216,6 @@ const ClientForm = () => {
           </Grid>
         </div>
       </Grid>
-     
-      <Modal isOpen={showPopup} onRequestClose={handlePopupClose} shouldCloseOnOverlayClick={false} overlayClassName="modal-overlay" className="modal-content">
-        <DialogContent style={{fontSize:"16px"}} >Client Details Updated Successfully !</DialogContent>
-        <DialogActions>
-          <Button className='primary-btn' onClick={handlePopupClose}>OK</Button>
-        </DialogActions>
-      </Modal>
       
       {showWorkItem && clientId && <WorkItem clientId={clientId} />}
     </MainCard>
