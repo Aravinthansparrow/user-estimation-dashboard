@@ -4,15 +4,19 @@ import Button from '@mui/material/Button';
 import { Box, Typography } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import Joi from 'joi';
 import { useDispatch, useSelector } from 'react-redux';
-import { updatePassword } from '../../store/reducers/authReducer'; // Update the path
-import { API_STATUS } from '../../../src/utils/constants';
+import { toast } from 'react-toastify'; // Import the toast object
+import 'react-toastify/dist/ReactToastify.css';
+import { updatePassword } from '../../store/reducers/authReducer';
+import { API_STATUS } from '../../utils/constants';
 import MainCard from 'ui-component/cards/MainCard';
 import SubCard from 'ui-component/cards/SubCard';
 
 const ChangePassword = () => {
   const dispatch = useDispatch();
-  const { loading, errorMessage } = useSelector((state) => state.login);
+  const { loading } = useSelector((state) => state.login);
   const [userId, setUserId] = useState(null); // Local state for user ID
 
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -47,20 +51,53 @@ const ChangePassword = () => {
       // Handle any error notifications or user feedback here
     }
   }, [loading]);
-
   const handleChangePassword = () => {
+    setError(null);
+
+    //  Joi schema for password validation
+    const passwordSchema = Joi.string()
+      .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/)
+      .required()
+      .messages({
+        'string.pattern.base': 'Password should be alphanumeric, case-sensitive and at least 1 special character.',
+        'string.empty': 'Passsword cannot be blank.',
+        'any.required': 'Please provide a password.'
+      });
+
+    // Validate the newPassword using Joi
+    const { error: passwordError } = passwordSchema.validate(newPassword);
+
+    if (passwordError) {
+      setError(passwordError.details[0].message);
+      return;
+    }
+
     if (newPassword !== confirmPassword) {
       setError('Passwords do not match.');
       return;
     }
+    //display toast message
+    toast.success('Password changed successfully', {
+      position: 'top-right',
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true
+    });
 
     dispatch(updatePassword({ userId, newPassword }));
+    
+    // Clear the input fields after password change
+    setNewPassword('');
+    setConfirmPassword('');
   };
 
   return (
     <MainCard style={{ height: '100%' }} className="" title="Change Password">
-      <SubCard>
-      <Typography variant='h4' className="pwd-hint" color="error">Hint : Password should contain Numbers with Lower and Upper character</Typography>
+      <SubCard style={{ maxWidth: '500px', padding: '20px' }}>
+        <Typography variant="h4" className="pwd-hint" color="error">
+          Hint : Password should contain Numbers with Lower and Upper character
+        </Typography>
         <Box>
           <TextField
             label="New Password"
@@ -108,13 +145,15 @@ const ChangePassword = () => {
           />
         </Box>
 
-        {error && <p>{error}</p>}
-        <Button className="buttonBox" onClick={handleChangePassword} variant="contained">
+        {error && (
+          <Box display="flex" gap="5px" color="error" alignItems="center">
+            <ErrorOutlineIcon color="error" />
+            <p style={{ color: 'red' }}>{error}</p>
+          </Box>
+        )}
+        <Button className="primary-btn" style={{ marginTop: '13px' }} onClick={handleChangePassword} variant="contained">
           Submit
         </Button>
-        {/* Optionally display a loading indicator or error message */}
-        {loading === API_STATUS.PENDING && <p>Loading...</p>}
-        {errorMessage && <p>{errorMessage}</p>}
       </SubCard>
     </MainCard>
   );

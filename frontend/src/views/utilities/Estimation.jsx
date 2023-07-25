@@ -115,7 +115,7 @@ const ClientForm = () => {
 
   return (
     <MainCard style={{ height: '100%' }} title="Generate Estimation">
-      <Grid style={{ maxWidth: '550px', margin: 'auto' }} item xs={12} sm={6}>
+      <Grid style={{ maxWidth: '550px', margin: '30px auto' }} item xs={12} sm={6}>
         <div style={{ height: '100%' }} title="Generate Estimation">
           <Grid style={{ maxWidth: '550px', margin: 'auto' }} item xs={12} sm={6}>
             <SubCard>

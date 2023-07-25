@@ -2,6 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchGeneralSettings, updateGeneralSettings } from '../../store/reducers/generalReducer';
 import { API_STATUS } from '../../utils/constants';
+import MainCard from 'ui-component/cards/MainCard';
+import SubCard from 'ui-component/cards/SubCard';
+import {
+  Dialog,
+  Typography,
+  DialogActions,
+  Table,
+  TableContainer,
+  TableBody,
+  TableRow,
+  TableCell,
+  Button,
+  Paper,
+  TextField
+} from '@mui/material';
+// import { Edit } from '@mui/icons-material';
 
 const GeneralSettings = () => {
   const [modal, setModal] = useState(false);
@@ -15,11 +31,10 @@ const GeneralSettings = () => {
     // Fetch general settings data if it's still pending
     if (generalSettingsStatus === API_STATUS.PENDING) {
       dispatch(fetchGeneralSettings());
-    }else if(generalSettingsStatus === API_STATUS.REJECTED) {
+    } else if (generalSettingsStatus === API_STATUS.REJECTED) {
       console.log('data failed');
     }
   }, [dispatch, generalSettingsStatus]);
-  
 
   useEffect(() => {
     // Update the tempValues state whenever generalSettings is updated
@@ -47,97 +62,89 @@ const GeneralSettings = () => {
     e.preventDefault();
     const updatedValues = { ...tempValues };
     console.log(updatedValues);
-    dispatch(updateGeneralSettings(updatedValues)).unwrap().then(() => {
-      // The Redux store will automatically update with the new values
-      setModal(false);
-    })
+    dispatch(updateGeneralSettings(updatedValues))
+      .unwrap()
+      .then(() => {
+        // The Redux store will automatically update with the new values
+        setModal(false);
+      });
   };
 
   return (
-    <div className="table-overall">
-      <h2 className="estimate-head">General Settings</h2>
-      <table className="work-item-table">
-        <tbody>
-          <tr className="workitem-tab">
-            <td>
-              <p>Version</p>
-            </td>
-            <td>
-              <input name="version" value={generalSettings.version || ''} readOnly />
-            </td>
-          </tr>
-          <tr className="workitem-tab">
-            <td>
-              <p>Document Version</p>
-            </td>
-            <td>
-              <input name="document_version" value={generalSettings.document_version || ''} readOnly />
-            </td>
-          </tr>
-          <tr className="workitem-tab">
-            <td>
-              <p>Hours per Story Point</p>
-            </td>
-            <td>
-              <input name="hours_per_story_point" value={generalSettings.hours_per_story_point || ''} readOnly />
-            </td>
-          </tr>
-          <tr className="workitem-tab">
-            <td>
-              <p>Rate per Hour</p>
-            </td>
-            <td>
-              <input name="rate_per_hour" value={generalSettings.rate_per_hour || ''} readOnly />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <button className="buttonBox" onClick={handleUpdate}>
-        Update
-      </button>
-
+    <MainCard style={{ height: '100%' }} title="General Settings">
+      <SubCard style={{ maxWidth: '500px' }}>
+        <TableContainer component={Paper}>
+          <Table className="work-item-table">
+            <TableBody>
+              <TableRow className="workitem-tab">
+                <TableCell>Version</TableCell>
+                <TableCell>
+                  <TextField name="version" value={generalSettings.version || ''} readOnly />
+                </TableCell>
+              </TableRow>
+              <TableRow className="workitem-tab">
+                <TableCell>Document Version</TableCell>
+                <TableCell>
+                  <TextField name="document_version" value={generalSettings.document_version || ''} readOnly />
+                </TableCell>
+              </TableRow>
+              <TableRow className="workitem-tab">
+                <TableCell>Hours per Story Point</TableCell>
+                <TableCell>
+                  <TextField name="hours_per_story_point" value={generalSettings.hours_per_story_point || ''} readOnly />
+                </TableCell>
+              </TableRow>
+              <TableRow className="workitem-tab">
+                <TableCell>Rate per Hour</TableCell>
+                <TableCell>
+                  <TextField name="rate_per_hour" value={generalSettings.rate_per_hour || ''} readOnly />
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Button className="primary-btn mt-15" variant="contained" onClick={handleUpdate}>
+          Update
+        </Button>
+      </SubCard>
       {modal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2 className="estimate-head">Update General Settings</h2>
-            <form onSubmit={handleSubmit}>
-              <div>
-                <p style={{ color: 'white' }}>Version:</p>
-                <input style={{ marginTop: '10px' }} name="version" value={tempValues.version || ''} onChange={handleChange} />
-              </div>
-              <div>
-                <p style={{ color: 'white' }}>Document Version:</p>
-                <input
-                  style={{ marginTop: '10px' }}
-                  name="document_version"
-                  value={tempValues.document_version || ''}
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
-                <p style={{ color: 'white' }}>Hours per Story Point:</p>
-                <input
-                  style={{ marginTop: '10px' }}
-                  name="hours_per_story_point"
-                  value={tempValues.hours_per_story_point || ''}
-                  onChange={handleChange}
-                />
-              </div>
-              <div>
-                <p style={{ color: 'white' }}>Rate per Hour:</p>
-                <input style={{ marginTop: '10px' }} name="rate_per_hour" value={tempValues.rate_per_hour || ''} onChange={handleChange} />
-              </div>
-              <div className="modal-buttons">
-                <button type="submit">Submit</button>
-                <button type="button" onClick={handleClose}>
-                  Cancel
-                </button>
-              </div>
-            </form>
+        <Dialog overlayClassName="modal-overlay" open={modal} >
+          <div className='modal'>
+          <Typography variant="h3" className="confirm-header">
+            Update General Settings
+          </Typography>
+          <form onSubmit={handleSubmit}>
+            <div className='text-box'>
+              <Typography className='min-w-155' variant="body1">Version:</Typography>
+              <TextField name="version" type='number' value={tempValues.version || ''} onChange={handleChange} />
+            </div>
+            <div className='text-box'>
+              <Typography className='min-w-155' variant="body1">Document Version:</Typography>
+              <TextField name="document_version" type='number' value={tempValues.document_version || ''} onChange={handleChange} />
+            </div>
+            <div className='text-box'>
+              <Typography className='min-w-155' variant="body1">Hours per Story Point:</Typography>
+              <TextField name="hours_per_story_point" type='number' value={tempValues.hours_per_story_point || ''} onChange={handleChange} />
+            </div>
+            <div className='text-box'>
+              <Typography className='min-w-155' variant="body1">Rate per Hour:</Typography>
+              <TextField name="rate_per_hour" type='number' value={tempValues.rate_per_hour || ''} onChange={handleChange} />
+            </div>
+            <DialogActions>
+              <Button variant="contained" type='submit' className="primary-btn">
+                Submit
+              </Button>
+              <Button variant="contained" onClick={handleClose}  className="primary-btn">
+                {' '}
+                
+                Cancel
+              </Button>
+            </DialogActions>
+          </form>
           </div>
-        </div>
+        </Dialog>
       )}
-    </div>
+    </MainCard>
   );
 };
 

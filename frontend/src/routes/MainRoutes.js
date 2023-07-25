@@ -14,7 +14,7 @@ const EstimationList = Loadable(lazy(() => import('views/utilities/EstimationLis
 const ComplexityLevel = Loadable(lazy(() => import('views/utilities/ComplexityLevel')));
 const ComponentType = Loadable(lazy(() => import('views/utilities/ComponentType')));
 const GeneralSettings = Loadable(lazy(() => import('views/utilities/GeneralSettings')));
-const ForgotPassword = Loadable(lazy(() => import('views/utilities/ForgotPassword')));
+const ForgotPassword = Loadable(lazy(() => import('views/utilities/ChangePassword')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 

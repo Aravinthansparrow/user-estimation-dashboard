@@ -9,6 +9,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { fetchEstimateList, changeStatus, estimateListSelector } from '../../store/reducers/clientReducer';
 import { API_STATUS } from '../../utils/constants';
 import { Box, Button, TextField, DialogActions, Typography, Paper } from '@mui/material';
+import Pagination from 'ui-component/pagination/pagination';
 import MainCard from 'ui-component/cards/MainCard';
 
 const EstimateList = () => {
@@ -26,6 +27,25 @@ const EstimateList = () => {
   const loading = useSelector(estimateListSelector).loading;
   const changestatus = useSelector(estimateListSelector).changestatus;
   const data = useSelector(estimateListSelector).loadData;
+
+  // Add pagination state
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 10;
+  const pageCount = Math.ceil(filteredClients.length / itemsPerPage);
+
+  // Calculate the serial number for each client
+  const calculateSerialNumber = (index) => {
+    return (page - 1) * itemsPerPage + index + 1;
+  };
+
+  // Update filteredClients to show only the data for the current page
+  const startIndex = (page - 1) * itemsPerPage;
+  const endIndex = page * itemsPerPage;
+  const currentClients = filteredClients.slice(startIndex, endIndex);
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
 
   // Dispatch the actions to update the 'created' and 'approved' values in the Redux store
   const dispatch = useDispatch();
@@ -142,73 +162,74 @@ const EstimateList = () => {
       {/* {showEstimateSummary ? (
         <EstimateSummary clientId={selectedClientId} />
       ) : ( */}
+      <div>
+        {showFilters && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <TextField
+              variant="outlined"
+              fullWidth
+              size="small"
+              className="input-list"
+              label="Filter by date"
+              value={filterByDate}
+              onChange={(e) => setFilterByDate(e.target.value)}
+            />
+            <TextField
+              variant="outlined"
+              fullWidth
+              size="small"
+              className="input-list"
+              label="Filter by client name"
+              value={filterByClientName}
+              onChange={(e) => setFilterByClientName(e.target.value)}
+            />
+            <TextField
+              variant="outlined"
+              fullWidth
+              className="input-list"
+              size="small"
+              label="Filter by estimated by"
+              value={filterByEstimatedBy}
+              onChange={(e) => setFilterByEstimatedBy(e.target.value)}
+            />
+            <TextField
+              variant="outlined"
+              fullWidth
+              size="small"
+              className="input-list"
+              label="Filter by status"
+              value={filterByStatus}
+              onChange={(e) => setFilterByStatus(e.target.value)}
+            />
+            <Button
+              variant="contained"
+              className="input-list secondary-btn"
+              color="primary"
+              onClick={applyFilters}
+              style={{ borderRadius: '20px', textTransform: 'none' }}
+              startIcon={<SearchIcon />}
+            >
+              Search
+            </Button>
+          </div>
+        )}
         <div>
-          {showFilters && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <TextField
-                variant="outlined"
-                fullWidth
-                size="small"
-                className="input-list"
-                label="Filter by date"
-                value={filterByDate}
-                onChange={(e) => setFilterByDate(e.target.value)}
-              />
-              <TextField
-                variant="outlined"
-                fullWidth
-                size="small"
-                className="input-list"
-                label="Filter by client name"
-                value={filterByClientName}
-                onChange={(e) => setFilterByClientName(e.target.value)}
-              />
-              <TextField
-                variant="outlined"
-                fullWidth
-                className="input-list"
-                size="small"
-                label="Filter by estimated by"
-                value={filterByEstimatedBy}
-                onChange={(e) => setFilterByEstimatedBy(e.target.value)}
-              />
-              <TextField
-                variant="outlined"
-                fullWidth
-                size="small"
-                className="input-list"
-                label="Filter by status"
-                value={filterByStatus}
-                onChange={(e) => setFilterByStatus(e.target.value)}
-              />
-              <Button
-                variant="contained"
-                className="input-list secondary-btn"
-                color="primary"
-                onClick={applyFilters}
-                style={{ borderRadius: '20px', textTransform: 'none' }}
-                startIcon={<SearchIcon />}
-              >
-                Search
-              </Button>
-            </div>
-          )}
-          <div>
-            <div className="list-headers">
-              <div className="head-serial mr-14">S.No</div>
-              <div className="head-date">Date</div>
-              <div className="head-name">Client Name</div>
-              <div className="head-by">Estimated By</div>
-              <div className="head-status">Status</div>
-              <div className="head-action">Actions</div>
-              <div className="head-view text-center">View</div>
-            </div>
+          <div className="list-headers">
+            <div className="head-serial mr-14">S.No</div>
+            <div className="head-date">Date</div>
+            <div className="head-name">Client Name</div>
+            <div className="head-by">Estimated By</div>
+            <div className="head-status">Status</div>
+            <div className="head-action">Actions</div>
+            <div className="head-view text-center">View</div>
+          </div>
 
-            <div className="list-tabs">
-              {filteredClients.map((client, index) => (
+          <div className="list-tabs">
+            {currentClients.map((client, index) => {
+              return (
                 <Paper key={client.id} elevation={3} className="field-set">
                   <Typography variant="body1" className="head-serial index-num">
-                    {index + 1}
+                    {calculateSerialNumber(index)}
                   </Typography>
                   <Typography variant="body1" className="head-date">
                     {client.createdAt.substring(0, 10)}
@@ -248,11 +269,16 @@ const EstimateList = () => {
                     </Button>
                   </div>
                 </Paper>
-              ))}
-            </div>
+              );
+            })}
           </div>
         </div>
+      </div>
       {/* )} */}
+      {/* Add Pagination component */}
+      <Box  display="flex" justifyContent="end" alignItems="center">
+        <Pagination currentPage={page} totalPages={pageCount} onPageChange={handlePageChange} />
+      </Box>
       {showEstimateSummary && (
         <Box mt={2} textAlign="center">
           <Button variant="contained" onClick={handleBack}>
@@ -264,7 +290,6 @@ const EstimateList = () => {
       <Modal
         className="modal modal-content"
         overlayClassName="modal-overlay"
-        
         isOpen={showConfirmationModal}
         onRequestClose={() => setShowConfirmationModal(false)}
       >
@@ -275,10 +300,10 @@ const EstimateList = () => {
           Are you sure you want to {confirmationAction === 'approved' ? 'approve' : 'reject'} this estimate?
         </Typography>
         <DialogActions>
-          <Button variant="contained" className='primary-btn' onClick={() => handleConfirmation(selectedClientId)}>
+          <Button variant="contained" className="primary-btn" onClick={() => handleConfirmation(selectedClientId)}>
             Confirm
           </Button>
-          <Button variant="contained" className='primary-btn'  onClick={() => setShowConfirmationModal(false)}>
+          <Button variant="contained" className="primary-btn" onClick={() => setShowConfirmationModal(false)}>
             Cancel
           </Button>
         </DialogActions>
