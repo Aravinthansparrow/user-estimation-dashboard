@@ -28,9 +28,9 @@ export const fetchComplexity = createAsyncThunk(
 
   export const submitComplexity = createAsyncThunk(
     `${namespace}/submitComplexity`,
-    async ({selectedDays, selectedValue}, { rejectWithValue }) => {
+    async ({complexityId, complexity, days}, { rejectWithValue }) => {
       try {
-        const response = await complexitySubmit(selectedDays, selectedValue); 
+        const response = await complexitySubmit(complexityId,complexity, days); 
         console.log("getScanCount--> ", response);// Replace 'fetchData' with your actual API function call
         return response.data;
       } catch (error) {
