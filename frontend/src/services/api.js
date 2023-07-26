@@ -18,10 +18,16 @@ export const getEstimateList =  () => {
   return Http.get(baseURL + '/clients' )
 };
 
-export const getClientDetails = (id) => {
+export const getClientDetails = (clientId) => {
   const baseURL = getBaseEndpointUrl();
-  return Http.get(baseURL + `/clients/${id}` )
-}
+  const url = `${baseURL}/clients`;
+
+  // No try/catch needed here since we are not adding specific error handling logic.
+  
+  return Http.get(url, { params: { clientId } });
+
+  
+};
 
 export const submitClientDetails =  (formData) => {
   console.log(formData)
@@ -82,10 +88,15 @@ export const workItemsSubmit =  (workItem) => {
   return Http.post(baseURL + '/workitems' , workItem)
 };
 
-export const workItemsGet =  (clientId) => {
-  
+export const workItemsGet = (clientId) => {
   const baseURL = getBaseEndpointUrl();
-  return Http.get(baseURL + `/workitems/?clientId=${clientId}` )
+  const url = `${baseURL}/workitems`;
+
+  // No try/catch needed here since we are not adding specific error handling logic.
+  
+  return Http.get(url, { params: { clientId } });
+
+  
 };
 
 //GeneralSetings

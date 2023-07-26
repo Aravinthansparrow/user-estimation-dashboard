@@ -36,29 +36,29 @@ const generalSettingsSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: {
-    [fetchGeneralSettings.pending]: (state) => {
+    [fetchGeneralSettings.pending](state) {
       state.status = API_STATUS.PENDING;
       state.error = null;
     },
-    [fetchGeneralSettings.fulfilled]: (state, action) => {
+    [fetchGeneralSettings.fulfilled] (state, action) {
       state.status = API_STATUS.FULFILLED;
       state.error = null;
       state.data = action.payload; // Update the state with the new data from the API response
     },
-    [fetchGeneralSettings.rejected]: (state, action) => {
+    [fetchGeneralSettings.rejected] (state, action) {
       state.status = API_STATUS.REJECTED;
       state.error = action.error.message || API_STATUS.NETWORK_ERROR;
     },
-    [updateGeneralSettings.pending]: (state) => {
+    [updateGeneralSettings.pending] (state) {
       state.status = API_STATUS.PENDING;
       state.error = null;
     },
-    [updateGeneralSettings.fulfilled]: (state, action) => {
+    [updateGeneralSettings.fulfilled] (state, action)  {
       state.status = API_STATUS.FULFILLED;
       state.error = null;
       state.data = action.payload; // Update the state with the new data from the API response
     },
-    [updateGeneralSettings.rejected]: (state, action) => {
+    [updateGeneralSettings.rejected](state, action)  {
       state.status = API_STATUS.REJECTED;
       state.error = action.payload || API_STATUS.NETWORK_ERROR;
     },

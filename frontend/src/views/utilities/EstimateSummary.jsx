@@ -33,11 +33,12 @@ const EstimateSummary = () => {
   const [totalDevEffortHours, setTotalDevEffortHours] = useState(0);
   const [totalDevEffortStoryPoints, setTotalDevEffortStoryPoints] = useState(0);
   const clientloading = useSelector(estimateListSelector).clientloading;
-  const workitemloading = useSelector(workItemSelector).workitemloading;
+  const getworkitemloading = useSelector(workItemSelector).getworkitemloading;
   const generalSettingsloading = useSelector(generalSettingsSelector).status
   const clientloadData = useSelector(estimateListSelector).clientloadData
   const workitemData = useSelector(workItemSelector).workitemloadData;
   const generalSettingsData = useSelector(generalSettingsSelector).data
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -58,7 +59,8 @@ const EstimateSummary = () => {
       setTotalDevEffortStoryPoints(totalStoryPoints)
 
     
-    })})
+    })
+  })
 
   const handleCreateNew = () => {
     setSendByEmail(false);
@@ -88,9 +90,9 @@ const EstimateSummary = () => {
 
 
 useEffect(()=>{
-  dispatch(getClientData({clientId: clientId}))
+  dispatch(getClientData(clientId))
   dispatch(fetchGeneralSettings())
-  dispatch(getWorkItem({clientId}))
+  dispatch(getWorkItem(clientId))
 }, [dispatch, clientId])
 
 useEffect(()=> {
@@ -122,14 +124,16 @@ useEffect(()=> {
 }, [generalSettingsloading])
 
 useEffect(()=> {
-  console.log(workitemloading, 'workitemloading')
-  if (workitemloading === API_STATUS.FULFILLED){
+  console.log(getworkitemloading, '3workitemloading')
+  if (getworkitemloading === API_STATUS.FULFILLED){
+
    setTableData(workitemData)
+   
   }
-  if (workitemloading === API_STATUS.REJECTED){
+  if (getworkitemloading === API_STATUS.REJECTED){
     console.log('general settings data not got')
   }
-}, [workitemloading])
+}, [getworkitemloading])
   
 
   // useEffect(() => {

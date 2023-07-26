@@ -30,9 +30,9 @@ export const fetchEstimateList = createAsyncThunk(`${namespace}/fetchEstimateLis
 
 export const getClientData = createAsyncThunk(
   `${namespace}/getClientData`,
-  async (id, { rejectWithValue }) => {
+  async (clientId, { rejectWithValue }) => {
     try {
-      const response = await getClientDetails(id);
+      const response = await getClientDetails(clientId);
       console.log('getScanCount--> ', response); // Replace 'fetchData' with your actual API function call
       return response.data;
     } catch (error) {
