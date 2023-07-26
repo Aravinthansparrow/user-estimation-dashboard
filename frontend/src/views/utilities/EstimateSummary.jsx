@@ -74,7 +74,7 @@ const EstimateSummary = () => {
   };
 
   const handleEstimateSummary = () => {
-    setEstimateSummary(!estimateSummary);
+    setEstimateSummary(true);
     setModularComponents(false);
     setSendByEmail(false);
     setDownload(false);
@@ -82,7 +82,7 @@ const EstimateSummary = () => {
   };
 
   const handleModularComponents = () => {
-    setModularComponents(!modularComponents);
+    setModularComponents(true);
     setEstimateSummary(false);
     setSendByEmail(false);
     setDownload(false);
