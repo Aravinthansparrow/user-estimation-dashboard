@@ -9,7 +9,9 @@ const initialState = {
   resetloading: 'initial',
   errorMessage: null,
   loginData: null,
-  username: localStorage.getItem('username') || null
+  username: localStorage.getItem('username') || null,
+  role: localStorage.getItem('role') || null,
+  email: localStorage.getItem('email') || null
 };
 
 export const doLogin = createAsyncThunk(`${namespace}/doLogin`, async ({ email, password }, { rejectWithValue }) => {
@@ -60,11 +62,16 @@ const loginSlice = createSlice({
       console.log({ payload });
       console.log(payload?.data?.username);
       state.loginData = payload?.data;
-
+      state.username = payload?.data?.username;
+      state.email = payload?.data?.email;
+      state.role = payload?.data?.role;
+      
       // Store the credintials in localStorage
       localStorage.setItem('isAuthenticated', true);
       localStorage.setItem('username', payload?.data?.username);
       localStorage.setItem('userId', payload?.data?.id);
+      localStorage.setItem('role', payload?.data?.role);
+      localStorage.setItem('email', payload?.data?.email);
     },
     [doLogin.rejected](state, action) {
       state.loading = API_STATUS.REJECTED;

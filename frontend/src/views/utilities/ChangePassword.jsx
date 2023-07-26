@@ -7,7 +7,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import Joi from 'joi';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify'; // Import the toast object
+import { toast } from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css';
 import { updatePassword } from '../../store/reducers/authReducer';
 import { API_STATUS } from '../../utils/constants';
@@ -91,7 +91,7 @@ const ChangePassword = () => {
     setNewPassword('');
     setConfirmPassword('');
   };
-
+ 
   return (
     <MainCard style={{ height: '100%' }} className="" title="Change Password">
       <SubCard style={{ maxWidth: '500px', padding: '20px' }}>
