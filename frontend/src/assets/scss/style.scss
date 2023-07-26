@@ -401,31 +401,70 @@
 .mr-14 {
   margin-right: 14px;
 }
-
+.border-null {
+  border-bottom: none !important;
+  padding: 9px 13px;
+}
 // Component Type CSS
+.content-label {
+  overflow: visible;
+    white-space: nowrap;
+    min-width: 137px;
+    color: black;
+    align-items: center;
+    display: flex;
+}
+.act-row{
+  border-bottom: 1px solid rgba(224, 224, 224, 1);
+}
+.activity-title{
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.total-box{
+  background: rgba(189, 232, 233, 0.7);
+  padding:13px 10px ;
+}
+.tot-para {
+  color: #364152;
+  font-size: 16px;
+}
+.activity-head {
+  background: rgba(189, 232, 233, 0.7) ;
+    border-radius: 10px 10px 0px 0px;
+    color: #00a8ab;
+    font-weight: 700;
+}
 .component{
   border-bottom: 1px solid #d2d9e2;
-  padding-bottom: 6px;
-  margin: 4px 71px;
+  padding-bottom: 9px;
+  margin: 7px 71px;
 }
 .component:last-child{
   border-bottom: none;
   padding-bottom: 0px;
 }
 .default-button{
-  background: #9c949459;
+  background: rgba(189, 232, 233, 0.7);
   border-radius: 30px;
   padding: 1px 14px;
 }
 .default-button:hover{
-  background: #9c949459;
+  background: rgb(0, 168, 171);
+  color: white;
+
 }
 .default-badge{
   cursor: not-allowed;
+   background:#d2d9e2;
+   border-radius: 30px;
+   padding: 1px 14px;
 }
 .component-title{
   background: rgb(0, 168, 171);
   color: white;
+  display: flex;
+  gap: 8px;
 }
 .component-title:hover {
   background: rgb(0, 168, 171);

@@ -17,7 +17,7 @@ import {
 import { Box, Typography, DialogActions, Button, TextField } from '@mui/material';
 import { API_STATUS } from '../../utils/constants';
 import MainCard from 'ui-component/cards/MainCard';
-import SubCard from 'ui-component/cards/SubCard';
+
 
 const ComponentType = () => {
   const [components, setComponents] = useState([]);
@@ -212,7 +212,7 @@ const ComponentType = () => {
 
   return (
     <MainCard style={{ height: '100%' }} title="Component Type">
-      <SubCard>
+      
         <Box display="flex" mb={6} justifyContent="center" >
           <Button variant="outlined" className="component-title" onClick={handleAddComponent}>
             Add Component
@@ -240,16 +240,16 @@ const ComponentType = () => {
                 </Button>
               )}
 
-              <Button className="edit-button view-btn" onClick={() => openEditModal(index)}>
+              <Button className=" view-btn" onClick={() => openEditModal(index)}>
                 <EditIcon sx={{ color: 'black' }} />
               </Button>
-              <Button className="delete-button view-btn" onClick={() => deleteComponent(index)}>
+              <Button className=" view-btn" onClick={() => deleteComponent(index)}>
                 <DeleteIcon sx={{ color: 'black' }} />
               </Button>
             </Box>
           </Box>
         ))}
-      </SubCard>
+     
 
       {/* Add New Component Modal */}
       <Modal

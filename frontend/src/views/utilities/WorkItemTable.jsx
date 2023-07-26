@@ -28,7 +28,7 @@ import {
 const WorkItem = () => {
   const { clientId } = useParams();
   const [rows, setRows] = useState([{}]);
-  const [tooltipOpen, setTooltipOpen] = useState(false); // State to control tooltip visibility
+  const [tooltipOpen, setTooltipOpen] = useState(false); //  tooltip visibility
   const [showEstimateSummary, setShowEstimateSummary] = useState(false);
   const [componentTypes, setComponentTypes] = useState([]);
   const [complexities, setComplexities] = useState([]);
@@ -228,7 +228,6 @@ console.log(defaultComponent)
     return rows.map((row, index) => {
       const effortOverride = parseFloat(row.effortOverride) || 0;
       const finalEffort = effortOverride ? effortOverride : row.buildEffort || selectedBuildEffort;
-
       const showDeleteButton = index !== 0; // Show delete button for all rows except the first row
 
       return (
