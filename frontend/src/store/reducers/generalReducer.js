@@ -65,4 +65,6 @@ const generalSettingsSlice = createSlice({
   }
 });
 
+
+export const generalSettingsSelector = (state) => state.generalSetting;
 export default generalSettingsSlice.reducer;

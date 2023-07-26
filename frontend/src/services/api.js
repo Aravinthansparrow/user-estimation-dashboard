@@ -18,6 +18,11 @@ export const getEstimateList =  () => {
   return Http.get(baseURL + '/clients' )
 };
 
+export const getClientDetails = (id) => {
+  const baseURL = getBaseEndpointUrl();
+  return Http.get(baseURL + `/clients/${id}` )
+}
+
 export const submitClientDetails =  (formData) => {
   console.log(formData)
   const baseURL = getBaseEndpointUrl();
@@ -77,6 +82,12 @@ export const workItemsSubmit =  (workItem) => {
   return Http.post(baseURL + '/workitems' , workItem)
 };
 
+export const workItemsGet =  (clientId) => {
+  
+  const baseURL = getBaseEndpointUrl();
+  return Http.get(baseURL + `/workitems/?clientId=${clientId}` )
+};
+
 //GeneralSetings
 export const getGeneralSettingsAPI = () => {
   const baseURL = getBaseEndpointUrl();
@@ -86,4 +97,27 @@ export const getGeneralSettingsAPI = () => {
 export const updateGeneralSettingsAPI = (updatedValues) => {
   const baseURL = getBaseEndpointUrl();
   return Http.put(baseURL + '/generalsettings', updatedValues);
+};
+
+//activities
+
+export const getActivities = () => {
+  const baseURL = getBaseEndpointUrl();
+  console.log('jh')
+  return Http.get(baseURL + '/activity');
+};
+
+export const addActivity = (activity, percentagesplit) => {
+  const baseURL = getBaseEndpointUrl();
+  return Http.post(baseURL + '/activity', { activity, percentagesplit });
+};
+
+export const updateActivity = (id, activity, percentagesplit) => {
+  const baseURL = getBaseEndpointUrl();
+  return Http.put(baseURL + `/activity/${id}`, { activity, percentagesplit });
+};
+
+export const deleteActivity = (id) => {
+  const baseURL = getBaseEndpointUrl();
+  return Http.delete(baseURL + `/activity/${id}`);
 };

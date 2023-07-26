@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getEstimateList, submitClientDetails, updateStatus } from '../../services/api'; // Replace 'fetchData' with your actual API function
+import { getClientDetails, getEstimateList, submitClientDetails, updateStatus } from '../../services/api'; // Replace 'fetchData' with your actual API function
 import { API_STATUS } from '../../utils/constants';
 const namespace = 'estimateList';
 const initialState = {
@@ -8,10 +8,12 @@ const initialState = {
   rejected: 0,
   notapproved: 0,
   loading: 'initial',
+  clientloading: 'initial',
   changestatus: 'initial',
   submitclients: 'initial',
   error: null,
   loadData: null,
+  clientloadData: null,
   id: null
 };
 
@@ -25,6 +27,21 @@ export const fetchEstimateList = createAsyncThunk(`${namespace}/fetchEstimateLis
     return rejectWithValue(error.response.data);
   }
 });
+
+export const getClientData = createAsyncThunk(
+  `${namespace}/getClientData`,
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await getClientDetails(id);
+      console.log('getScanCount--> ', response); // Replace 'fetchData' with your actual API function call
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+
 
 export const changeStatus = createAsyncThunk(
   `${namespace}/changeStatus`,
@@ -84,6 +101,19 @@ const mySlice = createSlice({
     },
     [fetchEstimateList.rejected](state, action) {
       state.loading = false;
+      state.error = action.payload;
+    },
+    [getClientData.pending](state) {
+      state.clientloading = API_STATUS.PENDING;
+      state.error = null;
+    },
+    [getClientData.fulfilled](state, action) {
+      state.clientloading = API_STATUS.FULFILLED;
+      state.error = null;
+      state.clientloadData = action.payload;
+    },
+    [getClientData.rejected](state, action) {
+      state.clientloading = false;
       state.error = action.payload;
     },
     [changeStatus.pending](state) {

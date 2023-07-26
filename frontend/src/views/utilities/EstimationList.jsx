@@ -94,7 +94,7 @@ const EstimateList = () => {
     setSelectedClientId(clientId);
     setShowEstimateSummary(true);
     setShowFilters(false);
-    navigate(`/estimation-list/${clientId}`);
+    navigate(`/utils/estimate-summary/${clientId}`);
   };
 
   const handleBack = () => {

@@ -41,7 +41,7 @@ const WorkItem = () => {
   const workitemloading = useSelector(workItemSelector).workitemloading;
   const data = useSelector(complexitySelector).loadData;
   const componentData = useSelector(componentSelector).loadData;
-
+console.log(defaultComponent)
   useEffect(() => {
     dispatch(fetchComponents());
     dispatch(fetchComplexity());
@@ -52,9 +52,15 @@ const WorkItem = () => {
     if (componentloading === API_STATUS.FULFILLED) {
       console.log('Component data got Successfully!');
       setComponentTypes(componentData);
+      const componentDefaultData = componentData.find((component) => component.default === 'default');
+    
+
+    if (componentDefaultData && componentDefaultData.name) {
+      setDefaultComponent(componentDefaultData.name);
+      console.log(defaultComponent);
 
       console.log(componentTypes);
-    }
+    }}
     if (componentloading === API_STATUS.REJECTED) {
       console.log('Component data got failed');
     }
@@ -74,7 +80,7 @@ const WorkItem = () => {
       console.log('workitem data submitted got Successfully!');
 
       setRows([]);
-      navigate(`/estimate-summary/${clientId}`);
+      navigate(`/utils/estimate-summary/${clientId}`);
       setShowEstimateSummary(true);
       // }
     }
@@ -83,14 +89,15 @@ const WorkItem = () => {
     }
   }, [componentloading, complexityloading, workitemloading]);
 
-  useEffect(() => {
-    const defaultComponentData = componentTypes.find((component) => component.default === 'default');
+  // useEffect(() => {
+  //   const defaultComponentData = componentTypes.find((component) => component.default === 'default');
+  //   console.log(defaultComponent)
 
-    if (defaultComponentData && defaultComponentData.name) {
-      setDefaultComponent(defaultComponentData.name);
-      console.log(defaultComponentData.name);
-    }
-  }, [componentTypes]);
+  //   if (defaultComponentData && defaultComponentData.name) {
+  //     setDefaultComponent(defaultComponentData.name);
+  //     console.log(defaultComponent);
+  //   }
+  // }, [componentTypes]);
 
   const selectedComplexity = complexities.length > 0 ? complexities[0].complexity : '';
   const selectedBuildEffort = selectedComplexity ? complexities[0].days : '0';
@@ -379,7 +386,7 @@ const WorkItem = () => {
               <Select
                 name="componentType"
                 style={{ minWidth: '120px' }}
-                value={row.componentType || ''}
+                value={row.componentType || defaultComponent}
                 onChange={(e) => handleChange(e, index)}
                 required
                 fullWidth
