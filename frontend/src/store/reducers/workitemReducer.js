@@ -31,14 +31,17 @@ export const getWorkItem = createAsyncThunk(
     `${namespace}/getWorkItem`,
     async (clientId, { rejectWithValue }) => {
         try {
+            console.log('hi')
+            console.log(clientId)
             
-            const data = await workItemsGet(clientId);
+            const response = await workItemsGet(clientId);
             
-            console.log("getScanCount--> ", data);
-            return data;
+            console.log("getScanCount--> ", response);
+            console.log()
+            return response.data;
         } catch (error) {
-            console.log("getScanCount error--->", error);
-            return rejectWithValue(error.response);
+        
+            return rejectWithValue(error.response.data);
         }
     }
 );

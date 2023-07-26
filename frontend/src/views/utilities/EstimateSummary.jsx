@@ -11,6 +11,7 @@ import { fetchGeneralSettings, generalSettingsSelector } from "store/reducers/ge
 import { getWorkItem, workItemSelector } from "store/reducers/workitemReducer";
 import { useDispatch } from "react-redux";
 import { API_STATUS } from "utils/constants";
+import { activitiesSelector, fetchActivities } from "store/reducers/activityReducer";
 const EstimateSummary = () => {
   const { clientId } = useParams();
 
@@ -32,11 +33,14 @@ const EstimateSummary = () => {
   const [totalDevEffortHours, setTotalDevEffortHours] = useState(0);
   const [totalDevEffortStoryPoints, setTotalDevEffortStoryPoints] = useState(0);
   const clientloading = useSelector(estimateListSelector).clientloading;
-  const workitemloading = useSelector(workItemSelector).workitemloading;
+  const getworkitemloading = useSelector(workItemSelector).getworkitemloading;
   const generalSettingsloading = useSelector(generalSettingsSelector).status
+  const activitiesloading = useSelector(activitiesSelector).activitiesloading;
+  const activitiesLoadData = useSelector(activitiesSelector).loadData
   const clientloadData = useSelector(estimateListSelector).clientloadData
   const workitemData = useSelector(workItemSelector).workitemloadData;
   const generalSettingsData = useSelector(generalSettingsSelector).data
+  
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -57,7 +61,8 @@ const EstimateSummary = () => {
       setTotalDevEffortStoryPoints(totalStoryPoints)
 
     
-    })})
+    })
+  })
 
   const handleCreateNew = () => {
     setSendByEmail(false);
@@ -87,9 +92,10 @@ const EstimateSummary = () => {
 
 
 useEffect(()=>{
-  dispatch(getClientData({clientId: clientId}))
+  dispatch(getClientData(clientId))
   dispatch(fetchGeneralSettings())
-  dispatch(getWorkItem({clientId}))
+  dispatch(getWorkItem(clientId))
+  dispatch(fetchActivities())
 }, [dispatch, clientId])
 
 useEffect(()=> {
@@ -121,60 +127,32 @@ useEffect(()=> {
 }, [generalSettingsloading])
 
 useEffect(()=> {
-  console.log(workitemloading, 'workitemloading')
-  if (workitemloading === API_STATUS.FULFILLED){
+  console.log(getworkitemloading, '3workitemloading')
+  if (getworkitemloading === API_STATUS.FULFILLED){
+
    setTableData(workitemData)
+   
   }
-  if (workitemloading === API_STATUS.REJECTED){
+  if (getworkitemloading === API_STATUS.REJECTED){
     console.log('general settings data not got')
   }
-}, [workitemloading])
+}, [getworkitemloading])
   
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const [clientsResponse, workItemsResponse, generalSettingsResponse] =
-  //         await Promise.all([
-  //           axios.get(`http://localhost:3002/clients`, {
-  //             params: { id: clientId },
-  //           }),
-  //           axios.get("http://localhost:3002/workItems", {
-  //             params: { clientId: clientId },
-  //           }),
-  //           axios.get("http://localhost:3002/generalSettings"),
-  //         ]);
+useEffect(()=> {
+  console.log(activitiesloading, 'activitiesloading')
+  if (activitiesloading === API_STATUS.FULFILLED){
 
-  //       if (
-  //         clientsResponse.status === 200 &&
-  //         workItemsResponse.status === 200 &&
-  //         generalSettingsResponse.status === 200
-  //       ) {
-  //         const clientData = clientsResponse.data;
-  //         // const workItemsData = workItemsResponse.data;
-  //         const generalSettingsData = generalSettingsResponse.data;
-          // setProjectName(clientData.clientName);
-          // setEstimatedBy(clientData.createdBy);
-          // setEstimatedOn(clientData.createdAt.substring(0, 10));
+   console.log(activitiesLoadData)
+   
+  
+  
+  }
+  if (activitiesloading === API_STATUS.REJECTED){
+    console.log('general settings data not got')
+  }
+}, [activitiesloading])
 
-  //         setTableData(workItemsResponse.data);
-          // setVersion(generalSettingsData.version.toString());
-          // setDocumentVersion(generalSettingsData.document_version.toString());
-          // setHoursPerStoryPoint(
-          //   generalSettingsData.hours_per_story_point.toString()
-          // );
-          // setRatePerHour(generalSettingsData.rate_per_hour.toString());
-  //         setDataLoaded(true);
-  //       } else {
-  //         console.error("Error fetching data:", clientsResponse.status);
-  //       }
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [clientId]);
 
   const handleDownload = () => {
     const workbook = XLSX.utils.book_new();
@@ -246,6 +224,14 @@ useEffect(()=> {
       "https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox?compose=new";
     window.open(emailClientLink, "_blank");
   };
+  const totalSecondColumn = activitiesLoadData.reduce(
+    (total, activity) => total + Math.round((activity.percentagesplit * totalDevEffortStoryPoints) / 100),
+    0
+  );
+
+  // Calculate the total for the third column of the "Activities" table
+  const totalThirdColumn = totalSecondColumn * hoursPerStoryPoint;
+  
 
   return (
     <div>
@@ -351,8 +337,36 @@ useEffect(()=> {
                 </tr>
               </tbody>
             </table>
-          </div>
+            </div>
+          <div className="activities-table">
+          <h2 className="summary-title">Activities</h2>
+          <table className="activities-table">
+            <thead>
+              <tr>
+                <th>Activities</th>
+                <th>Effort in story points/(person days)</th>
+                <th>Total effort in hrs</th>
+              </tr>
+            </thead>
+            <tbody>
+              {activitiesLoadData.map((activity, index) => (
+                <tr key={index}>
+                  <td>{activity.activity}</td>
+                  <td>{Math.round((activity.percentagesplit*totalDevEffortStoryPoints)/100)}</td>
+                  <td>{Math.round((activity.percentagesplit*totalDevEffortStoryPoints)/100)*hoursPerStoryPoint}</td>
+                </tr>
+              ))}
+                <tr>
+              <td>Total</td>
+              <td>{totalSecondColumn}</td>
+              <td>{totalThirdColumn}</td>
+            </tr>
+            </tbody>
+          </table>
         </div>
+          </div>
+       
+        
       )}
 
       {modularComponents && (

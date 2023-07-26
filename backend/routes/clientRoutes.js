@@ -22,13 +22,13 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
-  const { id } = req.query;
+  const clientId = req.query.clientId;
 
   try {
     let clients;
 
-    if (id) {
-      clients = await Client.findByPk(id, {
+    if (clientId) {
+      clients = await Client.findByPk(clientId, {
         include: WorkItem,
       });
     } else {
