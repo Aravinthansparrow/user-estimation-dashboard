@@ -72,6 +72,13 @@ const utilities = {
           type: 'item',
           url: '/master/general-settings',
           breadcrumbs: false
+        },
+        {
+          id: 'activities-split',
+          title: 'Activities Split Percentage',
+          type: 'item',
+          url: '/master/activities-split',
+          breadcrumbs: false
         }
       ]
     }

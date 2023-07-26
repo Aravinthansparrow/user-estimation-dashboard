@@ -11,6 +11,7 @@ const componentRoutes = require('./routes/componentRoutes');
 const complexityRoutes = require('./routes/complexityRoutes');
 const generalRoutes = require('./routes/generalRoutes');
 const userRoutes = require('./routes/userRoutes');
+const activityRoutes = require('./routes/activityRoutes')
 // Create an instance of Express app
 const app = express();
 
@@ -24,6 +25,7 @@ app.use('/components', componentRoutes);
 app.use('/complexity', complexityRoutes);
 app.use('/generalsettings', generalRoutes);
 app.use('/user', userRoutes);
+app.use('/activity', activityRoutes)
 
 // Sync the database and start the server
 sequelize.sync()

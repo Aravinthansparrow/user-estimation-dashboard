@@ -6,6 +6,7 @@ import complexityReducer from './reducers/complexityReducer';
 import componentReducer from './reducers/componentReducer';
 import workitemReducer from './reducers/workitemReducer';
 import generalReducer from './reducers/generalReducer';
+import activityReducer from './reducers/activityReducer';
 
 const store = configureStore({
   reducer: { 
@@ -16,6 +17,7 @@ const store = configureStore({
     component: componentReducer, 
     workitem: workitemReducer,
     generalSetting:generalReducer,
+    activities: activityReducer
   }
 });
 

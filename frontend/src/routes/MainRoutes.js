@@ -3,6 +3,7 @@ import { lazy } from 'react';
 // project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
+import EstimateSummary from 'views/utilities/EstimateSummary';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -15,6 +16,7 @@ const ComplexityLevel = Loadable(lazy(() => import('views/utilities/ComplexityLe
 const ComponentType = Loadable(lazy(() => import('views/utilities/ComponentType')));
 const GeneralSettings = Loadable(lazy(() => import('views/utilities/GeneralSettings')));
 const ForgotPassword = Loadable(lazy(() => import('views/utilities/ChangePassword')));
+const ActivitiesPercentageSplit = Loadable(lazy(()=> import('views/utilities/ActivitiesPercentageSplit')))
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -54,6 +56,10 @@ const MainRoutes = {
         {
           path: 'estimation-list',
           element: <EstimationList />
+        }, 
+        {
+          path: 'estimate-summary/:clientId',
+          element: <EstimateSummary/>
         }
       ]
     },
@@ -81,6 +87,15 @@ const MainRoutes = {
         {
           path: 'general-settings',
           element: <GeneralSettings />
+        }
+      ]
+    },
+    {
+      path: 'master',
+      children: [
+        {
+          path: 'activities-split',
+          element: <ActivitiesPercentageSplit />
         }
       ]
     },
