@@ -4,8 +4,21 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchComponents,addComponents, deleteComponents,componentSelector, setDeletedComponentIndex, updatingComponentName,  } from '../../store/reducers/componentReducer';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import {
+  fetchComponents,
+  addComponents,
+  deleteComponents,
+  componentSelector,
+  setDeletedComponentIndex,
+  updatingComponentName
+} from '../../store/reducers/componentReducer';
+import { Box, Typography, DialogActions, Button, TextField } from '@mui/material';
 import { API_STATUS } from '../../utils/constants';
+import MainCard from 'ui-component/cards/MainCard';
+import SubCard from 'ui-component/cards/SubCard';
+
 const ComponentType = () => {
   const [components, setComponents] = useState([]);
   const [newComponent, setNewComponent] = useState('');
@@ -16,17 +29,17 @@ const ComponentType = () => {
   const [defaultComponent, setDefaultComponent] = useState(null);
   const [confirmModalIsOpen, setConfirmModalIsOpen] = useState(false);
   const [confirmComponentIndex, setConfirmComponentIndex] = useState(null);
-  const componentloading = useSelector(componentSelector).componentloading
+  const componentloading = useSelector(componentSelector).componentloading;
   const addcomponentloading = useSelector(componentSelector).addcomponentloading;
   const deletecomponentloading = useSelector(componentSelector).deletecomponentloading;
-  const updatecomponentnameloading = useSelector(componentSelector).updatecomponentnameloading
-  const deletedComponentIndex = useSelector(componentSelector).deletedComponentIndex
-  const componentData = useSelector(componentSelector).loadData
-  const addComponentData = useSelector(componentSelector).addcomponentloadData
-  const updatecomponentnameData = useSelector(componentSelector).updatecomponentnameloadData
+  const updatecomponentnameloading = useSelector(componentSelector).updatecomponentnameloading;
+  const deletedComponentIndex = useSelector(componentSelector).deletedComponentIndex;
+  const componentData = useSelector(componentSelector).loadData;
+  const addComponentData = useSelector(componentSelector).addcomponentloadData;
+  const updatecomponentnameData = useSelector(componentSelector).updatecomponentnameloadData;
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchComponents())
+    dispatch(fetchComponents());
   }, [dispatch]);
 
   useEffect(() => {
@@ -34,84 +47,68 @@ const ComponentType = () => {
   }, [components]);
 
   useEffect(() => {
-    console.log(componentloading, "loading")
+    console.log(componentloading, 'loading');
     if (componentloading === API_STATUS.FULFILLED) {
-      
-      console.log("Component data got Successfully!");
-      
-      setComponents(componentData)
-     
-      const defaultComponentIndex = componentData.findIndex(component => component.default === 'default');
+      console.log('Component data got Successfully!');
+
+      setComponents(componentData);
+
+      const defaultComponentIndex = componentData.findIndex((component) => component.default === 'default');
       setDefaultComponent(defaultComponentIndex);
-    
     }
     if (componentloading === API_STATUS.REJECTED) {
-      
       console.log('Component data got failed');
-      
     }
-     
-    
-  
-  }, [componentloading])
+  }, [componentloading]);
 
-
-
-  useEffect(()=>{
-    console.log(addcomponentloading, "add component loading")
-    console.log(components)
+  useEffect(() => {
+    console.log(addcomponentloading, 'add component loading');
+    console.log(components);
     if (addcomponentloading === API_STATUS.FULFILLED) {
-      
-      console.log("Component added got Successfully!");
-      const newComponentObj = addComponentData
-      console.log(newComponentObj)
+      console.log('Component added got Successfully!');
+      const newComponentObj = addComponentData;
+      console.log(newComponentObj);
       setComponents([...components, newComponentObj]);
-      console.log(components)
+      console.log(components);
       setNewComponent('');
       setNewComponentModalIsOpen(false);
       if (newComponentObj.isDefault) {
         setDefaultComponent(components.length);
       }
-      console.log(components)
+      console.log(components);
     }
-    
+
     if (addcomponentloading === API_STATUS.REJECTED) {
-      
       console.log('Component data got failed');
-  }
+    }
+  }, [addcomponentloading]);
 
-  },[addcomponentloading])
-
-  useEffect(()=>{
-    console.log(updatecomponentnameloading, "update component name loading")
-    console.log(components)
+  useEffect(() => {
+    console.log(updatecomponentnameloading, 'update component name loading');
+    console.log(components);
     if (updatecomponentnameloading === API_STATUS.FULFILLED) {
       const updatedComponents = [...components];
-      
+
       updatedComponents[selectedComponentIndex] = updatecomponentnameData;
       setComponents(updatedComponents);
-      console.log(updatecomponentnameData)
+      console.log(updatecomponentnameData);
       if (updatecomponentnameData.default === 'default') {
         setDefaultComponent(confirmComponentIndex);
       }
-      console.log(defaultComponent)
+      console.log(defaultComponent);
       closeEditModal();
-      
     }
-    
+
     if (updatecomponentnameloading === API_STATUS.REJECTED) {
-      
       console.log('ComponentName update got failed');
-  }
+    }
+  }, [updatecomponentnameloading]);
 
-  },[updatecomponentnameloading])
-
-
-console.log(defaultComponent)
-  useEffect(()=>{
-    console.log(deletecomponentloading, "loading");
+  console.log(defaultComponent);
+  useEffect(() => {
+    console.log(deletecomponentloading, 'loading');
     if (deletecomponentloading === API_STATUS.FULFILLED && deletedComponentIndex !== null) {
-      console.log("Component deleted Successfully!");
+      console.log('Component deleted Successfully!');
       const updatedComponents = [...components];
       updatedComponents.splice(deletedComponentIndex, 1); // Use the deletedComponentIndex to remove the deleted component
       setComponents(updatedComponents);
@@ -122,62 +119,67 @@ console.log(defaultComponent)
     if (deletecomponentloading === API_STATUS.REJECTED) {
       console.log('Component not deleted');
     }
-  }, [deletecomponentloading])
+  }, [deletecomponentloading]);
 
   const addComponent = () => {
-    if(newComponent.trimEnd() !== '') {
-      
-      dispatch(addComponents({
-        name: newComponent,
-        isDefault: defaultComponent === null || components.length === 0,
-      }))
+    if (newComponent.trimEnd() !== '') {
+      dispatch(
+        addComponents({
+          name: newComponent,
+          isDefault: defaultComponent === null || components.length === 0
+        })
+      );
     }
-  }
+  };
 
   const updateComponentName = () => {
     if (selectedComponentIndex !== null && updatedComponentName.trim() !== '') {
       const componentToUpdate = components[selectedComponentIndex];
-      console.log(componentToUpdate)
+      console.log(componentToUpdate);
       const updatedComponent = {
         ...componentToUpdate,
         name: updatedComponentName.trim(),
-        isDefault: componentToUpdate.isDefault || selectedComponentIndex === defaultComponent,
+        isDefault: componentToUpdate.isDefault || selectedComponentIndex === defaultComponent
       };
-      console.log(updatedComponent)
-      dispatch(updatingComponentName({
-        id : componentToUpdate.id,
-        name: updatedComponentName.trim(),
-        isDefault: componentToUpdate.isDefault || selectedComponentIndex === defaultComponent,
-      }))}
-
-  }
+      console.log(updatedComponent);
+      dispatch(
+        updatingComponentName({
+          id: componentToUpdate.id,
+          name: updatedComponentName.trim(),
+          isDefault: componentToUpdate.isDefault || selectedComponentIndex === defaultComponent
+        })
+      );
+    }
+  };
 
   const handleConfirmDefault = () => {
     const componentToUpdate = components[confirmComponentIndex];
     const updatedComponent = {
       ...componentToUpdate,
-      isDefault: true,
+      isDefault: true
     };
-    console.log(updatedComponent)
-    dispatch(updatingComponentName({
-      id : componentToUpdate.id,
-      name : componentToUpdate.name,
-      isDefault :true
-    }))
+    console.log(updatedComponent);
+    dispatch(
+      updatingComponentName({
+        id: componentToUpdate.id,
+        name: componentToUpdate.name,
+        isDefault: true
+      })
+    );
     setConfirmModalIsOpen(false);
-    
-  }
+  };
   const deleteComponent = (index) => {
     const componentToDelete = components[index];
-    const id = componentToDelete.id
-    console.log(id)
+    const componentName = componentToDelete.name;
+    const id = componentToDelete.id;
+    console.log(id);
     dispatch(setDeletedComponentIndex(index));
-    dispatch(deleteComponents(id))
-  }
-  
+    dispatch(deleteComponents(id));
 
-  
-
+    // Show toast message when the component is deleted
+    toast.success(`${componentName} component successfully deleted!`, { autoClose: 4000
+      });
+  };
   const handleAddComponent = () => {
     setNewComponentModalIsOpen(true);
   };
@@ -203,47 +205,51 @@ console.log(defaultComponent)
     setConfirmModalIsOpen(true);
   };
 
-
   const handleCancelConfirm = () => {
     setConfirmComponentIndex(null);
     setConfirmModalIsOpen(false);
   };
 
-
   return (
-    <div className="component-manager">
-      <div className='component-title'>
-        <h2>Component Type</h2>
-        <button className="add-component-button" onClick={handleAddComponent}>
-          Add Component
-          <AddCircleOutlineIcon/>
-        </button>
-      </div>
-      {components.map((component, index) => (
-        <div className='component-items' key={index}>
-          <div className={`component ${defaultComponent === index ? 'default' : ''}`}>
-            <p>{component.name}</p>
-            <div className='set-define'>
+    <MainCard style={{ height: '100%' }} title="Component Type">
+      <SubCard>
+        <Box display="flex" mb={6} justifyContent="center" >
+          <Button variant="outlined" className="component-title" onClick={handleAddComponent}>
+            Add Component
+            <AddCircleOutlineIcon />
+          </Button>
+        </Box>
+        {components.map((component, index) => (
+          <Box
+            display="flex"
+            justifyContent="space-between"
+            mb={1}
+            key={index}
+            alignItems="center"
+            className={`component ${defaultComponent === index ? 'default' : ''}`}
+          >
+            <Typography variant="body1">{component.name}</Typography>
+            <Box display="flex" gap="12px">
               {defaultComponent === index ? (
-                <span className="default-badge">Default</span>
+                <Button variant="body1" className="default-badge">
+                  Default
+                </Button>
               ) : (
-                <button
-                  className="default-button"
-                  onClick={() => handleSetDefault(index)}
-                >
+                <Button variant="body1" className="default-button" onClick={() => handleSetDefault(index)}>
                   Set as Default
-                </button>
+                </Button>
               )}
-              <button className="edit-button" onClick={() => openEditModal(index)}>
+
+              <Button className="edit-button view-btn" onClick={() => openEditModal(index)}>
                 <EditIcon sx={{ color: 'black' }} />
-              </button>
-              <button className="delete-button" onClick={() => deleteComponent(index)}>
+              </Button>
+              <Button className="delete-button view-btn" onClick={() => deleteComponent(index)}>
                 <DeleteIcon sx={{ color: 'black' }} />
-              </button>
-            </div>
-          </div>
-        </div>
-      ))}
+              </Button>
+            </Box>
+          </Box>
+        ))}
+      </SubCard>
 
       {/* Add New Component Modal */}
       <Modal
@@ -253,16 +259,18 @@ console.log(defaultComponent)
         className="modal"
         overlayClassName="modal-overlay"
       >
-        <div className="modal-content">
-          <h2>Add New Component</h2>
-          <input
-            type="text"
-            value={newComponent}
-            onChange={(e) => setNewComponent(e.target.value)}
-          />
-          <button className="modal-button" onClick={addComponent}>Add</button>
-          <button className="modal-button" onClick={() => setNewComponentModalIsOpen(false)}>Cancel</button>
-        </div>
+        <DialogActions className="modal-content flex-column">
+          <Typography variant="h3">Add New Component</Typography>
+          <TextField type="text" style={{minWidth:"270px"}} value={newComponent} onChange={(e) => setNewComponent(e.target.value)} />
+          <Box  display="flex" justifyContent='space-between' alignSelf="end" gap="8px">
+          <Button variant="contained" className="primary-btn" onClick={addComponent}>
+            Add
+          </Button>
+          <Button variant="contained" className="primary-btn" onClick={() => setNewComponentModalIsOpen(false)}>
+            Cancel
+          </Button>
+          </Box>
+        </DialogActions>
       </Modal>
 
       {/* Edit Component Modal */}
@@ -273,16 +281,18 @@ console.log(defaultComponent)
         className="modal"
         overlayClassName="modal-overlay"
       >
-        <div className="modal-content">
-          <h2>Edit Component Name</h2>
-          <input
-            type="text"
-            value={updatedComponentName}
-            onChange={(e) => setUpdatedComponentName(e.target.value)}
-          />
-          <button className="modal-button" onClick={handleEditComponentName}>Save</button>
-          <button className="modal-button" onClick={closeEditModal}>Cancel</button>
-        </div>
+        <DialogActions className="modal-content flex-column">
+          <Typography variant="h3">Edit Component Name</Typography>
+          <TextField type="text" style={{minWidth:"270px"}} value={updatedComponentName} onChange={(e) => setUpdatedComponentName(e.target.value)} />
+          <Box  display="flex" justifyContent='space-between' alignSelf="end" gap="8px">
+          <Button variant="contained" className="primary-btn" onClick={handleEditComponentName}>
+            Save
+          </Button>
+          <Button variant="contained" className="primary-btn" onClick={closeEditModal}>
+            Cancel
+          </Button>
+          </Box>
+        </DialogActions>
       </Modal>
 
       {/* Set Default Confirmation Modal */}
@@ -293,14 +303,19 @@ console.log(defaultComponent)
         className="modal"
         overlayClassName="modal-overlay"
       >
-        <div className="modal-content">
-          <h2>Set as Default</h2>
-          <p>Are you sure you want to set this component as the default?</p>
-          <button className="modal-button" onClick={handleConfirmDefault}>Yes</button>
-          <button className="modal-button" onClick={handleCancelConfirm}>No</button>
-        </div>
+        <DialogActions className="modal-content flex-column">
+          <Typography variant="h3">Set as Default</Typography>
+          <Typography variant="body1">Are you sure you want to set this component as the default?</Typography>
+          <Box  display="flex" justifyContent='space-between' alignSelf="end" gap="8px">
+          <Button variant="contained" className="primary-btn" onClick={handleConfirmDefault}>
+            Yes
+          </Button>
+          <Button variant="contained" className="primary-btn" onClick={handleCancelConfirm}>
+            No
+          </Button></Box>
+        </DialogActions>
       </Modal>
-    </div>
+    </MainCard>
   );
 };
 

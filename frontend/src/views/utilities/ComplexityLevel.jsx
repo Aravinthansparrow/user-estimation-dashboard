@@ -135,23 +135,28 @@ function Complexity() {
           className="modal"
           overlayClassName="modal-overlay"
         >
-          <div className="modal-content">
+          <DialogActions className="modal-content flex-column gap-0">
             <Typography variant="h3" className="confirm-header">
               Confirmation
             </Typography>
-
-            <Typography variant="body1" className="confirm-para">
-              Complexity: {selectedValue}{' '}
-            </Typography>
-            <Typography variant="body1" className="confirm-para">
-              Number of Days: {selectedDays}{' '}
-            </Typography>
+            <Box display="flex" width="100%" alignItems="center">
+              <Typography variant="body1" className="confirm-para">
+                Complexity:
+              </Typography>{' '}
+              <p className='content-para'>{selectedValue} </p>
+            </Box>
+            <Box display="flex" ml={0} alignItems="center" width="100%" justifyContent='space-between'>
+              <Typography variant="body1" className="confirm-para">
+                Number of Days:
+              </Typography>{' '}
+              <p className='content-para'>{selectedDays} </p>
+            </Box>
             <DialogActions>
               <Button variant="contained" className="primary-btn" onClick={handlePopupClose}>
                 Close
               </Button>
             </DialogActions>
-          </div>
+          </DialogActions>
         </Dialog>
       </SubCard>
     </MainCard>
