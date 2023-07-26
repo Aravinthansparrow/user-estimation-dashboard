@@ -349,7 +349,7 @@ const EstimateSummary = () => {
             </TableContainer>
           </SubCard>
          
-          <Box className="activities-table">
+          <Box className="activities-table" style={{maxWidth:"630px"}}>
             <Typography variant="h3" style={{ margin: '20px 0px' }}>
               Activities
             </Typography>
