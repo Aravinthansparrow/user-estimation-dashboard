@@ -1,17 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Tilt } from 'react-tilt';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-
+import { fetchEstimateList, estimateListSelector } from '../../../store/reducers/clientReducer';
+import { setCreated, setApproved, setUnApproved, setRejected } from '../../../store/reducers/clientReducer';
+import { API_STATUS } from '../../../utils/constants';
 const NumberCards = () => {
+  const loading = useSelector(estimateListSelector).loading;
+const data = useSelector(estimateListSelector).loadData;
+const [clients, setClients] = useState([]);
   const reduxCreated = useSelector((state) => state.estimateList.created);
   const reduxApproved = useSelector((state) => state.estimateList.approved);
   const reduxUnApproved = useSelector((state) => state.estimateList.notapproved);
   const reduxRejected = useSelector((state) => state.estimateList.rejected);
-  console.log(reduxApproved);
+ 
   const [cardAnimation, setCardAnimation] = useState(false);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    // Count the number of rejected and not approved estimates
+    const rejectedEstimates = clients.filter((client) => client.status === 'rejected');
+    const notApprovedEstimates = clients.filter((client) => client.status !== 'approved');
+    const approvedEstimates = clients.filter((client) => client.status === 'approved');
+    const createdCount = clients.length;
+    const rejectedCount = rejectedEstimates.length;
+    const notApprovedCount = notApprovedEstimates.length;
 
+    // Count the number of approved estimates
+    const approvedCount = approvedEstimates.length;
+
+    dispatch(setCreated(createdCount));
+    dispatch(setApproved(approvedCount));
+    dispatch(setRejected(rejectedCount));
+    dispatch(setUnApproved(notApprovedCount));
+  }, [clients, dispatch]);
+
+  useEffect(() => {
+    // Dispatch the async thunk to fetch data from the table
+    dispatch(fetchEstimateList()); // Replace 'params' with any necessary parameters
+  }, [dispatch]);
+
+  useEffect(() => {
+    console.log(loading, 'loading');
+    if (loading === API_STATUS.FULFILLED) {
+      console.log('data got Successfully!');
+      setClients(data);
+     
+    }
+    if (loading === API_STATUS.REJECTED) {
+      console.log('data got failed');
+    }
+  }, [loading]);
   useEffect(() => {
     setCardAnimation(true);
   }, []);

@@ -11,7 +11,9 @@ import { API_STATUS } from '../../utils/constants';
 import { Box, Button, TextField, DialogActions, Typography, Paper } from '@mui/material';
 import Pagination from 'ui-component/pagination/pagination';
 import MainCard from 'ui-component/cards/MainCard';
-
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime'; // Import the relativeTime plugin
+import 'dayjs/locale/en';
 const EstimateList = () => {
   const [clients, setClients] = useState([]);
   const [selectedClientId, setSelectedClientId] = useState(null);
@@ -27,7 +29,8 @@ const EstimateList = () => {
   const loading = useSelector(estimateListSelector).loading;
   const changestatus = useSelector(estimateListSelector).changestatus;
   const data = useSelector(estimateListSelector).loadData;
-
+  dayjs.extend(relativeTime); // Extend dayjs with the relativeTime plugin
+  dayjs.locale('en');
   // Add pagination state
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;
@@ -232,7 +235,7 @@ const EstimateList = () => {
                     {calculateSerialNumber(index)}
                   </Typography>
                   <Typography variant="body1" className="head-date">
-                    {client.createdAt.substring(0, 10)}
+                  {dayjs(client.createdAt).format('DD-MM-YYYY')}
                   </Typography>
                   <Typography variant="body1" className="head-name">
                     {client.clientName}

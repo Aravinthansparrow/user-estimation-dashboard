@@ -32,12 +32,12 @@ const Client = sequelize.define('Client', {
     type: DataTypes.DATE,
     allowNull: false,
     defaultValue: DataTypes.NOW,
-    get() {
-      // Convert the date to "dd-mm-yyyy" format
-      const date = this.getDataValue('createdAt');
-      const formattedDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
-      return formattedDate;
-    },
+    // get() {
+    //   // Convert the date to "dd-mm-yyyy" format
+    //   const date = this.getDataValue('createdAt');
+    //   const formattedDate = `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
+    //   return formattedDate;
+    // },
   },
 });
 
