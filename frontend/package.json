@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "user/login",
   "dependencies": {
+    "@canvasjs/react-charts": "^1.0.0",
     "@emotion/cache": "^11.9.3",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
@@ -16,6 +17,7 @@
     "@tabler/icons": "^1.72.0",
     "apexcharts": "^3.35.3",
     "axios": "^1.4.0",
+    "dayjs": "^1.11.9",
     "formik": "^2.2.9",
     "framer-motion": "^6.3.16",
     "joi": "^17.9.2",

@@ -394,4 +394,5 @@ const YourComponent = () => {
   );
 };
 
-export default YourComponent;
+export default YourComponent
+

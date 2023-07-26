@@ -31,6 +31,7 @@ const EstimateSummary = () => {
   
   const [overallCosting, setOverallCosting] = useState(0);
   const [totalDevEffortHours, setTotalDevEffortHours] = useState(0);
+  const [totalSecondColumn, setTotalSecondColumn] = useState('');
   const [totalDevEffortStoryPoints, setTotalDevEffortStoryPoints] = useState(0);
   const clientloading = useSelector(estimateListSelector).clientloading;
   const getworkitemloading = useSelector(workItemSelector).getworkitemloading;
@@ -145,7 +146,11 @@ useEffect(()=> {
 
    console.log(activitiesLoadData)
    
-  
+   const totalSecondColumn = activitiesLoadData.reduce(
+    (total, activity) => total + Math.round((activity.percentagesplit * totalDevEffortStoryPoints) / 100),
+    0
+  );
+  setTotalSecondColumn(totalSecondColumn)
   
   }
   if (activitiesloading === API_STATUS.REJECTED){
@@ -224,10 +229,7 @@ useEffect(()=> {
       "https://mail.google.com/mail/u/0/?tab=rm&ogbl#inbox?compose=new";
     window.open(emailClientLink, "_blank");
   };
-  const totalSecondColumn = activitiesLoadData.reduce(
-    (total, activity) => total + Math.round((activity.percentagesplit * totalDevEffortStoryPoints) / 100),
-    0
-  );
+  
 
   // Calculate the total for the third column of the "Activities" table
   const totalThirdColumn = totalSecondColumn * hoursPerStoryPoint;

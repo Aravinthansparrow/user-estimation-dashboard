@@ -1,309 +1,91 @@
-import PropTypes from 'prop-types';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import {useDispatch, useSelector } from 'react-redux';
 
-// material-ui
-import { useTheme } from '@mui/material/styles';
-import { Avatar, Button, CardActions, CardContent, Divider, Grid, Menu, MenuItem, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { fetchEstimateList, estimateListSelector } from '../../../store/reducers/clientReducer';
+import { API_STATUS } from '../../../utils/constants';
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime'; // Import the relativeTime plugin
+import 'dayjs/locale/en';
 
-// project imports
-import BajajAreaChartCard from './BajajAreaChartCard';
-import MainCard from 'ui-component/cards/MainCard';
-import SkeletonPopularCard from 'ui-component/cards/Skeleton/PopularCard';
-import { gridSpacing } from 'store/constant';
 
-// assets
-import ChevronRightOutlinedIcon from '@mui/icons-material/ChevronRightOutlined';
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
-import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
+const SmallEstimateList = () => {
+  const [clients, setClients] = useState([]);
+  const [filteredClients, setFilteredClients] = useState([]);
+  const loading = useSelector(estimateListSelector).loading;
+  const data = useSelector(estimateListSelector).loadData;
+  dayjs.extend(relativeTime); // Extend dayjs with the relativeTime plugin
+  dayjs.locale('en'); // Set the locale to English
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  useEffect(() => {
+    // Dispatch the async thunk to fetch data from the table
+    dispatch(fetchEstimateList()); 
+  }, [dispatch]);
+  useEffect(() => {
+    console.log(loading, 'loading');
+    if (loading === API_STATUS.FULFILLED) {
+      console.log('data got Successfully!');
+      setClients(data);
+      
+    }
+    if (loading === API_STATUS.REJECTED) {
+      console.log('data got failed');
+    }
+  }, [loading]);
 
-// ==============================|| DASHBOARD DEFAULT - POPULAR CARD ||============================== //
+ useEffect(()=> {
+  const lastFiveClients = clients.slice(-5).reverse(); // Get the last 5 elements
+      setFilteredClients(lastFiveClients);
+ }, [clients])
 
-const PopularCard = ({ isLoading }) => {
-  const theme = useTheme();
-
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleView = (clientId) => {
+    // setSelectedClientId(clientId);
+    console.log(clientId)
+    // setShowFilters(false);
+    navigate(`/utils/estimate-summary/${clientId}`);
   };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  
 
   return (
-    <>
-      {isLoading ? (
-        <SkeletonPopularCard />
-      ) : (
-        <MainCard content={false}>
-          <CardContent>
-            <Grid container spacing={gridSpacing}>
-              <Grid item xs={12}>
-                <Grid container alignContent="center" justifyContent="space-between">
-                  <Grid item>
-                    <Typography variant="h4">Popular Stocks</Typography>
-                  </Grid>
-                  <Grid item>
-                    <MoreHorizOutlinedIcon
-                      fontSize="small"
-                      sx={{
-                        color: theme.palette.primary[200],
-                        cursor: 'pointer'
-                      }}
-                      aria-controls="menu-popular-card"
-                      aria-haspopup="true"
-                      onClick={handleClick}
-                    />
-                    <Menu
-                      id="menu-popular-card"
-                      anchorEl={anchorEl}
-                      keepMounted
-                      open={Boolean(anchorEl)}
-                      onClose={handleClose}
-                      variant="selectedMenu"
-                      anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'right'
-                      }}
-                      transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right'
-                      }}
-                    >
-                      <MenuItem onClick={handleClose}> Today</MenuItem>
-                      <MenuItem onClick={handleClose}> This Month</MenuItem>
-                      <MenuItem onClick={handleClose}> This Year </MenuItem>
-                    </Menu>
-                  </Grid>
-                </Grid>
-              </Grid>
-              <Grid item xs={12} sx={{ pt: '16px !important' }}>
-                <BajajAreaChartCard />
-              </Grid>
-              <Grid item xs={12}>
-                <Grid container direction="column">
-                  <Grid item>
-                    <Grid container alignItems="center" justifyContent="space-between">
-                      <Grid item>
-                        <Typography variant="subtitle1" color="inherit">
-                          Bajaj Finery
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Grid container alignItems="center" justifyContent="space-between">
-                          <Grid item>
-                            <Typography variant="subtitle1" color="inherit">
-                              $1839.00
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Avatar
-                              variant="rounded"
-                              sx={{
-                                width: 16,
-                                height: 16,
-                                borderRadius: '5px',
-                                backgroundColor: theme.palette.success.light,
-                                color: theme.palette.success.dark,
-                                ml: 2
-                              }}
-                            >
-                              <KeyboardArrowUpOutlinedIcon fontSize="small" color="inherit" />
-                            </Avatar>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="subtitle2" sx={{ color: 'success.dark' }}>
-                      10% Profit
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Divider sx={{ my: 1.5 }} />
-                <Grid container direction="column">
-                  <Grid item>
-                    <Grid container alignItems="center" justifyContent="space-between">
-                      <Grid item>
-                        <Typography variant="subtitle1" color="inherit">
-                          TTML
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Grid container alignItems="center" justifyContent="space-between">
-                          <Grid item>
-                            <Typography variant="subtitle1" color="inherit">
-                              $100.00
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Avatar
-                              variant="rounded"
-                              sx={{
-                                width: 16,
-                                height: 16,
-                                borderRadius: '5px',
-                                backgroundColor: theme.palette.orange.light,
-                                color: theme.palette.orange.dark,
-                                marginLeft: 1.875
-                              }}
-                            >
-                              <KeyboardArrowDownOutlinedIcon fontSize="small" color="inherit" />
-                            </Avatar>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="subtitle2" sx={{ color: theme.palette.orange.dark }}>
-                      10% loss
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Divider sx={{ my: 1.5 }} />
-                <Grid container direction="column">
-                  <Grid item>
-                    <Grid container alignItems="center" justifyContent="space-between">
-                      <Grid item>
-                        <Typography variant="subtitle1" color="inherit">
-                          Reliance
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Grid container alignItems="center" justifyContent="space-between">
-                          <Grid item>
-                            <Typography variant="subtitle1" color="inherit">
-                              $200.00
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Avatar
-                              variant="rounded"
-                              sx={{
-                                width: 16,
-                                height: 16,
-                                borderRadius: '5px',
-                                backgroundColor: theme.palette.success.light,
-                                color: theme.palette.success.dark,
-                                ml: 2
-                              }}
-                            >
-                              <KeyboardArrowUpOutlinedIcon fontSize="small" color="inherit" />
-                            </Avatar>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="subtitle2" sx={{ color: theme.palette.success.dark }}>
-                      10% Profit
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Divider sx={{ my: 1.5 }} />
-                <Grid container direction="column">
-                  <Grid item>
-                    <Grid container alignItems="center" justifyContent="space-between">
-                      <Grid item>
-                        <Typography variant="subtitle1" color="inherit">
-                          TTML
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Grid container alignItems="center" justifyContent="space-between">
-                          <Grid item>
-                            <Typography variant="subtitle1" color="inherit">
-                              $189.00
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Avatar
-                              variant="rounded"
-                              sx={{
-                                width: 16,
-                                height: 16,
-                                borderRadius: '5px',
-                                backgroundColor: theme.palette.orange.light,
-                                color: theme.palette.orange.dark,
-                                ml: 2
-                              }}
-                            >
-                              <KeyboardArrowDownOutlinedIcon fontSize="small" color="inherit" />
-                            </Avatar>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="subtitle2" sx={{ color: theme.palette.orange.dark }}>
-                      10% loss
-                    </Typography>
-                  </Grid>
-                </Grid>
-                <Divider sx={{ my: 1.5 }} />
-                <Grid container direction="column">
-                  <Grid item>
-                    <Grid container alignItems="center" justifyContent="space-between">
-                      <Grid item>
-                        <Typography variant="subtitle1" color="inherit">
-                          Stolon
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Grid container alignItems="center" justifyContent="space-between">
-                          <Grid item>
-                            <Typography variant="subtitle1" color="inherit">
-                              $189.00
-                            </Typography>
-                          </Grid>
-                          <Grid item>
-                            <Avatar
-                              variant="rounded"
-                              sx={{
-                                width: 16,
-                                height: 16,
-                                borderRadius: '5px',
-                                backgroundColor: theme.palette.orange.light,
-                                color: theme.palette.orange.dark,
-                                ml: 2
-                              }}
-                            >
-                              <KeyboardArrowDownOutlinedIcon fontSize="small" color="inherit" />
-                            </Avatar>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                  <Grid item>
-                    <Typography variant="subtitle2" sx={{ color: theme.palette.orange.dark }}>
-                      10% loss
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </CardContent>
-          <CardActions sx={{ p: 1.25, pt: 0, justifyContent: 'center' }}>
-            <Button size="small" disableElevation>
-              View All
-              <ChevronRightOutlinedIcon />
-            </Button>
-          </CardActions>
-        </MainCard>
-      )}
-    </>
+    <div className='recent-estimate'>
+
+    
+        <div>
+          <h2>Recent Estimations</h2>
+          
+          <div>
+            <div className="list-headers undo-justify">
+            <div className="head-serial mr-29">S.No</div>
+              <div className="head-date  mr-29">Date</div>
+              <div className="head-name mr-29">Client Name</div>
+              <div className="head-by mr-29">Estimated By</div>
+              <div className="head-status mr-29">Status</div>
+              <div className="head-view">View</div>
+              </div>
+            </div>
+            <div className="list-tabs">
+              {filteredClients.map((client, index) => (
+                <div className="field-set estimate-new" key={client.id}>
+                  <div  className="head-serial index-num">{index + 1}</div>
+                  <div className="head-date">{dayjs(client.createdAt).fromNow()}</div>
+                  
+                  <div className="head-name">{client.clientName}</div>
+                  <div className="head-by">{client.createdBy}</div>
+                  <div  className="head-status">{client.status}</div>
+                
+                  <div className="head-view align-l-p">
+                    <button className="view-btn" onClick={() => handleView(client.id)}><VisibilityIcon /></button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            </div>
+         
+      
+    </div>
   );
 };
 
-PopularCard.propTypes = {
-  isLoading: PropTypes.bool
-};
-
-export default PopularCard;
+export default SmallEstimateList;

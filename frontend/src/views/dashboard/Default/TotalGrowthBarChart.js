@@ -1,135 +1,101 @@
-import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import CanvasJSReact from '@canvasjs/react-charts';
+// var CanvasJS = CanvasJSReact.CanvasJS;
+var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+//var CanvasJSReact = require('@canvasjs/react-charts');
+import { useSelector, useDispatch } from 'react-redux';
+import { setCreated, setApproved, setUnApproved, setRejected } from '../../../store/reducers/clientReducer';
+import { fetchEstimateList,  estimateListSelector } from '../../../store/reducers/clientReducer';
+import { API_STATUS } from '../../../utils/constants';
 
-// material-ui
-import { useTheme } from '@mui/material/styles';
-import { Grid, MenuItem, TextField, Typography } from '@mui/material';
+const TotalGrowthBarChart = () => {
+	
+    const [clients, setClients] = useState([]);
+const loading = useSelector(estimateListSelector).loading;
 
-// third-party
-import ApexCharts from 'apexcharts';
-import Chart from 'react-apexcharts';
+const data = useSelector(estimateListSelector).loadData;
+const dispatch = useDispatch();
+const reduxCreated = useSelector((state) => state.estimateList.created);
+const reduxApproved = useSelector((state) => state.estimateList.approved);
+const reduxUnApproved = useSelector((state) => state.estimateList.notapproved);
+const reduxRejected = useSelector((state) => state.estimateList.rejected);
+console.log(reduxCreated)
+useEffect(() => {
+// Count the number of rejected and not approved estimates
+const rejectedEstimates = clients.filter((client) => client.status === 'rejected');
+const notApprovedEstimates = clients.filter((client) => client.status !== 'approved');
+const approvedEstimates = clients.filter((client) => client.status === 'approved');
+const createdCount = clients.length;
+const rejectedCount = rejectedEstimates.length;
+const notApprovedCount = notApprovedEstimates.length;
 
-// project imports
-import SkeletonTotalGrowthBarChart from 'ui-component/cards/Skeleton/TotalGrowthBarChart';
-import MainCard from 'ui-component/cards/MainCard';
-import { gridSpacing } from 'store/constant';
+// Count the number of approved estimates
+const approvedCount = approvedEstimates.length;
 
-// chart data
-import chartData from './chart-data/total-growth-bar-chart';
+dispatch(setCreated(createdCount));
+dispatch(setApproved(approvedCount));
+dispatch(setRejected(rejectedCount));
+dispatch(setUnApproved(notApprovedCount));
+}, [clients, dispatch]);
 
-const status = [
-  {
-    value: 'today',
-    label: 'Today'
-  },
-  {
-    value: 'month',
-    label: 'This Month'
-  },
-  {
-    value: 'year',
-    label: 'This Year'
-  }
-];
+useEffect(() => {
+// Dispatch the async thunk to fetch data from the table
+dispatch(fetchEstimateList()); // Replace 'params' with any necessary parameters
+}, [dispatch]);
 
-// ==============================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||============================== //
+useEffect(() => {
+console.log(loading, 'loading');
+if (loading === API_STATUS.FULFILLED) {
+  console.log('data got Successfully!');
+  setClients(data);
+ 
+}
+if (loading === API_STATUS.REJECTED) {
+  console.log('data got failed');
+}
+}, [loading]);
+		const options = {
+			animationEnabled: true,
+			theme: "light2",
+			title:{
+				text: "Estimations"
+			},
+			axisX: {
+				title: "Status",
+				reversed: true,
+			},
+			axisY: {
+				title: "Number of estimations",
+				includeZero: true,
+				// labelFormatter: this.addSymbols
+			},
+			data: [{
+				type: "bar",
+				dataPoints: [
+					{ y: reduxCreated , label: "Created" },
+					{ y: reduxUnApproved, label: "UnApproved" },
+					{ y: reduxApproved, label: "Accepted" },
+					{ y: reduxRejected, label: "Rejected" },
+				
+				]
+			}]
+		}
+		return (
+		<div>
+			<CanvasJSChart options = {options}
+				/* onRef={ref => this.chart = ref} */
+			/>
+			{/*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/}
+		</div>
+		);
+	}
+	// addSymbols(e){
+	// 	var suffixes = ["", "K", "M", "B"];
+	// 	var order = Math.max(Math.floor(Math.log(Math.abs(e.value)) / Math.log(1000)), 0);
+	// 	if(order > suffixes.length - 1)
+	// 		order = suffixes.length - 1;
+	// 	var suffix = suffixes[order];
+	// 	return CanvasJS.formatNumber(e.value / Math.pow(1000, order)) + suffix;
+	// }
 
-const TotalGrowthBarChart = ({ isLoading }) => {
-  const [value, setValue] = useState('today');
-  const theme = useTheme();
-  const customization = useSelector((state) => state.customization);
-
-  const { navType } = customization;
-  const { primary } = theme.palette.text;
-  const darkLight = theme.palette.dark.light;
-  const grey200 = theme.palette.grey[200];
-  const grey500 = theme.palette.grey[500];
-
-  const primary200 = theme.palette.primary[200];
-  const primaryDark = theme.palette.primary.dark;
-  const secondaryMain = theme.palette.secondary.main;
-  const secondaryLight = theme.palette.secondary.light;
-
-  useEffect(() => {
-    const newChartData = {
-      ...chartData.options,
-      colors: [primary200, primaryDark, secondaryMain, secondaryLight],
-      xaxis: {
-        labels: {
-          style: {
-            colors: [primary, primary, primary, primary, primary, primary, primary, primary, primary, primary, primary, primary]
-          }
-        }
-      },
-      yaxis: {
-        labels: {
-          style: {
-            colors: [primary]
-          }
-        }
-      },
-      grid: {
-        borderColor: grey200
-      },
-      tooltip: {
-        theme: 'light'
-      },
-      legend: {
-        labels: {
-          colors: grey500
-        }
-      }
-    };
-
-    // do not load chart when loading
-    if (!isLoading) {
-      ApexCharts.exec(`bar-chart`, 'updateOptions', newChartData);
-    }
-  }, [navType, primary200, primaryDark, secondaryMain, secondaryLight, primary, darkLight, grey200, isLoading, grey500]);
-
-  return (
-    <>
-      {isLoading ? (
-        <SkeletonTotalGrowthBarChart />
-      ) : (
-        <MainCard>
-          <Grid container spacing={gridSpacing}>
-            <Grid item xs={12}>
-              <Grid container alignItems="center" justifyContent="space-between">
-                <Grid item>
-                  <Grid container direction="column" spacing={1}>
-                    <Grid item>
-                      <Typography variant="subtitle2">Total Growth</Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="h3">$2,324.00</Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item>
-                  <TextField id="standard-select-currency" select value={value} onChange={(e) => setValue(e.target.value)}>
-                    {status.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <Chart {...chartData} />
-            </Grid>
-          </Grid>
-        </MainCard>
-      )}
-    </>
-  );
-};
-
-TotalGrowthBarChart.propTypes = {
-  isLoading: PropTypes.bool
-};
-
-export default TotalGrowthBarChart;
+export default TotalGrowthBarChart;  
