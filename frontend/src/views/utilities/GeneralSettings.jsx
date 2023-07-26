@@ -17,7 +17,6 @@ import {
   Paper,
   TextField
 } from '@mui/material';
-// import { Edit } from '@mui/icons-material';
 
 const GeneralSettings = () => {
   const [modal, setModal] = useState(false);
@@ -79,25 +78,25 @@ const GeneralSettings = () => {
               <TableRow className="workitem-tab">
                 <TableCell>Version</TableCell>
                 <TableCell>
-                  <TextField name="version" value={generalSettings.version || ''} readOnly />
+                  <TextField  value={generalSettings.version || ''} readOnly />
                 </TableCell>
               </TableRow>
               <TableRow className="workitem-tab">
                 <TableCell>Document Version</TableCell>
                 <TableCell>
-                  <TextField name="document_version" value={generalSettings.document_version || ''} readOnly />
+                  <TextField value={generalSettings.document_version || ''} readOnly />
                 </TableCell>
               </TableRow>
               <TableRow className="workitem-tab">
                 <TableCell>Hours per Story Point</TableCell>
                 <TableCell>
-                  <TextField name="hours_per_story_point" value={generalSettings.hours_per_story_point || ''} readOnly />
+                  <TextField  value={generalSettings.hours_per_story_point || ''} readOnly />
                 </TableCell>
               </TableRow>
               <TableRow className="workitem-tab">
                 <TableCell>Rate per Hour</TableCell>
                 <TableCell>
-                  <TextField name="rate_per_hour" value={generalSettings.rate_per_hour || ''} readOnly />
+                  <TextField value={generalSettings.rate_per_hour || ''} readOnly />
                 </TableCell>
               </TableRow>
             </TableBody>

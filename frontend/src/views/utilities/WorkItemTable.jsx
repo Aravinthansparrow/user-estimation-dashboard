@@ -488,7 +488,7 @@ console.log(defaultComponent)
   return (
     <div>
       {!showEstimateSummary && (
-        <MainCard style={{ height: '100%' }} className="" title="Workitem Table">
+        <MainCard style={{ height: '100%' }} title="Workitem Table">
           <TableContainer className="work-item-container " component={Paper}>
             <Table>
               <TableHead>

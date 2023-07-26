@@ -131,10 +131,24 @@
 }
 
 //Button customizing
+.tab-btn{
+  padding: 13px 22px;
+    background-color: rgba(189, 232, 233, 0.7) ;
+}
+.tab-btn:hover{
+  background-color:rgb(0, 168, 171);
+  color:black;
+  font-weight: 700;
+}
 .primary-btn {
   border-radius: '20px' !important;
   background-color: rgba(189, 232, 233, 0.7)!important;
   color: rgb(0, 168, 171)!important;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+    letter-spacing: 1px;
 }
 .secondary-btn {
   background-color: rgb(0, 168, 171);
@@ -401,9 +415,18 @@
 .mr-14 {
   margin-right: 14px;
 }
+.summary-title {
+  color: #00a8ab;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 0px;
+}
 .border-null {
   border-bottom: none !important;
   padding: 9px 13px;
+}
+.border-none {
+  border-bottom:none ;
 }
 // Component Type CSS
 .content-label {
