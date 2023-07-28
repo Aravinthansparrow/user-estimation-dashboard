@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {useDispatch, useSelector } from 'react-redux';
-
+import { Box} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { fetchEstimateList, estimateListSelector } from '../../../store/reducers/clientReducer';
 import { API_STATUS } from '../../../utils/constants';
@@ -49,16 +49,12 @@ const SmallEstimateList = () => {
   
 
   return (
-    <div className='recent-estimate'>
-
-    
+    <Box className='recent-estimate'>
         <div>
           <h2>Recent Estimations</h2>
-          
           <div>
-            <div className="list-headers undo-justify">
-            <div className="head-serial mr-29">S.No</div>
-              <div className="head-date  mr-29">Date</div>
+            <div className="recent-header">
+              <div className="head-date   mr-29">Date</div>
               <div className="head-name mr-29">Client Name</div>
               <div className="head-by mr-29">Estimated By</div>
               <div className="head-status mr-29">Status</div>
@@ -66,9 +62,9 @@ const SmallEstimateList = () => {
               </div>
             </div>
             <div className="list-tabs">
-              {filteredClients.map((client, index) => (
+              {filteredClients.map((client) => (
                 <div className="field-set estimate-new" key={client.id}>
-                  <div  className="head-serial index-num">{index + 1}</div>
+                  
                   <div className="head-date">{dayjs(client.createdAt).fromNow()}</div>
                   
                   <div className="head-name">{client.clientName}</div>
@@ -76,7 +72,7 @@ const SmallEstimateList = () => {
                   <div  className="head-status">{client.status}</div>
                 
                   <div className="head-view align-l-p">
-                    <button className="view-btn" onClick={() => handleView(client.id)}><VisibilityIcon /></button>
+                    <button className="estimate-btn" onClick={() => handleView(client.id)}><VisibilityIcon /></button>
                   </div>
                 </div>
               ))}
@@ -84,7 +80,7 @@ const SmallEstimateList = () => {
             </div>
          
       
-    </div>
+    </Box>
   );
 };
 

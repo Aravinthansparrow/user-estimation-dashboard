@@ -53,9 +53,170 @@
   }
 }
 
+// ==============================|| BARCARDS ||============================== //
+.client-part{
+  background-color: white;
+    padding: 17px 20px 0px 20px;
+    border-radius: 12px;
+    width: 25%;
+    overflow: hidden;
+}
+.bar-container {
+  padding: 12px;
+    background: white;
+    border-radius: 12px;
+    position: relative;
+    z-index: 93;
+}
+.client-box {
+  margin: 8px 0px;
+  padding: 0px;
+  justify-content: space-between;
+}
+
+.top-names{
+  list-style: none;
+  font-size: 14px;
+  color: rgb(33, 43, 54);
+  font-weight: 500;
+}
+.favourite{
+  font-size: 14px;
+  color: rgb(99, 115, 129);
+}
+.event-icon{
+  display: flex;
+  width: 35px;
+  height: 35px;
+  color: rgb(0, 167, 111);
+  border-radius: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  background: rgba(0, 167, 111, 0.08);
+}
+.client-box:nth-child(2) .event-icon{
+  color: rgb(0, 184, 217);
+  
+    background-color: rgba(0, 184, 217, 0.08);
+}
+.client-box:nth-child(3) .event-icon{
+  color: rgb(255, 86, 48);
+  background-color: rgba(255, 86, 48, 0.08);
+}
+.client-icon{
+ 
+  color: rgb(12 9 9 / 67%);
+  align-items: center;
+  display: flex;
+  width: 35px;
+  height: 35px;
+  border-radius: 100%;
+  justify-content: center;
+  
+  background-image: linear-gradient(135deg, rgb(55 61 73 / 18%) 0%, rgb(37 40 45 / 24%) 100%);
+}
+.client-icon svg {
+  font-size: 26px;
+}
+.client-names{
+  padding: 0px;
+ 
+}
+.card {
+  color: rgb(6, 27, 100);
+  transition: 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  background: linear-gradient(135deg, rgba(37, 198, 112, 0.56), rgb(25 200 141 / 54%)) rgba(255, 255, 255, 0.83);
+  font-size: 1.875rem;
+  border-radius: 12px;
+  padding: 30px 0px;
+  box-shadow: rgb(37 198 112 / 47%) 0px 1px 100px 0px;
+    text-align: center;
+    width: 23%;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+.card-hold {
+  display: flex;
+    border-radius: 50%;
+    -webkit-box-align: center;
+    align-items: center;
+    width: 64px; 
+    height: 64px; 
+    -webkit-box-pack: center;
+    justify-content: center;
+    color: rgb(16 105 58 / 89%);
+    background-image: linear-gradient(135deg, rgba(16, 57, 150, 0) 0%, rgba(16, 57, 150, 0.24) 100%);
+    padding: 33px;
+}
+.card:nth-child(2) .card-hold{
+  padding: 10px;
+  width: 90px;
+  height: 90px;
+}
+.card:nth-child(3) .card-hold{
+  padding: 10px;
+  width: 90px;
+  height: 90px;
+}
+.card:nth-child(4) .card-hold{
+  padding: 10px;
+  background-image: linear-gradient(135deg, rgba(183, 33, 54, 0) 0%, rgba(183, 33, 54, 0.24) 100%);
+  width: 90px;
+  height: 90px;
+}
+.count-create{
+  font-size: 35px;
+  font-weight: 600;
+  margin: 10px 0px 5px 0px;
+ color: rgb(16 105 58 / 89%);
+}
+.tag-name{
+  opacity: 0.72;
+  line-height: 1.57143;
+  color: rgb(16 105 58 / 89%);
+    font-size: 16px;
+    font-weight: 700;
+}
+.split-tag{
+  margin-top: 10px;
+  line-height: 1.57143;
+
+    font-size: 20px;
+    font-weight: 700;
+}
+.card-icon {
+  font-size: 32px;
+}
+.card:nth-child(2){
+  color: rgb(122, 79, 1);
+  box-shadow: rgba(255, 171, 0, 0.23) 0px 38px 100px 0px;
+  background: linear-gradient(135deg, rgba(255, 171, 0, 0.35), rgb(232 144 114 / 18%)) rgb(224 180 90 / 36%);
+}
+.card:nth-child(3){
+  color: rgb(7 133 135);
+  box-shadow: rgba(150, 219, 220, 0.97) 0px 26px 100px 0px;
+  background: rgb(150 219 220 / 97%);
+}
+.card:nth-child(4){
+  color: rgb(122, 12, 46);
+  background: rgb(228 188 164 / 64%);
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: rgba(228, 188, 164, 0.55) 0px 97px 162px 0px;
+}
+.defaultcard{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .work-item-container {
   overflow: auto !important; /* Enable vertical scrollbar */
   position: relative;
+  padding-bottom: 15px;
 }
 
 .work-item-container::-webkit-scrollbar {
@@ -164,26 +325,15 @@
   border-radius: 100px;
   font-size: 13px;
  padding: 2px 11px;
-  color: white !important;
+ color: rgb(34, 154, 22) !important;
   margin-right: 5px;
   cursor: not-allowed !important;
   pointer-events: all !important;
   border: none;
-  opacity: 0.5;
-  background-color: green;
-}
-.disable-app:hover {
-  color: white !important;
-  opacity: 0.5;
-  background-color: green;
+  background-color: rgba(84, 214, 44, 0.16);
 }
 .form-control{
   margin-bottom: 15px;
-}
-.disable-rej:hover {
-  color: white !important;
-  opacity: 0.5;
-  background-color: red;
 }
 .pwd-hint{
   margin-bottom: 15px;
@@ -192,20 +342,19 @@
   border-radius: 100px;
   font-size: 13px;
  padding: 2px 11px;
-  color: white !important;
+ color: rgb(183, 33, 54) !important;
   margin-right: 5px;
   border: none;
-  opacity: 0.5;
   cursor: not-allowed !important;
   pointer-events: all !important;
-  background-color: red;
+  background-color: rgba(255, 72, 66, 0.16);
 }
 .rej-btn {
   border-radius: 100px;
   font-size: 13px;
  padding: 2px 11px;
-  background-color: transparent;
- 
+ color: rgb(183, 33, 54) !important;
+ background-color: transparent;
   margin-right: 5px;
   cursor: pointer;
   border: none;
@@ -222,7 +371,7 @@
   border: 2px solid #1fa31fc2;
 }
 .rej-btn:hover {
-  background-color: red;
+  background-color: #f42323d4;
   color: white !important;
 }
 .app-btn:hover{
@@ -242,6 +391,51 @@
 }
 .gap-0{
   gap: 0px !important;
+}
+.CircularProgressbar .CircularProgressbar-trail {
+  stroke: #8476765e !important;
+  stroke-linecap: round;
+}
+.pl-10 {
+  padding-left: 10px !important;
+}
+.estimate-new {
+  padding: 7px 0px 7px 10px !important;
+  border-bottom: 1px solid #d2d9e2;
+}
+.estimate-btn {
+  width: unset !important;
+    color: #364152;
+    background-color: rgba(189, 232, 233, 0.7);
+    padding: 8px;
+    cursor: pointer;
+    height: 38px;
+    border: none;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+}
+.estimate-btn:hover{
+  background-color: #00a8ab;
+  color: white;
+}
+.estimate-new:last-child {
+  border-bottom: none !important;
+}
+.recent-estimate{
+  background-color: white;
+  position: relative;
+  z-index: 10;
+  padding: 15px;
+  border-radius: 12px;
+}
+.recent-header {
+  background: rgb(244, 246, 248);
+  color: #00a8ab;
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 10px;
 }
 // ==============================|| ANIMATION KEYFRAMES ||============================== //
 

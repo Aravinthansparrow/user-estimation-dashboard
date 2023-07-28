@@ -22,7 +22,8 @@ import {
   MenuItem,
   TextField,
   TextareaAutosize,
-  Tooltip
+  Tooltip,
+  Box
 } from '@mui/material';
 
 const WorkItem = () => {
@@ -232,7 +233,7 @@ console.log(defaultComponent)
 
       return (
         <TableRow className="table-rows" key={index}>
-          <TableCell>{index + 1}</TableCell>
+          <TableCell className="workitem-data">{index + 1}</TableCell>
 
           <TableCell className="workitem-data">
             <Tooltip
@@ -497,12 +498,14 @@ console.log(defaultComponent)
               <TableBody className="table-body-container">{renderTableBody()}</TableBody>
             </Table>
           </TableContainer>
+          <Box display="flex">
           <Button variant="contained" onClick={addRow} className="primary-btn" style={{ margin: '20px 12px 0px 0px' }}>
             Add Row
           </Button>
           <Button variant="contained" onClick={handleSubmit} className="primary-btn" style={{ margin: '20px 0px 0px 0px' }}>
             Submit
           </Button>
+          </Box>
         </MainCard>
       )}
     </div>

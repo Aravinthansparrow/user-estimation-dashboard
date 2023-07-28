@@ -349,7 +349,7 @@ const EstimateSummary = () => {
             </TableContainer>
           </SubCard>
          
-          <Box className="activities-table" style={{maxWidth:"630px"}}>
+          <Box className="activities-table" style={{maxWidth:"800px"}}>
             <Typography variant="h3" style={{ margin: '20px 0px' }}>
               Activities
             </Typography>
@@ -365,9 +365,9 @@ const EstimateSummary = () => {
                 <TableBody>
                   {activitiesLoadData.map((activity, index) => (
                     <TableRow key={index}>
-                      <TableCell>{activity.activity}</TableCell>
+                      <TableCell style={{ padding:"9px" }}>{activity.activity}</TableCell>
                       <TableCell style={{ textAlign: 'center',padding:"9px" }}>{Math.round((activity.percentagesplit * totalDevEffortStoryPoints) / 100)}</TableCell>
-                      <TableCell style={{ textAlign: 'center' }}>{Math.round((activity.percentagesplit * totalDevEffortStoryPoints) / 100) * hoursPerStoryPoint}</TableCell>
+                      <TableCell style={{ textAlign: 'center',padding:"9px" }}>{Math.round((activity.percentagesplit * totalDevEffortStoryPoints) / 100) * hoursPerStoryPoint}</TableCell>
                     </TableRow>
                   ))}
                   <TableRow className="total-box">

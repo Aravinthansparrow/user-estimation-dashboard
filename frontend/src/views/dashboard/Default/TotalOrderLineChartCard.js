@@ -76,7 +76,7 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
       {isLoading ? (
         <SkeletonTotalOrderCard />
       ) : (
-        <CardWrapper border={false} content={false}>
+        <CardWrapper border={false} style={{display:"none"}} content={false}>
           <Box sx={{ p: 2.25 }}>
             <Grid container direction="column">
               <Grid item>
