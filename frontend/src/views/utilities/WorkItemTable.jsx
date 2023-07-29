@@ -83,7 +83,7 @@ console.log(defaultComponent)
       setRows([]);
       navigate(`/utils/estimate-summary/${clientId}`);
       setShowEstimateSummary(true);
-      // }
+      
     }
     if (workitemloading === API_STATUS.REJECTED) {
       console.log('data got failed');

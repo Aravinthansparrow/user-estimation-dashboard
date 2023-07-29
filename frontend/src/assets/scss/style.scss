@@ -56,15 +56,15 @@
 // ==============================|| BARCARDS ||============================== //
 .client-part{
   background-color: white;
-    padding: 17px 20px 0px 20px;
+    padding: 17px 20px 0px 20px !important;
+    padding-bottom: 0px !important;
     border-radius: 12px;
     width: 25%;
     overflow: hidden;
+    height: fit-content;
 }
 .bar-container {
-  padding: 12px;
     background: white;
-    border-radius: 12px;
     position: relative;
     z-index: 93;
 }
@@ -123,17 +123,20 @@
   padding: 0px;
  
 }
+.grid-one {
+  display: flex;
+  gap: 25px;
+}
 .card {
   color: rgb(6, 27, 100);
   transition: 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   background: linear-gradient(135deg, rgba(37, 198, 112, 0.56), rgb(25 200 141 / 54%)) rgba(255, 255, 255, 0.83);
   font-size: 1.875rem;
-  border-radius: 12px;
-  padding: 30px 0px;
+  padding: 0px 0px;
   box-shadow: rgb(37 198 112 / 47%) 0px 1px 100px 0px;
+
     text-align: center;
     width: 23%;
-    min-height: 200px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -195,7 +198,7 @@
 .card:nth-child(2){
   color: rgb(122, 79, 1);
   box-shadow: rgba(255, 171, 0, 0.23) 0px 38px 100px 0px;
-  background: linear-gradient(135deg, rgba(255, 171, 0, 0.35), rgb(232 144 114 / 18%)) rgb(224 180 90 / 36%);
+  background: linear-gradient(135deg, rgba(255, 171, 0, 0.35), rgba(232, 144, 114, 0.18)) rgb(224 180 90 / 52%);
 }
 .card:nth-child(3){
   color: rgb(7 133 135);
@@ -214,24 +217,24 @@
   align-items: center;
 }
 .work-item-container {
-  overflow: auto !important; /* Enable vertical scrollbar */
+  overflow: auto !important; 
   position: relative;
   padding-bottom: 15px;
 }
 
 .work-item-container::-webkit-scrollbar {
   max-width: 10px !important;
-  height: 10px; /* Width of the scrollbar */
+  height: 10px; 
   cursor: pointer !important;
 }
 
 .work-item-container::-webkit-scrollbar-thumb {
-  background-color: rgba(141, 167, 168, 0.7); /* Scrollbar thumb color */
-  border-radius: 6px; /* Scrollbar thumb border radius */
+  background-color: rgba(141, 167, 168, 0.7); 
+  border-radius: 6px; 
 }
 
 .work-item-container::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(17, 193, 196); /* Scrollbar thumb color on hover */
+  background-color: rgb(17, 193, 196); 
 }
 .workitem-data{
   line-height: 20px !important;
@@ -404,16 +407,16 @@
   border-bottom: 1px solid #d2d9e2;
 }
 .estimate-btn {
-  width: unset !important;
-    color: #364152;
-    background-color: rgba(189, 232, 233, 0.7);
-    padding: 8px;
-    cursor: pointer;
-    height: 38px;
-    border: none;
-    border-radius: 100%;
-    display: flex;
-    align-items: center;
+  min-width: 39px;
+  color: #364152;
+  background-color: rgba(189, 232, 233, 0.7);
+  padding: 8px;
+  cursor: pointer;
+  height: 38px;
+  border: none;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
 }
 .estimate-btn:hover{
   background-color: #00a8ab;
@@ -426,8 +429,6 @@
   background-color: white;
   position: relative;
   z-index: 10;
-  padding: 15px;
-  border-radius: 12px;
 }
 .recent-header {
   background: rgb(244, 246, 248);
@@ -695,6 +696,61 @@
   min-width: 165px;
     text-align: center;
 }
+
+// ==============================|| MEDIA QUERIES ||============================== //
+
+@media screen and (max-width: 992px) {
+  .grid-one{
+    flex-wrap: wrap;
+  }
+  .card-container{
+    width: 100%;
+  }
+  .client-part{
+    width: 100%;
+  }
+  .client-part .client-names {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .client-part .client-names .client-box {
+    width: 30%;
+  }
+}
+@media screen and (max-width: 768px){
+  .card-container{
+   flex-wrap: wrap;
+  }
+  .card-container .card {
+    width: 46%;
+  }
+}
+@media screen and (max-width: 525px){
+  .client-names {
+    flex-wrap: wrap;
+  }
+  .client-names .client-box {
+    width: 100% !important;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

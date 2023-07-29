@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setCreated, setApproved, setUnApproved, setRejected } from '../../../store/reducers/clientReducer';
 import { fetchEstimateList, estimateListSelector } from '../../../store/reducers/clientReducer';
 import { API_STATUS } from '../../../utils/constants';
+import SubCard from 'ui-component/cards/SubCard';
 
 const TotalGrowthBarChart = () => {
   const [clients, setClients] = useState([]);
@@ -73,21 +74,19 @@ const TotalGrowthBarChart = () => {
       {
         type: 'bar',
         dataPoints: [
-          { y: reduxCreated, label: 'Created',color:'rgb(0, 184, 217 )' },
+          { y: reduxCreated, label: 'Created',color:'rgb(37 198 112 / 91%)' },
           { y: reduxUnApproved, label: 'Pending',color:"rgb(255 171 0 / 90%)" },
-          { y: reduxApproved, label: 'Accepted',color:'rgb(0, 167, 111)' },
+          { y: reduxApproved, label: 'Accepted',color:'rgb(0, 184, 217 )' },
           { y: reduxRejected, label: 'Rejected',color:'rgb(255, 86, 48)' }
         ]
       }
     ]
   };
   return (
-    <div className='bar-container'>
-      <CanvasJSChart
-        options={options}
-      />
+    <SubCard className='bar-container'>
+      <CanvasJSChart options={options} />
       {/*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/}
-    </div>
+    </SubCard>
   );
 };
 

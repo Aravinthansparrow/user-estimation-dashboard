@@ -8,6 +8,7 @@ import { fetchEstimateList, estimateListSelector } from '../../../store/reducers
 import { setCreated, setApproved, setUnApproved, setRejected } from '../../../store/reducers/clientReducer';
 import { API_STATUS } from '../../../utils/constants';
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
+import SubCard from 'ui-component/cards/SubCard';
 
 const NumberCards = () => {
   const loading = useSelector(estimateListSelector).loading;
@@ -63,14 +64,14 @@ const NumberCards = () => {
 
   return (
     <Box className="card-container" display="flex" gap="25px" width="75%">
-      <Box className="card">
+      <SubCard className="card">
         <Tilt className={`defaultcard ${cardAnimation ? 'animated slideIn' : ''}`} options={{ max: 25 }}>
           <div className='card-hold'><VerifiedUserOutlinedIcon className='card-icon'/></div> 
           <Typography className='count-create'>{reduxCreated}</Typography>
           <Typography className='tag-name'>Created</Typography>
         </Tilt>
-      </Box>
-      <Box className="card">
+      </SubCard>
+      <SubCard className="card">
         <Tilt className={` defaultcard ${cardAnimation ? 'animated slideIn' : ''}`} options={{ max: 25 }}>
           <div className='card-hold'>
             <CircularProgressbar
@@ -87,8 +88,8 @@ const NumberCards = () => {
           </div>
           <Typography className='split-tag'>Pending</Typography>
         </Tilt>
-      </Box>
-      <Box className="card">
+      </SubCard>
+      <SubCard className="card">
         <Tilt className={`defaultcard ${cardAnimation ? 'animated slideIn' : ''}`} options={{ max: 25 }}>
         <div className='card-hold'>
             <CircularProgressbar
@@ -105,8 +106,8 @@ const NumberCards = () => {
           </div>
           <Typography className='split-tag'>Approved</Typography>
         </Tilt>
-      </Box>
-      <Box className="card">
+      </SubCard>
+      <SubCard className="card">
         <Tilt className={`defaultcard ${cardAnimation ? 'animated slideIn' : ''}`} options={{ max: 25 }}>
         <div className='card-hold'>
             <CircularProgressbar
@@ -123,7 +124,7 @@ const NumberCards = () => {
           </div>
           <Typography  className='split-tag'>Rejected</Typography>
         </Tilt>
-      </Box>
+      </SubCard>
     </Box>
   );
 };
