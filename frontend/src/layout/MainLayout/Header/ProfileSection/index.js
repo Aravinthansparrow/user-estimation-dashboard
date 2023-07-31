@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector,useDispatch } from 'react-redux';
 
 // material-ui
 import KeyOutlinedIcon from '@mui/icons-material/KeyOutlined';
@@ -27,12 +26,12 @@ import {
 import PerfectScrollbar from 'react-perfect-scrollbar';
 
 //Selector imports
-import { loginSelector } from 'store/reducers/authReducer';
+import { logOut,loginSelector } from 'store/reducers/authReducer';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
-import User1 from 'assets/images/users/user-round.svg';
+import User1 from 'assets/images/users/avatar_3.jpg';
 import GreetingMessage from './GreetingMessage';
 
 // assets
@@ -44,6 +43,8 @@ const ProfileSection = () => {
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  // const { errorMessage } = useSelector(loginSelector);
 
   // Getting values from useSelector
   const username = useSelector(loginSelector).username;
@@ -59,8 +60,10 @@ const ProfileSection = () => {
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
    * */
   const anchorRef = useRef(null);
+
   const handleLogout = async () => {
-    navigate('/login');
+    dispatch(logOut());
+    window.location.href = '/user/login';
   };
 
   const handleClose = (event) => {
@@ -168,7 +171,7 @@ const ProfileSection = () => {
                           {user}
                         </Typography>
                       </Stack>
-                      <Typography my={0.5} style={{fontSize:"15px"}} variant="subtitle2">
+                      <Typography my={0.5} style={{ fontSize: '15px' }} variant="subtitle2">
                         {' '}
                         {email}
                       </Typography>
@@ -210,7 +213,7 @@ const ProfileSection = () => {
                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
                           selected={selectedIndex === 1}
-                          onClick={(event) => handleListItemClick(event, 1, '/utils/forgot-password')}
+                          onClick={(event) => handleListItemClick(event, 1, '/auth/change-password')}
                         >
                           <ListItemIcon>
                             <KeyOutlinedIcon stroke={1.5} size="1.3rem" />
@@ -218,15 +221,13 @@ const ProfileSection = () => {
 
                           <Grid container spacing={1} justifyContent="space-between">
                             <Grid item>
-                             
-                                <Typography variant="body2">Change Password</Typography>
-                             
+                              <Typography variant="body2">Change Password</Typography>
                             </Grid>
                           </Grid>
                         </ListItemButton>
                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
-                          selected={selectedIndex === 4}
+                          selected={selectedIndex === 2}
                           onClick={handleLogout}
                         >
                           <ListItemIcon>

@@ -1,14 +1,11 @@
-import React, { useState,useEffect } from 'react';
-import { useDispatch,useSelector } from "react-redux";
-// import Joi from 'joi';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from 'react-router-dom';
-import {
-  doLogin,
-  loginSelector,
-} from "../../../../store/reducers/authReducer";
-import { API_STATUS } from "../../../../utils/constants";
-
+import { doLogin, loginSelector } from '../../../../store/reducers/authReducer';
+import { API_STATUS } from '../../../../utils/constants';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
@@ -29,20 +26,18 @@ import {
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const Login = () => {
   const theme = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // const [error, setError] = useState('');
-  const loading  = useSelector(loginSelector).loading;
+  const loading = useSelector(loginSelector).loading;
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [checked, setChecked] = useState(true);
-
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -51,39 +46,33 @@ const Login = () => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-  // Define the Joi schema for validation
-  // const schema = Joi.object({
-  //   email: Joi.string().email({ tlds: false }).required(),
-  //   password: Joi.string()
-  //     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/)
-  //     .required()
-  //     .messages({
-  //       'string.pattern.base': 'Password should be alphanumeric, case-sensitive, and contain at least 1 special character.'
-  //     })
-  // });
-  const handleLogin =  (e) => {
+
+  const handleLogin = (e) => {
     e.preventDefault();
-    
-    dispatch(doLogin({email, password}))
+    dispatch(doLogin({ email, password }));
   };
+
   useEffect(() => {
-    console.log(loading, "loading")
+    console.log(loading, 'loading');
     if (loading === API_STATUS.FULFILLED) {
-      
-      console.log("Loggedin Successfully!");
+      console.log('Loggedin Successfully!');
+      toast.success('Loggedin Successfully!',{autoClose:2000});
+      toast.dismiss();
       navigate('/dashboard/default');
     }
     if (loading === API_STATUS.REJECTED) {
-      
       console.log('Login Failed! Please check username and password');
+      toast.dismiss();
+      toast.error('Login Failed! Please check username and password',{autoClose:2000});
     }
   }, [loading]);
+
   return (
-    <div>
-      <div style={{ textAlign:"center",marginBottom:"10px" }}>
-      <AccountCircleIcon  style={{ fontSize:"75",color:"#6d737c" }}/>
-    </div>
-      <form onSubmit={handleLogin} >
+    <Box>
+      <Box textAlign= 'center' marginBottom= '10px'>
+        <AccountCircleIcon style={{ fontSize: '75', color: '#6d737c' }} />
+      </Box>
+      <form onSubmit={handleLogin}>
         <FormControl fullWidth sx={{ ...theme.typography.customInput }}>
           <InputLabel htmlFor="outlined-adornment-email-login">Email Address </InputLabel>
           <OutlinedInput
@@ -95,7 +84,6 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
             label="Email Address"
             autoComplete="email"
-            inputProps={{}}
           />
         </FormControl>
 
@@ -122,24 +110,9 @@ const Login = () => {
               </InputAdornment>
             }
             label="Password"
-            inputProps={{}}
           />
         </FormControl>
-        {/* {error && (
-            <Box
-              sx={{
-                color: "red",
-                display: "flex",
-                alignItems: "center",
-                fontWeight: "normal",
-                my: 2,
-                width: "100%",
-              }}
-            >
-              <ErrorIcon sx={{ mr: 1 }} />
-              <span>{error}</span>
-            </Box>
-          )} */}
+
         <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
           <FormControlLabel
             control={<Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)} name="checked" color="primary" />}
@@ -150,20 +123,12 @@ const Login = () => {
           </Typography>
         </Stack>
         <Box sx={{ mt: 2 }}>
-          
-            <Button
-              fullWidth
-              size="large"
-              type="submit"
-              variant="contained"
-              style={{ color: 'white', background: 'rgb(0, 168, 171)' }}
-            >
-              Sign in
-            </Button>
-          
+          <Button fullWidth size="large" type="submit" variant="contained" style={{ color: 'white', background: 'rgb(0, 168, 171)' }}>
+            Sign in
+          </Button>
         </Box>
       </form>
-    </div>
+    </Box>
   );
 };
 

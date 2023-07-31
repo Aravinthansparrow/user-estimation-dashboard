@@ -3,7 +3,8 @@ import MainCard from 'ui-component/cards/MainCard';
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useParams } from 'react-router-dom';
-import '../../../src/assets/scss/style.scss';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchComplexity, complexitySelector } from '../../store/reducers/complexityReducer';
 import { API_STATUS } from '../../utils/constants';
@@ -27,9 +28,10 @@ import {
 } from '@mui/material';
 
 const WorkItem = () => {
-  const { clientId } = useParams();
+  const { id } = useParams();
+  console.log(id)
   const [rows, setRows] = useState([{}]);
-  const [tooltipOpen, setTooltipOpen] = useState(false); //  tooltip visibility
+  const [tooltipOpen, setTooltipOpen] = useState(false); 
   const [showEstimateSummary, setShowEstimateSummary] = useState(false);
   const [componentTypes, setComponentTypes] = useState([]);
   const [complexities, setComplexities] = useState([]);
@@ -42,7 +44,8 @@ const WorkItem = () => {
   const workitemloading = useSelector(workItemSelector).workitemloading;
   const data = useSelector(complexitySelector).loadData;
   const componentData = useSelector(componentSelector).loadData;
-console.log(defaultComponent)
+  console.log(defaultComponent);
+
   useEffect(() => {
     dispatch(fetchComponents());
     dispatch(fetchComplexity());
@@ -54,26 +57,30 @@ console.log(defaultComponent)
       console.log('Component data got Successfully!');
       setComponentTypes(componentData);
       const componentDefaultData = componentData.find((component) => component.default === 'default');
-    
 
-    if (componentDefaultData && componentDefaultData.name) {
-      setDefaultComponent(componentDefaultData.name);
-      console.log(defaultComponent);
-
-      console.log(componentTypes);
-    }}
+      if (componentDefaultData && componentDefaultData.name) {
+        setDefaultComponent(componentDefaultData.name);
+        console.log(defaultComponent);
+        console.log(componentTypes);
+      }
+    }
     if (componentloading === API_STATUS.REJECTED) {
       console.log('Component data got failed');
+      toast.error('Workitem Component data got failed !', {
+        autoClose: 2000
+      });
     }
 
     console.log(complexityloading, 'loading');
     if (complexityloading === API_STATUS.FULFILLED) {
-      console.log('data got Successfully!');
+      console.log('Complexity data got Successfully!');
       setComplexities(data);
       console.log(complexities);
     }
     if (complexityloading === API_STATUS.REJECTED) {
-      console.log('data got failed');
+      toast.error('Workitem data got failed !', {
+        autoClose: 2000
+      });
     }
 
     console.log(workitemloading, 'loading');
@@ -81,24 +88,16 @@ console.log(defaultComponent)
       console.log('workitem data submitted got Successfully!');
 
       setRows([]);
-      navigate(`/utils/estimate-summary/${clientId}`);
+      navigate(`/utils/estimate-summary/${id}`);
       setShowEstimateSummary(true);
-      
     }
     if (workitemloading === API_STATUS.REJECTED) {
-      console.log('data got failed');
+      console.log('Data got failed');
+      toast.error('Workitem data got failed !', {
+        autoClose: 2000
+      });
     }
   }, [componentloading, complexityloading, workitemloading]);
-
-  // useEffect(() => {
-  //   const defaultComponentData = componentTypes.find((component) => component.default === 'default');
-  //   console.log(defaultComponent)
-
-  //   if (defaultComponentData && defaultComponentData.name) {
-  //     setDefaultComponent(defaultComponentData.name);
-  //     console.log(defaultComponent);
-  //   }
-  // }, [componentTypes]);
 
   const selectedComplexity = complexities.length > 0 ? complexities[0].complexity : '';
   const selectedBuildEffort = selectedComplexity ? complexities[0].days : '0';
@@ -157,7 +156,7 @@ console.log(defaultComponent)
         buildEffort: row.buildEffort || selectedBuildEffort,
         effortOverride: row.effortOverride || '0',
         finalEffort: finalEffort, // Use the calculated finalEffort
-        clientId: clientId
+        clientId: id
       };
       console.log(workItem);
       console.log(finalEffort);
@@ -186,6 +185,9 @@ console.log(defaultComponent)
 
       if (isFormValid) {
         dispatch(submitWorkItem({ workItem }));
+        toast.success('Workitem submitted successfully !', {
+          autoClose: 2000
+        });
       } else {
         setTooltipOpen(true); // Show the tooltips for unfilled fields
       }
@@ -242,7 +244,7 @@ console.log(defaultComponent)
               arrow
               placement="top"
               PopperProps={{
-                style: { transform: 'translateX(10px)',zIndex:"0" }
+                style: { transform: 'translateX(10px)', zIndex: '0' }
               }}
             >
               <TextField
@@ -263,7 +265,7 @@ console.log(defaultComponent)
               arrow
               placement="top"
               PopperProps={{
-                style: { transform: 'translateX(10px)' ,zIndex:"0" }
+                style: { transform: 'translateX(10px)', zIndex: '0' }
               }}
             >
               <TextField
@@ -284,7 +286,7 @@ console.log(defaultComponent)
               arrow
               placement="top"
               PopperProps={{
-                style: { transform: 'translateX(10px)' ,zIndex:"0" }
+                style: { transform: 'translateX(10px)', zIndex: '0' }
               }}
             >
               <TextField
@@ -305,7 +307,7 @@ console.log(defaultComponent)
               arrow
               placement="top"
               PopperProps={{
-                style: { transform: 'translateX(10px)' ,zIndex:"0" }
+                style: { transform: 'translateX(10px)', zIndex: '0' }
               }}
             >
               <TextField
@@ -320,15 +322,6 @@ console.log(defaultComponent)
             </Tooltip>
           </TableCell>
           <TableCell className="workitem-data">
-            <Tooltip
-              open={tooltipOpen && !row.comments}
-              title="Comment is required"
-              arrow
-              placement="top"
-              PopperProps={{
-                style: { transform: 'translateX(10px)' ,zIndex:"0" }
-              }}
-            >
               <Select
                 name="comments"
                 style={{ minWidth: '120px' }}
@@ -341,7 +334,6 @@ console.log(defaultComponent)
                 <MenuItem value="good">Good to have</MenuItem>
                 <MenuItem value="nice">Nice to have</MenuItem>
               </Select>
-            </Tooltip>
           </TableCell>
           <TableCell className="workitem-data">
             <Tooltip
@@ -350,7 +342,7 @@ console.log(defaultComponent)
               arrow
               placement="top"
               PopperProps={{
-                style: { transform: 'translateX(10px)' ,zIndex:"0" }
+                style: { transform: 'translateX(10px)', zIndex: '0' }
               }}
             >
               <TextareaAutosize
@@ -374,15 +366,7 @@ console.log(defaultComponent)
             </Tooltip>
           </TableCell>
           <TableCell className="workitem-data">
-            <Tooltip
-              open={tooltipOpen && !row.componentType}
-              title="ComponentType is required"
-              arrow
-              placement="top"
-              PopperProps={{
-                style: { transform: 'translateX(10px)' ,zIndex:"0" }
-              }}
-            >
+            
               <Select
                 name="componentType"
                 style={{ minWidth: '120px' }}
@@ -400,18 +384,10 @@ console.log(defaultComponent)
                     </MenuItem>
                   ))}
               </Select>
-            </Tooltip>
+           
           </TableCell>
           <TableCell className="workitem-data">
-            <Tooltip
-              open={tooltipOpen && !row.complexity}
-              title="Complexity is required"
-              arrow
-              placement="top"
-              PopperProps={{
-                style: { transform: 'translateX(10px)' ,zIndex:"0" }
-              }}
-            >
+            
               <Select
                 name="complexity"
                 style={{ minWidth: '100px' }}
@@ -432,31 +408,20 @@ console.log(defaultComponent)
                 {selectedComplexity !== 'medium' && <MenuItem value="medium">Medium</MenuItem>}
                 {selectedComplexity !== 'complex' && <MenuItem value="complex">Complex</MenuItem>}
               </Select>
-            </Tooltip>
+          </TableCell>
+          <TableCell className="workitem-data">
+            <TextField
+              style={{ minWidth: '90px' }}
+              fullWidth
+              type="text"
+              className="col-9"
+              name="buildEffort"
+              value={row.buildEffort || selectedBuildEffort}
+              readOnly
+            />
           </TableCell>
           <TableCell className="workitem-data">
             
-              <TextField
-                style={{ minWidth: '90px' }}
-                fullWidth
-                type="text"
-                className="col-9"
-                name="buildEffort"
-                value={row.buildEffort || selectedBuildEffort}
-                readOnly
-              />
-            
-          </TableCell>
-          <TableCell className="workitem-data">
-          <Tooltip
-              open={tooltipOpen && !row.effortOverride}
-              title="effortOverride is required"
-              arrow
-              placement="top"
-              PopperProps={{
-                style: { transform: 'translateX(10px)' ,zIndex:"0" }
-              }}
-            >
               <TextField
                 fullWidth
                 style={{ minWidth: '100px' }}
@@ -465,16 +430,16 @@ console.log(defaultComponent)
                 value={row.effortOverride || ''}
                 onChange={(e) => handleChange(e, index)}
               />
-            </Tooltip>
+           
           </TableCell>
           <TableCell className="workitem-data">
             <div style={{ minWidth: '80px' }}>{finalEffort}</div>
           </TableCell>
           <TableCell className="workitem-data">
             {showDeleteButton ? (
-              <button className="delete-row-button" onClick={deleteRow}>
+              <Button className="delete-row-button" onClick={deleteRow}>
                 <DeleteIcon />
-              </button>
+              </Button>
             ) : (
               <div className="disable-delete delete-row-button">
                 <DeleteIcon />{' '}
@@ -499,12 +464,12 @@ console.log(defaultComponent)
             </Table>
           </TableContainer>
           <Box display="flex">
-          <Button variant="contained" onClick={addRow} className="primary-btn" style={{ margin: '20px 12px 0px 0px' }}>
-            Add Row
-          </Button>
-          <Button variant="contained" onClick={handleSubmit} className="primary-btn" style={{ margin: '20px 0px 0px 0px' }}>
-            Submit
-          </Button>
+            <Button variant="contained" onClick={addRow} className="primary-btn" style={{ margin: '20px 12px 0px 0px' }}>
+              Add Row
+            </Button>
+            <Button variant="contained" onClick={handleSubmit} className="primary-btn" style={{ margin: '20px 0px 0px 0px' }}>
+              Submit
+            </Button>
           </Box>
         </MainCard>
       )}

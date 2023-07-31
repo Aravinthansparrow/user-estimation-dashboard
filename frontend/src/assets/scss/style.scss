@@ -175,7 +175,7 @@
 .count-create{
   font-size: 35px;
   font-weight: 600;
-  margin: 10px 0px 5px 0px;
+  margin: 0px;
  color: rgb(16 105 58 / 89%);
 }
 .tag-name{
@@ -284,6 +284,7 @@
   justify-content: center;
   padding: 6px;
   cursor: pointer;
+  min-width: fit-content;
   border: none;
 }
 .delete-row-button:hover{
@@ -292,6 +293,7 @@
 }
 .disable-delete{
   cursor: not-allowed;
+  min-width: fit-content;
 }
 
 //Button customizing
@@ -431,7 +433,7 @@
   z-index: 10;
 }
 .recent-header {
-  background: rgb(244, 246, 248);
+  background: rgb(216 218 220 / 45%);
   color: #00a8ab;
   font-weight: 700;
   display: flex;
@@ -600,7 +602,7 @@
   justify-content: center;
 }
 .field-set{
-  padding: 5px 0px 5px 19px;
+  padding: 7px 0px 7px 19px;
   border-radius: 0px;
   width: 100%;
   display: flex;
@@ -655,12 +657,8 @@
 }
 .component{
   border-bottom: 1px solid #d2d9e2;
-  padding-bottom: 9px;
-  margin: 7px 71px;
-}
-.component:last-child{
-  border-bottom: none;
-  padding-bottom: 0px;
+    padding: 4px 24px;
+    background: #a0a8b329;
 }
 .default-button{
   background: rgba(189, 232, 233, 0.7);
@@ -677,6 +675,7 @@
    background:#d2d9e2;
    border-radius: 30px;
    padding: 1px 14px;
+   min-width: 117px;
 }
 .component-title{
   background: rgb(0, 168, 171);

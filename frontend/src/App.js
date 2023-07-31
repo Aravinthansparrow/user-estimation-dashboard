@@ -11,7 +11,7 @@ import themes from 'themes';
 
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
-// import WorkItem from 'views/utilities/WorkItemTable';
+
 // ==============================|| APP ||============================== //
 
 const App = () => {

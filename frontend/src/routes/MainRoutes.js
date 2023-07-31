@@ -1,13 +1,13 @@
 import { lazy } from 'react';
 
-// project imports
+// Project imports
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
 
-// dashboard routing
+// Dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 
-// utilities routing
+// Utilities routing
 const Estimation = Loadable(lazy(() => import('views/utilities/Estimation')));
 const WorkItem = Loadable(lazy(() => import('views/utilities/WorkItemTable')));
 const EstimateSummary = Loadable(lazy(() => import('views/utilities/EstimateSummary')));
@@ -15,8 +15,10 @@ const EstimationList = Loadable(lazy(() => import('views/utilities/EstimationLis
 const ComplexityLevel = Loadable(lazy(() => import('views/utilities/ComplexityLevel')));
 const ComponentType = Loadable(lazy(() => import('views/utilities/ComponentType')));
 const GeneralSettings = Loadable(lazy(() => import('views/utilities/GeneralSettings')));
+const ActivitiesPercentageSplit = Loadable(lazy(()=> import('views/utilities/ActivitiesPercentageSplit')));
+
+// Authenticate Routing
 const ForgotPassword = Loadable(lazy(() => import('views/utilities/ChangePassword')));
-const ActivitiesPercentageSplit = Loadable(lazy(()=> import('views/utilities/ActivitiesPercentageSplit')))
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -41,26 +43,21 @@ const MainRoutes = {
       path: 'utils',
       children: [
         {
-          path: 'generate-estimation/:clientId',
+          path: 'generate-estimation/:id',
           element: <WorkItem />
         },
         {
           path: 'generate-estimation',
-          element: <Estimation />
-        }
-      ]
-    },
-    {
-      path: 'utils',
-      children: [
+          element: <Estimation />,
+        },
         {
           path: 'estimation-list',
           element: <EstimationList />
         }, 
         {
-          path: 'estimate-summary/:clientId',
+          path: 'estimate-summary/:id',
           element: <EstimateSummary/>
-        }
+        },
       ]
     },
     {
@@ -69,30 +66,15 @@ const MainRoutes = {
         {
           path: 'component-type',
           element: <ComponentType />
-        }
-      ]
-    },
-    {
-      path: 'master',
-      children: [
+        },
         {
           path: 'complexity-level',
           element: <ComplexityLevel />
-        }
-      ]
-    },
-    {
-      path: 'master',
-      children: [
+        },
         {
           path: 'general-settings',
           element: <GeneralSettings />
-        }
-      ]
-    },
-    {
-      path: 'master',
-      children: [
+        },
         {
           path: 'activities-split',
           element: <ActivitiesPercentageSplit />
@@ -100,14 +82,14 @@ const MainRoutes = {
       ]
     },
     {
-      path: 'utils',
+      path: 'auth',
       children: [
         {
-          path: 'forgot-password',
+          path: 'change-password',
           element: <ForgotPassword />
         }
       ]
-    },
+    }
   ]
 };
 

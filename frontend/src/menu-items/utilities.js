@@ -1,10 +1,8 @@
 // assets
 import { IconWindmill } from '@tabler/icons';
-
 import TableChartIcon from "@mui/icons-material/TableChart";
 import TableViewIcon from '@mui/icons-material/TableView';
 import ViewWeekIcon from "@mui/icons-material/ViewWeek";
-import KeyIcon from '@mui/icons-material/Key';
 
 // constant
 const icons = {
@@ -12,7 +10,6 @@ const icons = {
   TableChartIcon,
   TableViewIcon,
   ViewWeekIcon,
-  KeyIcon
 };
 
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
@@ -36,14 +33,6 @@ const utilities = {
       type: 'item',
       url: '/utils/estimation-list',
       icon: icons.ViewWeekIcon,
-      breadcrumbs: false
-    },
-    {
-      id: 'forgot-password',
-      title: 'Forgot Password',
-      type: 'item',
-      url: '/utils/forgot-password',
-      icon: icons.KeyIcon,
       breadcrumbs: false
     },
     {

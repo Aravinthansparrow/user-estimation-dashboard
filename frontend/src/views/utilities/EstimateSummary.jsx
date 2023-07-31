@@ -14,16 +14,19 @@ import { API_STATUS } from 'utils/constants';
 import { activitiesSelector, fetchActivities } from 'store/reducers/activityReducer';
 import SubCard from 'ui-component/cards/SubCard';
 import MainCard from 'ui-component/cards/MainCard';
+import dayjs from 'dayjs';
+import 'dayjs/locale/en';
 import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Button, Paper, Box, Typography, InputBase } from '@mui/material';
 
 const EstimateSummary = () => {
-  const { clientId } = useParams();
+  const { id } = useParams();
   const [sendByEmail, setSendByEmail] = useState(false);
   const [download, setDownload] = useState(false);
   const [createNew, setCreateNew] = useState(false);
   const [estimateSummary, setEstimateSummary] = useState(false);
   const [modularComponents, setModularComponents] = useState(true);
   const [tableData, setTableData] = useState([]);
+  const [activityData, setActivityData] = useState([]);
   const [projectName, setProjectName] = useState('');
   const [estimatedBy, setEstimatedBy] = useState('');
   const [estimatedOn, setEstimatedOn] = useState('');
@@ -35,6 +38,8 @@ const EstimateSummary = () => {
   const [totalDevEffortHours, setTotalDevEffortHours] = useState(0);
   const [totalSecondColumn, setTotalSecondColumn] = useState('');
   const [totalDevEffortStoryPoints, setTotalDevEffortStoryPoints] = useState(0);
+
+  //Import useSelector
   const clientloading = useSelector(estimateListSelector).clientloading;
   const getworkitemloading = useSelector(workItemSelector).getworkitemloading;
   const generalSettingsloading = useSelector(generalSettingsSelector).status;
@@ -71,7 +76,8 @@ const EstimateSummary = () => {
     setCreateNew(true);
     setModularComponents(false);
     setEstimateSummary(false);
-    navigate('/generate-estimation'); // Navigates to '/generate-estimate' route
+    navigate('/utils/generate-estimation'); // Navigates to '/generate-estimate' route
+    window.location.reload(true)
   };
 
   const handleEstimateSummary = () => {
@@ -91,11 +97,11 @@ const EstimateSummary = () => {
   };
 
   useEffect(() => {
-    dispatch(getClientData(clientId));
+    dispatch(getClientData(id));
     dispatch(fetchGeneralSettings());
-    dispatch(getWorkItem(clientId));
+    dispatch(getWorkItem(id));
     dispatch(fetchActivities());
-  }, [dispatch, clientId]);
+  }, [dispatch, id]);
 
   useEffect(() => {
     console.log(clientloading, 'clientloading');
@@ -103,7 +109,7 @@ const EstimateSummary = () => {
       const clientData = clientloadData;
       setProjectName(clientData.clientName);
       setEstimatedBy(clientData.createdBy);
-      setEstimatedOn(clientData.createdAt.substring(0, 10));
+      setEstimatedOn(clientData.createdAt);
     }
     if (clientloading === API_STATUS.REJECTED) {
       console.log('client data not got');
@@ -133,17 +139,23 @@ const EstimateSummary = () => {
     }
   }, [getworkitemloading]);
 
+  useEffect(()=>{
+    let totalSecondColumn = 0;
+    activityData.forEach((row) => {
+      const percentagesplit = parseFloat(row.percentagesplit) || 0
+      
+      totalSecondColumn += Math.round(((percentagesplit* totalDevEffortStoryPoints)/100))
+    })
+    setTotalSecondColumn(totalSecondColumn)
+      console.log(totalSecondColumn)
+  });
+  
   useEffect(() => {
+    
     console.log(activitiesloading, 'activitiesloading');
     if (activitiesloading === API_STATUS.FULFILLED) {
-      console.log(activitiesLoadData);
-
-      const totalSecondColumn = activitiesLoadData.reduce(
-        (total, activity) => total + Math.round((activity.percentagesplit * totalDevEffortStoryPoints) / 100),
-        0
-      );
-      setTotalSecondColumn(totalSecondColumn);
-    }
+      setActivityData(activitiesLoadData)
+      }
     if (activitiesloading === API_STATUS.REJECTED) {
       console.log('general settings data not got');
     }
@@ -285,7 +297,7 @@ const EstimateSummary = () => {
                       Estimated On
                     </TableCell>
                     <TableCell className="border-none" style={{ padding: '5px 0px' }}>
-                      <InputBase fullWidth type="text" value={estimatedOn} readOnly />
+                      <InputBase fullWidth type="text"value={dayjs(estimatedOn).locale('en').format('DD-MM-YYYY')} readOnly />
                     </TableCell>
                   </TableRow>
                   <TableRow className="workitem-tab table-rows">

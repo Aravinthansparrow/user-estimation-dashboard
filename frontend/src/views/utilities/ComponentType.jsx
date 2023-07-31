@@ -17,7 +17,7 @@ import {
 import { Box, Typography, DialogActions, Button, TextField } from '@mui/material';
 import { API_STATUS } from '../../utils/constants';
 import MainCard from 'ui-component/cards/MainCard';
-
+import SubCard from 'ui-component/cards/SubCard';
 
 const ComponentType = () => {
   const [components, setComponents] = useState([]);
@@ -177,8 +177,7 @@ const ComponentType = () => {
     dispatch(deleteComponents(id));
 
     // Show toast message when the component is deleted
-    toast.success(`${componentName} component successfully deleted!`, { autoClose: 4000
-      });
+    toast.success(`${componentName} component successfully deleted!`, { autoClose: 4000 });
   };
   const handleAddComponent = () => {
     setNewComponentModalIsOpen(true);
@@ -212,13 +211,13 @@ const ComponentType = () => {
 
   return (
     <MainCard style={{ height: '100%' }} title="Component Type">
-      
-        <Box display="flex" mb={6} justifyContent="center" >
-          <Button variant="outlined" className="component-title" onClick={handleAddComponent}>
-            Add Component
-            <AddCircleOutlineIcon />
-          </Button>
-        </Box>
+      <Box display="flex" mb={3} justifyContent="center">
+        <Button variant="outlined" className="component-title" onClick={handleAddComponent}>
+          Add Component
+          <AddCircleOutlineIcon />
+        </Button>
+      </Box>
+      <SubCard style={{maxWidth:'700px',margin:'auto'}}>
         {components.map((component, index) => (
           <Box
             display="flex"
@@ -249,7 +248,7 @@ const ComponentType = () => {
             </Box>
           </Box>
         ))}
-     
+      </SubCard>
 
       {/* Add New Component Modal */}
       <Modal
@@ -261,14 +260,14 @@ const ComponentType = () => {
       >
         <DialogActions className="modal-content flex-column">
           <Typography variant="h3">Add New Component</Typography>
-          <TextField type="text" style={{minWidth:"270px"}} value={newComponent} onChange={(e) => setNewComponent(e.target.value)} />
-          <Box  display="flex" justifyContent='space-between' alignSelf="end" gap="8px">
-          <Button variant="contained" className="primary-btn" onClick={addComponent}>
-            Add
-          </Button>
-          <Button variant="contained" className="primary-btn" onClick={() => setNewComponentModalIsOpen(false)}>
-            Cancel
-          </Button>
+          <TextField type="text" style={{ minWidth: '270px' }} value={newComponent} onChange={(e) => setNewComponent(e.target.value)} />
+          <Box display="flex" justifyContent="space-between" alignSelf="end" gap="8px">
+            <Button variant="contained" className="primary-btn" onClick={addComponent}>
+              Add
+            </Button>
+            <Button variant="contained" className="primary-btn" onClick={() => setNewComponentModalIsOpen(false)}>
+              Cancel
+            </Button>
           </Box>
         </DialogActions>
       </Modal>
@@ -283,14 +282,19 @@ const ComponentType = () => {
       >
         <DialogActions className="modal-content flex-column">
           <Typography variant="h3">Edit Component Name</Typography>
-          <TextField type="text" style={{minWidth:"270px"}} value={updatedComponentName} onChange={(e) => setUpdatedComponentName(e.target.value)} />
-          <Box  display="flex" justifyContent='space-between' alignSelf="end" gap="8px">
-          <Button variant="contained" className="primary-btn" onClick={handleEditComponentName}>
-            Save
-          </Button>
-          <Button variant="contained" className="primary-btn" onClick={closeEditModal}>
-            Cancel
-          </Button>
+          <TextField
+            type="text"
+            style={{ minWidth: '270px' }}
+            value={updatedComponentName}
+            onChange={(e) => setUpdatedComponentName(e.target.value)}
+          />
+          <Box display="flex" justifyContent="space-between" alignSelf="end" gap="8px">
+            <Button variant="contained" className="primary-btn" onClick={handleEditComponentName}>
+              Save
+            </Button>
+            <Button variant="contained" className="primary-btn" onClick={closeEditModal}>
+              Cancel
+            </Button>
           </Box>
         </DialogActions>
       </Modal>
@@ -306,13 +310,14 @@ const ComponentType = () => {
         <DialogActions className="modal-content flex-column">
           <Typography variant="h3">Set as Default</Typography>
           <Typography variant="body1">Are you sure you want to set this component as the default?</Typography>
-          <Box  display="flex" justifyContent='space-between' alignSelf="end" gap="8px">
-          <Button variant="contained" className="primary-btn" onClick={handleConfirmDefault}>
-            Yes
-          </Button>
-          <Button variant="contained" className="primary-btn" onClick={handleCancelConfirm}>
-            No
-          </Button></Box>
+          <Box display="flex" justifyContent="space-between" alignSelf="end" gap="8px">
+            <Button variant="contained" className="primary-btn" onClick={handleConfirmDefault}>
+              Yes
+            </Button>
+            <Button variant="contained" className="primary-btn" onClick={handleCancelConfirm}>
+              No
+            </Button>
+          </Box>
         </DialogActions>
       </Modal>
     </MainCard>

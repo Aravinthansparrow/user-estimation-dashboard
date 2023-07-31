@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Joi from 'joi';
 import { Grid, Button, TextField, Box, InputAdornment } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
@@ -8,8 +8,8 @@ import ErrorIcon from '@mui/icons-material/Error';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useDispatch, useSelector} from 'react-redux';
+import { useNavigate, useLocation  } from 'react-router-dom';
 import { clientDetails, estimateListSelector } from '../../store/reducers/clientReducer';
 import { API_STATUS } from '../../utils/constants';
 
@@ -31,12 +31,10 @@ const ClientForm = () => {
     email: ''
   });
 
-  // const [showWorkItem, setShowWorkItem] = useState(false);
-  // const [isSubmitted, setIsSubmitted] = useState(false);
   const [clientId, setClientId] = useState('');
-  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
-
+  console.log(clientId);
   const location = useLocation();
   const urlParams = new URLSearchParams(location.search);
   const submittedParam = urlParams.get('submitted');
@@ -54,42 +52,49 @@ const ClientForm = () => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
+
   const validateEmailFormat = (email) => {
     // Regular expression for email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
+  // Reset isFormSubmitted when the component is mounted
   useEffect(() => {
-    if (submittedParam === 'true' && isFormSubmitted) {
+    setIsSubmitted(false);
+  }, []);
+
+  const isNavigationDoneRef = useRef(false); // Using ref to track navigation
+
+  useEffect(() => {
+    console.log(clientdetails, 'client details');
+    if (submittedParam === 'true' && isSubmitted) {
       // Reset the submittedParam after showing the toast message
       urlParams.set('submitted', 'false');
     }
-    // If the form is successfully submitted, navigate to the desired page
-    if (clientdetails === API_STATUS.FULFILLED && isFormSubmitted) {
-        setClientId(id);
-        toast.success('Client Details Updated Successfully!', {
-          autoClose: 2000,
-        });
-        navigate(`/utils/generate-estimation/${clientId}?submitted=true`);
-    }
+    if (clientdetails === API_STATUS.FULFILLED && !isNavigationDoneRef.current) {
+      console.log(id);
+      setClientId(id);
+      console.log(clientId);
+      navigate(`/utils/generate-estimation/${id}?submitted=true`);
+      isNavigationDoneRef.current = true; // Mark navigation as done
 
-    if (clientdetails === API_STATUS.REJECTED && isFormSubmitted) {
+      return () => {
+        isNavigationDoneRef.current = true;
+        console.log(isNavigationDoneRef.current);
+        // Clean up function to clear the "submitted" parameter when the component unmounts
+        urlParams.delete('submitted');
+      };
+    }
+    if (clientdetails === API_STATUS.REJECTED) {
       toast.error('Client submission failed');
-      // Reset the isFormSubmitted
-      setIsFormSubmitted(false);
     }
-
-    return () => {
-      // Clean up function to clear the "submitted" parameter when the component unmounts
-      urlParams.delete('submitted');
-    };
-  }, [submittedParam, clientdetails, id, clientId, navigate, urlParams,isFormSubmitted]);
+  }, [clientdetails, id, urlParams, submittedParam,isSubmitted]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     console.log(formData);
+
     // Check for empty fields and mark them as errors
     const newErrors = {};
     Object.keys(formData).forEach((field) => {
@@ -118,18 +123,20 @@ const ClientForm = () => {
         }));
       });
     } else {
+      // setIsFormSubmitted(true);
+      setIsSubmitted(true);
       // Dispatch the form submission
       dispatch(clientDetails({ formData }));
-      // Set isSubmitted to true to trigger toast and navigation
-      setIsFormSubmitted(true);
-      
+      toast.success('Client Details Updated Successfully !', {
+        autoClose: 2000
+      });
     }
   };
 
   return (
     <MainCard style={{ height: '100%' }} title="Generate Estimation">
       <Grid style={{ maxWidth: '550px', margin: '30px auto' }} item xs={12} sm={6}>
-        <div style={{ height: '100%' }} title="Generate Estimation">
+        <div style={{ height: '100%' }}>
           <Grid style={{ maxWidth: '550px', margin: 'auto' }} item xs={12} sm={6}>
             <SubCard>
               <form onSubmit={handleSubmit}>
@@ -148,12 +155,12 @@ const ClientForm = () => {
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
-                            {isFormSubmitted && !errors.clientName && <CheckCircleIcon style={{ color: 'green' }} />}
+                            {isSubmitted && !errors.clientName && <CheckCircleIcon style={{ color: 'green' }} />}
                             {errors.clientName && <ErrorIcon color="error" />}
                           </InputAdornment>
                         )
                       }}
-                      style={{ marginBottom: '10px', borderColor: isFormSubmitted && !errors.clientName ? 'green' : '' }}
+                      style={{ marginBottom: '10px', borderColor: isSubmitted && !errors.clientName ? 'green' : '' }}
                     />
                   </div>
                   <div>
@@ -170,12 +177,12 @@ const ClientForm = () => {
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
-                            {isFormSubmitted && !errors.clientAddress && <CheckCircleIcon style={{ color: 'green' }} />}
+                            {isSubmitted && !errors.clientAddress && <CheckCircleIcon style={{ color: 'green' }} />}
                             {errors.clientAddress && <ErrorIcon color="error" />}
                           </InputAdornment>
                         )
                       }}
-                      style={{ marginBottom: '10px', borderColor: isFormSubmitted && !errors.clientAddress ? 'green' : '' }}
+                      style={{ marginBottom: '10px', borderColor: isSubmitted && !errors.clientAddress ? 'green' : '' }}
                     />
                   </div>
                   <div>
@@ -192,12 +199,12 @@ const ClientForm = () => {
                       InputProps={{
                         endAdornment: (
                           <InputAdornment position="end">
-                            {isFormSubmitted && !errors.email && <CheckCircleIcon style={{ color: 'green' }} />}
+                            {isSubmitted && !errors.email && <CheckCircleIcon style={{ color: 'green' }} />}
                             {errors.email && <ErrorIcon color="error" />}
                           </InputAdornment>
                         )
                       }}
-                      style={{ marginBottom: '10px', borderColor: isFormSubmitted && !errors.email ? 'green' : '' }}
+                      style={{ marginBottom: '10px', borderColor: isSubmitted && !errors.email ? 'green' : '' }}
                     />
                   </div>
                   <Box sx={{ mt: 2, textAlign: 'center' }}>

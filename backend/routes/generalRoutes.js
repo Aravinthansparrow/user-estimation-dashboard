@@ -1,32 +1,13 @@
+// generalSettingsRoutes.js
+
 const express = require('express');
 const router = express.Router();
-const  GeneralSettings  = require('../models/GeneralSettings');
-
+const generalSettingsController = require('../controllers/generalSettingsController');
 
 // Get general settings
-router.get('/', async (req, res) => {
-    try {
-      const generalSettings = await GeneralSettings.findOne();
-      res.json(generalSettings);
-    } catch (error) {
-      console.error('Error retrieving general settings:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-  
-  // Update general settings
-  router.put('/', async (req, res) => {
-    try {
-      const { version, document_version, hours_per_story_point, rate_per_hour } = req.body;
-      await GeneralSettings.update(
-        { version, document_version, hours_per_story_point, rate_per_hour },
-        { where: {} }
-      );
-      res.sendStatus(204);
-    } catch (error) {
-      console.error('Error updating general settings:', error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-  
-  module.exports=router;
+router.get('/', generalSettingsController.getGeneralSettings);
+
+// Update general settings
+router.put('/', generalSettingsController.updateGeneralSettings);
+
+module.exports = router;
