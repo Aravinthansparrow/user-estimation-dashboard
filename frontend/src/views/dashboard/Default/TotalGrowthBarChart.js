@@ -27,10 +27,7 @@ const TotalGrowthBarChart = () => {
     const createdCount = clients.length;
     const rejectedCount = rejectedEstimates.length;
     const notApprovedCount = notApprovedEstimates.length;
-
-    // Count the number of approved estimates
     const approvedCount = approvedEstimates.length;
-
     dispatch(setCreated(createdCount));
     dispatch(setApproved(approvedCount));
     dispatch(setRejected(rejectedCount));
@@ -38,8 +35,7 @@ const TotalGrowthBarChart = () => {
   }, [clients, dispatch]);
 
   useEffect(() => {
-    // Dispatch the async thunk to fetch data from the table
-    dispatch(fetchEstimateList()); // Replace 'params' with any necessary parameters
+    dispatch(fetchEstimateList()); 
   }, [dispatch]);
 
   useEffect(() => {
@@ -68,7 +64,6 @@ const TotalGrowthBarChart = () => {
     axisY: {
       title: 'No of Estimations',
       includeZero: true
-      // labelFormatter: this.addSymbols
     },
     data: [
       {
@@ -85,7 +80,6 @@ const TotalGrowthBarChart = () => {
   return (
     <SubCard className='bar-container'>
       <CanvasJSChart options={options} />
-      {/*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/}
     </SubCard>
   );
 };

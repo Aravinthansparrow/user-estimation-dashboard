@@ -86,7 +86,6 @@ const YourComponent = () => {
     console.log(updateActivityloading, 'loading');
     if (updateActivityloading === API_STATUS.FULFILLED) {
       console.log('activities data updated got Successfully!');
-
       const updatedItems = data.map((item) =>
         item.id === selectedItemId ? { ...item, activity: editedActivity, percentagesplit: editedPercentage } : item
       );
@@ -116,14 +115,11 @@ const YourComponent = () => {
     // Check if both newActivity and newPercentage are filled
     if (newActivity.trim() !== '' && newPercentage.trim() !== '') {
       const parsedPercentage = parseFloat(newPercentage);
-
       if (parsedPercentage !== 0) {
         // Calculate the current total percentage
         const currentTotalPercentage = calculateTotalPercentage();
-
         // Calculate the total percentage after adding the new activity
         const updatedTotalPercentage = currentTotalPercentage + parsedPercentage;
-
         if (updatedTotalPercentage <= 100) {
           // If the updated total is less than or equal to 100, add the new activity
           dispatch(

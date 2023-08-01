@@ -2,8 +2,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { API_STATUS } from '../../utils/constants';
 import { getGeneralSettingsAPI, updateGeneralSettingsAPI } from '../../services/api';
-const namespace = 'generalSetting';
 
+const namespace = 'generalSetting';
 const initialState = {
   data: {},
   status: API_STATUS.PENDING,
@@ -20,7 +20,7 @@ export const fetchGeneralSettings = createAsyncThunk(`${namespace}/fetchGeneralS
   }
 });
 
-// Async thunk to update general settings to the API
+
 export const updateGeneralSettings = createAsyncThunk(`${namespace}/updateGeneralSettings`, async (updatedValues, { rejectWithValue }) => {
   try {
     const response = await updateGeneralSettingsAPI(updatedValues);
@@ -30,7 +30,7 @@ export const updateGeneralSettings = createAsyncThunk(`${namespace}/updateGenera
   }
 });
 
-// Create a slice of the Redux state for general settings
+
 const generalSettingsSlice = createSlice({
   name: namespace,
   initialState,
@@ -40,25 +40,25 @@ const generalSettingsSlice = createSlice({
       state.status = API_STATUS.PENDING;
       state.error = null;
     },
-    [fetchGeneralSettings.fulfilled] (state, action) {
+    [fetchGeneralSettings.fulfilled](state, action) {
       state.status = API_STATUS.FULFILLED;
       state.error = null;
       state.data = action.payload; // Update the state with the new data from the API response
     },
-    [fetchGeneralSettings.rejected] (state, action) {
+    [fetchGeneralSettings.rejected](state, action) {
       state.status = API_STATUS.REJECTED;
       state.error = action.error.message || API_STATUS.NETWORK_ERROR;
     },
-    [updateGeneralSettings.pending] (state) {
+    [updateGeneralSettings.pending](state) {
       state.status = API_STATUS.PENDING;
       state.error = null;
     },
-    [updateGeneralSettings.fulfilled] (state, action)  {
+    [updateGeneralSettings.fulfilled](state, action) {
       state.status = API_STATUS.FULFILLED;
       state.error = null;
       state.data = action.payload; // Update the state with the new data from the API response
     },
-    [updateGeneralSettings.rejected](state, action)  {
+    [updateGeneralSettings.rejected](state, action) {
       state.status = API_STATUS.REJECTED;
       state.error = action.payload || API_STATUS.NETWORK_ERROR;
     },

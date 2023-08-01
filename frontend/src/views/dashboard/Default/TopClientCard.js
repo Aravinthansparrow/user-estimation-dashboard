@@ -12,8 +12,8 @@ const TopClients = () => {
   const loading = useSelector(estimateListSelector).loading;
   const data = useSelector(estimateListSelector).loadData;
   const dispatch = useDispatch();
+
   useEffect(() => {
-    // Dispatch the async thunk to fetch data from the table
     dispatch(fetchEstimateList());
   }, [dispatch]);
 
@@ -22,7 +22,6 @@ const TopClients = () => {
     if (loading === API_STATUS.FULFILLED) {
       console.log('data got Successfully!');
       const allClients = data;
-
       // Count the occurrence of each client name
       const clientNameCounts = allClients.reduce((counts, client) => {
         const { clientName } = client;
@@ -32,10 +31,9 @@ const TopClients = () => {
 
       // Sort the client names based on their occurrence
       const sortedClientNames = Object.keys(clientNameCounts).sort((a, b) => clientNameCounts[b] - clientNameCounts[a]);
-
+      
       // Get the top 3 most repeated client names
       const topClientNames = sortedClientNames.slice(0, 3);
-
       setTopClientNames(topClientNames);
     }
     if (loading === API_STATUS.REJECTED) {

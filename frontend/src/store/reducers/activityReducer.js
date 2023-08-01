@@ -18,10 +18,8 @@ const initialState = {
 
 export const fetchActivities = createAsyncThunk(
   `${namespace}/fetchActivities`,
-  async (payload, { rejectWithValue }) => {
-    
+  async (payload,{ rejectWithValue }) => {
     try {
-      
       const response = await getActivities(); // Replace 'getActivities' with your actual API function call
       console.log("getActivities--> ", response);
       return response.data;
@@ -126,10 +124,7 @@ const activitiesSlice = createSlice({
       },
       [deleteActivityAction.fulfilled] (state) {
         state.deleteActivityloading = API_STATUS.FULFILLED;
-        state.error = null;
-        
-
-        
+        state.error = null; 
       },
       [deleteActivityAction.rejected] (state, action) {
         state.deleteActivityloading = API_STATUS.REJECTED;

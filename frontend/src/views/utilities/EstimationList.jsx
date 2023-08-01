@@ -12,8 +12,9 @@ import { Box, Button, TextField, DialogActions, Typography, Paper } from '@mui/m
 import Pagination from 'ui-component/pagination/pagination';
 import MainCard from 'ui-component/cards/MainCard';
 import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime'; // Import the relativeTime plugin
+import relativeTime from 'dayjs/plugin/relativeTime'; 
 import 'dayjs/locale/en';
+
 const EstimateList = () => {
   const [clients, setClients] = useState([]);
   const [selectedClientId, setSelectedClientId] = useState(null);
@@ -29,8 +30,9 @@ const EstimateList = () => {
   const loading = useSelector(estimateListSelector).loading;
   const changestatus = useSelector(estimateListSelector).changestatus;
   const data = useSelector(estimateListSelector).loadData;
-  dayjs.extend(relativeTime); // Extend dayjs with the relativeTime plugin
+  dayjs.extend(relativeTime); 
   dayjs.locale('en');
+
   // Add pagination state
   const [page, setPage] = useState(1);
   const itemsPerPage = 10;
@@ -108,7 +110,7 @@ const EstimateList = () => {
   const applyFilters = () => {
     let filteredData = clients;
     if (filterByDate) {
-      filteredData = filteredData.filter((client) => client.createdAt.substring(0, 10).includes(filterByDate));
+      filteredData = filteredData.filter((client) =>  dayjs(client.createdAt).format('DD-MM-YYYY').includes(filterByDate));
     }
     if (filterByClientName) {
       filteredData = filteredData.filter((client) => client.clientName.toLowerCase().includes(filterByClientName.toLowerCase()));
