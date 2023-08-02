@@ -5,7 +5,6 @@ import { Box, Typography } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import Joi from 'joi';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css';
@@ -13,7 +12,7 @@ import { updatePassword } from '../../store/reducers/authReducer';
 import { API_STATUS } from '../../utils/constants';
 import MainCard from 'ui-component/cards/MainCard';
 import SubCard from 'ui-component/cards/SubCard';
-
+import passwordSchema from 'Joi Schemas/changePasswordSchema';
 const ChangePassword = () => {
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.login);
@@ -53,17 +52,6 @@ const ChangePassword = () => {
   }, [loading]);
   const handleChangePassword = () => {
     setError(null);
-
-    //  Joi schema for password validation
-    const passwordSchema = Joi.string()
-      .pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%?&])[A-Za-z\d@$!%?&]{8,}$/)
-      .required()
-      .messages({
-        'string.pattern.base': 'Password should be alphanumeric, case-sensitive and at least 1 special character.',
-        'string.empty': 'Passsword cannot be blank.',
-        'any.required': 'Please provide a password.'
-      });
-
     // Validate the newPassword using Joi
     const { error: passwordError } = passwordSchema.validate(newPassword);
 

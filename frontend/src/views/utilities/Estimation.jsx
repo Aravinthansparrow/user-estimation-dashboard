@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Joi from 'joi';
 import { Grid, Button, TextField, Box, InputAdornment } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import MainCard from 'ui-component/cards/MainCard';
@@ -12,6 +11,7 @@ import { useDispatch, useSelector} from 'react-redux';
 import { useNavigate, useLocation  } from 'react-router-dom';
 import { clientDetails, estimateListSelector } from '../../store/reducers/clientReducer';
 import { API_STATUS } from '../../utils/constants';
+import clientFormSchema from 'Joi Schemas/clientFormSchema';
 
 const ClientForm = () => {
   const dispatch = useDispatch();
@@ -39,14 +39,14 @@ const ClientForm = () => {
   const urlParams = new URLSearchParams(location.search);
   const submittedParam = urlParams.get('submitted');
 
-  const schema = Joi.object({
-    clientName: Joi.string().required().label('client name'),
-    clientAddress: Joi.string().required().label('Client Address'),
-    email: Joi.string()
-      .email({ tlds: { allow: false } }) // Disable Joi's TLD validation
-      .required()
-      .label('Email ID')
-  });
+  // const schema = Joi.object({
+  //   clientName: Joi.string().required().label('client name'),
+  //   clientAddress: Joi.string().required().label('Client Address'),
+  //   email: Joi.string()
+  //     .email({ tlds: { allow: false } }) // Disable Joi's TLD validation
+  //     .required()
+  //     .label('Email ID')
+  // });
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -114,7 +114,7 @@ const ClientForm = () => {
     }
 
     // Validate the form with Joi
-    const validation = schema.validate(formData, { abortEarly: false, allowUnknown: true });
+    const validation = clientFormSchema.validate(formData, { abortEarly: false, allowUnknown: true });
     if (validation.error) {
       validation.error.details.forEach((detail) => {
         setErrors((prevErrors) => ({
