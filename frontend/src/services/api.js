@@ -21,12 +21,7 @@ export const getEstimateList =  () => {
 export const getClientDetails = (clientId) => {
   const baseURL = getBaseEndpointUrl();
   const url = `${baseURL}/clients`;
-
-  // No try/catch needed here since we are not adding specific error handling logic.
-  
   return Http.get(url, { params: { clientId } });
-
-  
 };
 
 export const submitClientDetails =  (formData) => {
@@ -35,12 +30,10 @@ export const submitClientDetails =  (formData) => {
   return Http.post(baseURL + '/clients' , formData)
 };
 
-
 export const updateStatus = (id, status) => {
   const baseURL = getBaseEndpointUrl();
   return Http.put(baseURL + '/clients' + `/${id}`, {status})
 }
-
 
 //Complexity
 
@@ -51,8 +44,6 @@ export const getComplexity =  () => {
 
 export const complexitySubmit = (complexityId,complexity , days) => {
   const baseURL = getBaseEndpointUrl();
- 
-  
   return Http.put(baseURL + '/complexity', {complexityId, complexity, days})
 }
 
@@ -63,19 +54,17 @@ export const getComponents =  () => {
   return Http.get(baseURL + '/components' )
 };
 
-export const addingComponent = (name, isDefault) =>{
- 
+export const addingComponent = (name, isDefault) => {
   const baseURL = getBaseEndpointUrl();
   return Http.post(baseURL + '/components', {name, isDefault})
 }
 
-export const deletingComponent = (id) =>{
- 
+export const deletingComponent = (id) => {
   const baseURL = getBaseEndpointUrl();
   return Http.delete(baseURL + `/components/${id}`)
 }
 
-export const updateComponentName = (id, name, isDefault) =>{
+export const updateComponentName = (id, name, isDefault) => {
   const baseURL = getBaseEndpointUrl();
   return Http.put(baseURL + `/components/${id}`, {name, isDefault})
 }
@@ -91,9 +80,6 @@ export const workItemsSubmit =  (workItem) => {
 export const workItemsGet = (clientId) => {
   const baseURL = getBaseEndpointUrl();
   const url = `${baseURL}/workitems`;
-
-  // No try/catch needed here since we are not adding specific error handling logic.
-  
   return Http.get(url, { params: { clientId } });
 
   

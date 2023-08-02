@@ -1,7 +1,5 @@
-// Http.js
 import axios from 'axios';
-
-const _axios = axios
+const _axios = axios;
 
 export class Http{
   static get(url, options={}){

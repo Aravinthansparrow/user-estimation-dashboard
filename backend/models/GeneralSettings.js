@@ -23,22 +23,22 @@ const GeneralSettings = sequelize.define('general_settings', {
 });
 
 //Create the table in the database
-GeneralSettings.sync({ force: true })
-  .then(() => {
-    // Insert initial values
-    return GeneralSettings.create({
-      version: 1,
-      document_version: 1,
-      hours_per_story_point: 8,
-      rate_per_hour: 5
-    });
-  })
-  .then(() => {
-    console.log('GeneralSettings table created and initial values inserted.');
-  })
-  .catch((error) => {
-    console.error('Error creating GeneralSettings table:', error);
-  });
+// GeneralSettings.sync({ force: true })
+//   .then(() => {
+//     // Insert initial values
+//     return GeneralSettings.create({
+//       version: 1,
+//       document_version: 1,
+//       hours_per_story_point: 8,
+//       rate_per_hour: 5
+//     });
+//   })
+//   .then(() => {
+//     console.log('GeneralSettings table created and initial values inserted.');
+//   })
+//   .catch((error) => {
+//     console.error('Error creating GeneralSettings table:', error);
+//   });
 
 
   module.exports = GeneralSettings;

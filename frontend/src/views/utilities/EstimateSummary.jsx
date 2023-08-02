@@ -51,6 +51,7 @@ const EstimateSummary = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  
   useEffect(() => {
     let totalCosting = 0;
     let totalDevEffort = 0;
@@ -167,7 +168,7 @@ const EstimateSummary = () => {
     const estimateSummaryData = [
       ['Project Name', projectName],
       ['Estimated By', estimatedBy],
-      ['Estimated On', estimatedOn],
+      ['Estimated On', dayjs(estimatedOn).locale('en').format('DD-MM-YYYY')],
       ['Version', version],
       ['Document Version', documentVersion],
       ['Hours per Story Point', hoursPerStoryPoint],
@@ -213,7 +214,18 @@ const EstimateSummary = () => {
       ...modularComponentsData
     ]);
     XLSX.utils.book_append_sheet(workbook, modularComponentsSheet, 'Modular Components');
-
+      // Add the data for the "Activities" table
+  const activitiesData = activitiesLoadData.map((activity) => [
+    activity.activity,
+    Math.round((activity.percentagesplit * totalDevEffortStoryPoints) / 100),
+    Math.round((activity.percentagesplit * totalDevEffortStoryPoints) / 100) * hoursPerStoryPoint
+  ]);
+  const activitiesSheet = XLSX.utils.aoa_to_sheet([
+    ['Activities', 'Effort in story points/(person days)', 'Total effort in hrs'],
+    ...activitiesData,
+    ['Total', totalSecondColumn, totalThirdColumn]
+  ]);
+  XLSX.utils.book_append_sheet(workbook, activitiesSheet, 'Activities');
     XLSX.writeFile(workbook, 'estimate_summary.xlsx');
   };
 

@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { workItemsGet, workItemsSubmit } from "../../services/api";
 import { API_STATUS } from "../../utils/constants";
-const namespace = "workitem";
 
+const namespace = "workitem";
 const initialState = {
     workitemloading: "initial",
     getworkitemloading: "initial",
@@ -15,9 +15,7 @@ export const submitWorkItem = createAsyncThunk(
     `${namespace}/submitWorkItem`,
     async ({ workItem }, { rejectWithValue }) => {
         try {
-            
             const data = await workItemsSubmit(workItem);
-            
             console.log("getScanCount--> ", data);
             return data;
         } catch (error) {
@@ -33,14 +31,11 @@ export const getWorkItem = createAsyncThunk(
         try {
             console.log('hi')
             console.log(clientId)
-            
             const response = await workItemsGet(clientId);
-            
             console.log("getScanCount--> ", response);
             console.log()
             return response.data;
         } catch (error) {
-        
             return rejectWithValue(error.response.data);
         }
     }
@@ -52,7 +47,7 @@ const workItemSlice = createSlice({
     name: namespace,
     initialState,
     reducers: {
-       
+
     },
     extraReducers: {
         [submitWorkItem.pending](state) {
@@ -77,7 +72,7 @@ const workItemSlice = createSlice({
             state.getworkitemloading = API_STATUS.REJECTED;
             state.errorMessage = action?.payload?.data;
         },
-      
+
     },
 });
 

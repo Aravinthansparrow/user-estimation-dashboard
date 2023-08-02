@@ -126,7 +126,7 @@ const WorkItem = () => {
         const selectedComplexity = value;
 
         const selectedBuildEffort =
-          selectedComplexity === 'simple' ? '1' : selectedComplexity === 'medium' ? '2' : selectedComplexity === 'complex' ? '3' : '';
+          selectedComplexity === 'Simple' ? '1' : selectedComplexity === 'Medium' ? '2' : selectedComplexity === 'Complex' ? '3' : '';
 
         updatedRows[index]['buildEffort'] = selectedBuildEffort;
       }
@@ -396,6 +396,7 @@ const WorkItem = () => {
                 required
                 fullWidth
               >
+              
                 {complexities.map((complexity) => (
                   <MenuItem
                     key={complexity.id}
@@ -404,9 +405,9 @@ const WorkItem = () => {
                     {complexity.complexity === row.complexity ? complexity.complexity : selectedComplexity}
                   </MenuItem>
                 ))}
-                {selectedComplexity !== 'simple' && <MenuItem value="simple">Simple</MenuItem>}
-                {selectedComplexity !== 'medium' && <MenuItem value="medium">Medium</MenuItem>}
-                {selectedComplexity !== 'complex' && <MenuItem value="complex">Complex</MenuItem>}
+                {selectedComplexity !== 'Simple' && <MenuItem value="Simple">Simple</MenuItem>}
+                {selectedComplexity !== 'Medium' && <MenuItem value="Medium">Medium</MenuItem>}
+                {selectedComplexity !== 'Complex' && <MenuItem value="Complex">Complex</MenuItem>}
               </Select>
           </TableCell>
           <TableCell className="workitem-data">

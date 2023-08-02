@@ -131,7 +131,6 @@ const mySlice = createSlice({
     },
     [clientDetails.fulfilled](state, action) {
       state.submitclients = API_STATUS.FULFILLED;
-
       state.id = action.payload.id;
       console.log(state.id);
     },
@@ -140,10 +139,7 @@ const mySlice = createSlice({
     }
   }
 });
+
 export const estimateListSelector = (state) => state.estimateList;
-
-// Export the individual action creators
 export const { setCreated, setApproved, setRejected, setUnApproved } = mySlice.actions;
-
-// Export the reducer
 export default mySlice.reducer;

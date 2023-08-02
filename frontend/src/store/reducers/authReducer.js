@@ -19,7 +19,6 @@ export const doLogin = createAsyncThunk(`${namespace}/doLogin`, async ({ email, 
     console.log(email, password);
     //let payload = EncryptDecrypt.encryptdata(postData, secretKey)
     const data = await loginUser(email, password);
-
     console.log('getScanCount--> ', data);
     return data;
   } catch (error) {

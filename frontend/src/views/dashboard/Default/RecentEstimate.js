@@ -17,13 +17,14 @@ const SmallEstimateList = () => {
   const [filteredClients, setFilteredClients] = useState([]);
   const loading = useSelector(estimateListSelector).loading;
   const data = useSelector(estimateListSelector).loadData;
-  dayjs.extend(relativeTime); // Extend dayjs with the relativeTime plugin
-  dayjs.locale('en'); // Set the locale to English
+  dayjs.extend(relativeTime); 
+  dayjs.locale('en'); 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+
+// Dispatch the async thunk to fetch data from the table
   useEffect(() => {
-    // Dispatch the async thunk to fetch data from the table
     dispatch(fetchEstimateList());
   }, [dispatch]);
 
@@ -44,10 +45,9 @@ const SmallEstimateList = () => {
   }, [clients]);
 
   const handleView = (clientId) => {
-    // setSelectedClientId(clientId);
+   
     console.log(clientId);
-    // setShowFilters(false);
-    navigate(`/utils/estimate-summary/${clientId}`);
+   navigate(`/utils/estimate-summary/${clientId}`);
   };
 
   return (
