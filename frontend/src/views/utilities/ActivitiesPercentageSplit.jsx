@@ -40,6 +40,7 @@ const YourComponent = () => {
   const [selectedItemId, setSelectedItemId] = useState(null);
   const [editedActivity, setEditedActivity] = useState('');
   const [editedPercentage, setEditedPercentage] = useState('');
+  const [showConfirmDeleteModal, setShowConfirmDeleteModal] = useState(false);
   const activitiesloading = useSelector(activitiesSelector).activitiesloading;
   const addActivityloading = useSelector(activitiesSelector).addActivityloading;
   const updateActivityloading = useSelector(activitiesSelector).updateActivityloading;
@@ -47,7 +48,6 @@ const YourComponent = () => {
   const activitiesData = useSelector(activitiesSelector).loadData;
   const addactivitiesData = useSelector(activitiesSelector).addloadData;
   const deleteActivityId = useSelector(activitiesSelector).deletedActivityId;
-  
 
   useEffect(() => {
     console.log(data);
@@ -136,24 +136,24 @@ const YourComponent = () => {
           // Show a toast notification when the total percentage exceeds 100
           toast.error('Total percentage cannot exceed 100%.', {
             position: 'top-right',
-            autoClose: 3000, 
+            autoClose: 3000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
-            progress: undefined,
+            progress: undefined
           });
         }
       } else {
         // Show a toast notification when the entered percentage is 0
         toast.error('Percentage split cannot be 0.', {
           position: 'top-right',
-          autoClose: 3000, 
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined,
+          progress: undefined
         });
       }
     } else {
@@ -182,20 +182,26 @@ const YourComponent = () => {
       }
     }
   };
-  
-  const handleDelete = (id) => {
-    const activityToDelete = data.find((item) => item.id === id);
-    if (activityToDelete) {
-      dispatch(deleteActivityAction(id));
-      dispatch(setDeletedActivityId(id));
-      toast.success(`${activityToDelete.activity} successfully deleted.`, {
+
+  const handleDeleteConfirm = (id) => {
+    setShowConfirmDeleteModal(true);
+    setSelectedItemId(id);
+  };
+
+  // Function to handle delete cancellation
+  const handleDeleteCancel = () => {
+    setShowConfirmDeleteModal(false);
+    setSelectedItemId(null);
+  };
+
+  const handleDeleteConfirmAction = () => {
+    if (selectedItemId !== null) {
+      dispatch(deleteActivityAction(selectedItemId));
+      dispatch(setDeletedActivityId(selectedItemId)); // This sets the activity ID to be deleted in the reducer
+      setShowConfirmDeleteModal(false);
+      toast.success('Activity percentage successfully deleted.', {
         position: 'top-right',
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
+        autoClose: 3000
       });
     }
   };
@@ -213,7 +219,8 @@ const YourComponent = () => {
 
     if (editedActivity.trim() !== '' && !isNaN(parsedPercentage) && parsedPercentage >= 1 && parsedPercentage <= 100) {
       // Calculate the current total percentage excluding the selected item's percentage
-      const currentTotalPercentage = calculateTotalPercentage() - parseFloat(data.find(item => item.id === selectedItemId).percentagesplit);
+      const currentTotalPercentage =
+        calculateTotalPercentage() - parseFloat(data.find((item) => item.id === selectedItemId).percentagesplit);
 
       // Calculate the updated total percentage after adding the new percentage
       const updatedTotalPercentage = currentTotalPercentage + parsedPercentage;
@@ -238,7 +245,7 @@ const YourComponent = () => {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined,
+          progress: undefined
         });
       }
     } else {
@@ -250,7 +257,7 @@ const YourComponent = () => {
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
+        progress: undefined
       });
     }
   };
@@ -294,7 +301,7 @@ const YourComponent = () => {
                     >
                       <EditIcon sx={{ color: 'black' }} />
                     </Button>
-                    <Button variant="contained" className=" view-btn" onClick={() => handleDelete(item.id)}>
+                    <Button variant="contained" className=" view-btn" onClick={() => handleDeleteConfirm(item.id)}> 
                       <DeleteIcon sx={{ color: 'black' }} />
                     </Button>{' '}
                   </Box>
@@ -303,8 +310,17 @@ const YourComponent = () => {
             ))}
           </TableBody>
         </Table>
+        <Box display="flex" alignItems="center" className="total-box">
+          <Typography style={{ width: '40%' }} className="tot-para" variant="h3">
+            Total Percentage Split:
+          </Typography>
+          <Typography style={{ width: '20%', textAlign: 'center' }} className="tot-para" variant="h3">
+            {' '}
+            {calculateTotalPercentage()}%
+          </Typography>
+        </Box>
       </TableContainer>
-
+      {/* Set Add Activity Modal */}
       <Dialog isOpen={showPopup} contentLabel="Complexity Level Modal" className="modal" overlayClassName="modal-overlay">
         <DialogActions className="modal-content flex-column">
           <Typography variant="h3">Add New Entry</Typography>
@@ -342,7 +358,7 @@ const YourComponent = () => {
           </Box>
         </DialogActions>
       </Dialog>
-
+      {/* Edit Activity percentage Modal */}
       <Dialog isOpen={showEditPopup} contentLabel="Complexity Level Modal" className="modal" overlayClassName="modal-overlay">
         <DialogActions className="modal-content flex-column">
           <Typography variant="h3">Edit Entry</Typography>
@@ -358,7 +374,7 @@ const YourComponent = () => {
             />
           </Box>
           <Box display="flex">
-          <InputLabel className="content-label">Percentage Split</InputLabel>
+            <InputLabel className="content-label">Percentage Split</InputLabel>
             <TextField
               fullWidth
               required
@@ -380,19 +396,29 @@ const YourComponent = () => {
           </Box>
         </DialogActions>
       </Dialog>
-
-      <Box display="flex" alignItems="center" className="total-box">
-        <Typography style={{ width: '40%' }} className="tot-para" variant="h3">
-          Total Percentage Split:
-        </Typography>
-        <Typography style={{ width: '20%', textAlign: 'center' }} className="tot-para" variant="h3">
-          {' '}
-          {calculateTotalPercentage()}%
-        </Typography>
-      </Box>
+      {/* delete Activity percentage Modal */}
+      <Dialog
+        isOpen={showConfirmDeleteModal}
+        onRequestClose={handleDeleteCancel}
+        contentLabel="Confirmation Modal"
+        className="modal"
+        overlayClassName="modal-overlay"
+      >
+        <DialogActions className="modal-content flex-column">
+          <Typography variant="h3">Confirmation</Typography>
+          <Typography variant="body1">Are you sure you want to delete this activity percentage?</Typography>
+          <Box display="flex" justifyContent="space-between" alignSelf="end" gap="8px">
+            <Button variant="contained" className="primary-btn" onClick={handleDeleteConfirmAction}>
+              Confirm
+            </Button>
+            <Button variant="contained" className="primary-btn" onClick={handleDeleteCancel}>
+              Cancel
+            </Button>
+          </Box>
+        </DialogActions>
+      </Dialog>
     </MainCard>
   );
 };
 
-export default YourComponent
-
+export default YourComponent;

@@ -162,10 +162,6 @@ const EstimateList = () => {
 
   return (
     <MainCard style={{ height: '100%' }} title="Estimation List">
-      {/* {showEstimateSummary ? (
-        <EstimateSummary clientId={selectedClientId} />
-      ) : ( */}
-      <div>
         {showFilters && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <TextField
@@ -276,9 +272,7 @@ const EstimateList = () => {
             })}
           </div>
         </div>
-      </div>
-      {/* )} */}
-      {/* Add Pagination component */}
+      {/* Pagination component */}
       <Box  display="flex" justifyContent="end" alignItems="center">
         <Pagination currentPage={page} totalPages={pageCount} onPageChange={handlePageChange} />
       </Box>

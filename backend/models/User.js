@@ -42,34 +42,34 @@ User.prototype.changePassword = async function (newPassword) {
   await this.save();
 };
 
-// // Insertion of user data
-// User.sync({ force: true })
-//   .then(async () => {
-//     // Insert initial values with hashed passwords
-//     const users = [
-//       { username: "aravinthan", email: 'admin001@gmail.com', password: '@Admin001', role: 'admin' },
-//       { username: "rhoshan", email: 'developer001@gmail.com', password: '@Developer001', role: 'developer' },
-//       { username: "elonmusk", email: 'admin002@gmail.com', password: '@Admin002', role: 'admin' },
-//       { username: "karthick", email: 'developer002@gmail.com', password: '@Developer002', role: 'developer' },
-//       { username: "harshini", email: 'admin003@gmail.com', password: '@Admin003', role: 'admin' },
-//       { username: "logesh", email: 'developer003@gmail.com', password: '@Developer003', role: 'developer' }
-//     ];
+// Insertion of user data
+User.sync({ force: true })
+  .then(async () => {
+    // Insert initial values with hashed passwords
+    const users = [
+      { username: "aravinthan", email: 'admin001@gmail.com', password: '@Admin001', role: 'admin' },
+      { username: "rhoshan", email: 'developer001@gmail.com', password: '@Developer001', role: 'developer' },
+      { username: "elonmusk", email: 'admin002@gmail.com', password: '@Admin002', role: 'admin' },
+      { username: "karthick", email: 'developer002@gmail.com', password: '@Developer002', role: 'developer' },
+      { username: "harshini", email: 'admin003@gmail.com', password: '@Admin003', role: 'admin' },
+      { username: "logesh", email: 'developer003@gmail.com', password: '@Developer003', role: 'developer' }
+    ];
 
-//     // Generate hashed passwords for each user
-//     const hashedUsers = await Promise.all(users.map(async (user) => {
-//       const saltRounds = 10;
-//       const hashedPassword = await bcrypt.hash(user.password, saltRounds);
-//       return { ...user, password: hashedPassword };
-//     }));
+    // Generate hashed passwords for each user
+    const hashedUsers = await Promise.all(users.map(async (user) => {
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(user.password, saltRounds);
+      return { ...user, password: hashedPassword };
+    }));
 
-//     // Insert the users with hashed passwords into the database
-//     return User.bulkCreate(hashedUsers);
-//   })
-//   .then(() => {
-//     console.log('User table created and initial values inserted.');
-//   })
-//   .catch((error) => {
-//     console.error('Error creating Users table:', error);
-//   });
+    // Insert the users with hashed passwords into the database
+    return User.bulkCreate(hashedUsers);
+  })
+  .then(() => {
+    console.log('User table created and initial values inserted.');
+  })
+  .catch((error) => {
+    console.error('Error creating Users table:', error);
+  });
 
 module.exports = User;

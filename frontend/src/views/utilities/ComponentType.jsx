@@ -27,6 +27,8 @@ const ComponentType = () => {
   const [selectedComponentIndex, setSelectedComponentIndex] = useState(null);
   const [updatedComponentName, setUpdatedComponentName] = useState('');
   const [defaultComponent, setDefaultComponent] = useState(null);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [componentToDeleteIndex, setComponentToDeleteIndex] = useState(null);
   const [confirmModalIsOpen, setConfirmModalIsOpen] = useState(false);
   const [confirmComponentIndex, setConfirmComponentIndex] = useState(null);
   const componentloading = useSelector(componentSelector).componentloading;
@@ -38,12 +40,13 @@ const ComponentType = () => {
   const addComponentData = useSelector(componentSelector).addcomponentloadData;
   const updatecomponentnameData = useSelector(componentSelector).updatecomponentnameloadData;
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(fetchComponents());
   }, [dispatch]);
 
   useEffect(() => {
-    console.log(components); // Log the updated components array after state update
+    console.log(components);
   }, [components]);
 
   useEffect(() => {
@@ -169,16 +172,28 @@ const ComponentType = () => {
     setConfirmModalIsOpen(false);
   };
   const deleteComponent = (index) => {
-    const componentToDelete = components[index];
-    const componentName = componentToDelete.name;
-    const id = componentToDelete.id;
-    console.log(id);
+    setComponentToDeleteIndex(index);
+    setShowConfirmationModal(true);
     dispatch(setDeletedComponentIndex(index));
-    dispatch(deleteComponents(id));
-
-    // Show toast message when the component is deleted
-    toast.success(`${componentName} component successfully deleted!`, { autoClose: 4000 });
   };
+
+  const handleConfirmDelete = () => {
+    if (componentToDeleteIndex !== null) {
+      const indexToDelete = componentToDeleteIndex;
+      const componentToDelete = components[indexToDelete];
+      // Dispatch the deleteComponents action
+      dispatch(deleteComponents(componentToDelete.id));
+      // Reset the state
+      setShowConfirmationModal(false);
+      setComponentToDeleteIndex(null);
+      toast.success(`${componentToDelete.name} component successfully deleted!`, { autoClose: 3000 });
+    }
+  };
+  const handleCancelDelete = () => {
+    setShowConfirmationModal(false);
+    setComponentToDeleteIndex(null);
+  };
+
   const handleAddComponent = () => {
     setNewComponentModalIsOpen(true);
   };
@@ -217,7 +232,7 @@ const ComponentType = () => {
           <AddCircleOutlineIcon />
         </Button>
       </Box>
-      <SubCard style={{maxWidth:'700px',margin:'auto'}}>
+      <SubCard style={{ maxWidth: '700px', margin: 'auto' }}>
         {components.map((component, index) => (
           <Box
             display="flex"
@@ -249,7 +264,6 @@ const ComponentType = () => {
           </Box>
         ))}
       </SubCard>
-
       {/* Add New Component Modal */}
       <Modal
         isOpen={newComponentModalIsOpen}
@@ -271,7 +285,6 @@ const ComponentType = () => {
           </Box>
         </DialogActions>
       </Modal>
-
       {/* Edit Component Modal */}
       <Modal
         isOpen={editModalIsOpen}
@@ -298,7 +311,6 @@ const ComponentType = () => {
           </Box>
         </DialogActions>
       </Modal>
-
       {/* Set Default Confirmation Modal */}
       <Modal
         isOpen={confirmModalIsOpen}
@@ -318,6 +330,28 @@ const ComponentType = () => {
               No
             </Button>
           </Box>
+        </DialogActions>
+      </Modal>
+      {/* Set Default Confirmation Modal */}
+      <Modal
+        className="modal modal-content"
+        overlayClassName="modal-overlay"
+        isOpen={showConfirmationModal}
+        onRequestClose={handleCancelDelete}
+      >
+        <Typography variant="h3" className="confirm-header">
+          Confirmation
+        </Typography>
+        <Typography variant="body1" className="confirm-para">
+          Are you sure you want to delete this component?
+        </Typography>
+        <DialogActions>
+          <Button variant="contained" className="primary-btn" onClick={handleConfirmDelete}>
+            Confirm
+          </Button>
+          <Button variant="contained" className="primary-btn" onClick={handleCancelDelete}>
+            Cancel
+          </Button>
         </DialogActions>
       </Modal>
     </MainCard>

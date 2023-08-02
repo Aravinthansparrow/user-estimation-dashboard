@@ -8,8 +8,8 @@ import ErrorIcon from '@mui/icons-material/Error';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useDispatch, useSelector} from 'react-redux';
-import { useNavigate, useLocation  } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { clientDetails, estimateListSelector } from '../../store/reducers/clientReducer';
 import { API_STATUS } from '../../utils/constants';
 
@@ -50,7 +50,15 @@ const ClientForm = () => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
+
+    // Check for valid input and set errors and isSubmitted
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: value.trim() === '' ? `Please provide a valid ${name}` : ''
+    }));
+
     setFormData({ ...formData, [name]: value });
+    setIsSubmitted(false); // Set isSubmitted to false to show tick icon quickly
   };
 
   const validateEmailFormat = (email) => {
@@ -88,8 +96,9 @@ const ClientForm = () => {
     }
     if (clientdetails === API_STATUS.REJECTED) {
       toast.error('Client submission failed');
+      setIsSubmitted(false);
     }
-  }, [clientdetails, id, urlParams, submittedParam,isSubmitted]);
+  }, [clientdetails, id, urlParams, submittedParam, isSubmitted]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -106,10 +115,14 @@ const ClientForm = () => {
 
     // Validate email format using regex
     if (formData.email.trim() !== '' && !validateEmailFormat(formData.email)) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        email: 'Please provide a valid Email ID'
-      }));
+      newErrors.email = 'Please provide a valid Email ID';
+    }
+
+    setErrors(newErrors);
+
+    // If there are errors, prevent form submission and show error messages
+    if (Object.keys(newErrors).length > 0) {
+      setIsSubmitted(false); // Set isSubmitted to false if there are errors
       return;
     }
 
