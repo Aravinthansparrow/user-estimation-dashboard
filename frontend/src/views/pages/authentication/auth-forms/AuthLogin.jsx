@@ -19,16 +19,17 @@ import {
   InputLabel,
   OutlinedInput,
   Stack,
-  Typography
+  Typography,
+  CircularProgress
 } from '@mui/material';
 
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
-
 const Login = () => {
   const theme = useTheme();
+  const [loader, setLoader] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const loading = useSelector(loginSelector).loading;
@@ -48,27 +49,33 @@ const Login = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
+    setLoader(true);
     dispatch(doLogin({ email, password }));
+    // After the API call, hide the circular progress
+    setLoader(false);
   };
 
   useEffect(() => {
     console.log(loading, 'loading');
     if (loading === API_STATUS.FULFILLED) {
       console.log('Loggedin Successfully!');
-      toast.success('Loggedin Successfully!',{autoClose:2000});
       toast.dismiss();
-      navigate('/dashboard/default');
+      toast.success('Loggedin Successfully!', { autoClose: 3000 });
+      setLoader(true);
+      setTimeout(() => {
+        navigate('/dashboard/default');
+      }, 4000);
     }
     if (loading === API_STATUS.REJECTED) {
       console.log('Login Failed! Please check username and password');
       toast.dismiss();
-      toast.error('Login Failed! Please check username and password',{autoClose:2000});
+      toast.error('Login Failed! Please check username and password', { autoClose: 4000 });
     }
-  }, [loading]);
+  }, [loading, navigate]);
 
   return (
     <Box>
-      <Box textAlign= 'center' marginBottom= '10px'>
+      <Box textAlign="center" marginBottom="10px">
         <AccountCircleIcon style={{ fontSize: '75', color: '#6d737c' }} />
       </Box>
       <form onSubmit={handleLogin}>
@@ -121,12 +128,20 @@ const Login = () => {
             Forgot Password?
           </Typography>
         </Stack>
-        <Box sx={{ mt: 2 }}>
-          <Button fullWidth size="large" type="submit" variant="contained" style={{ color: 'white', background: 'rgb(0, 168, 171)' }}>
-            Sign in
-          </Button>
-        </Box>
+        {!loader && (
+          <Box sx={{ mt: 2 }}>
+            <Button fullWidth size="large" type="submit" variant="contained" style={{ color: 'white', background: 'rgb(0, 168, 171)' }}>
+              Sign in
+            </Button>
+          </Box>
+        )}
       </form>
+      {loader && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', my: 2}}>
+          <Button fullWidth size="large" variant="contained" style={{ padding:'4px',background: 'rgb(195 203 203 / 49%)'}}>
+          <CircularProgress /></Button>
+        </Box>
+      )}
     </Box>
   );
 };

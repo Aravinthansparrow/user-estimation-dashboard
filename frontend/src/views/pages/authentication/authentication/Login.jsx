@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 // material-ui
-import { Divider, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 
 // project imports
 import AuthWrapper from '../AuthWrapper';
@@ -29,9 +29,6 @@ const Login = () => {
                   </Grid>
                   <Grid item xs={12}>
                     <AuthLogin />
-                  </Grid>
-                  <Grid item xs={12}>
-                    <Divider />
                   </Grid>
                 </Grid>
               </AuthCardWrapper>

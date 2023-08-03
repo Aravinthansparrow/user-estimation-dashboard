@@ -39,15 +39,6 @@ const ClientForm = () => {
   const urlParams = new URLSearchParams(location.search);
   const submittedParam = urlParams.get('submitted');
 
-  // const schema = Joi.object({
-  //   clientName: Joi.string().required().label('client name'),
-  //   clientAddress: Joi.string().required().label('Client Address'),
-  //   email: Joi.string()
-  //     .email({ tlds: { allow: false } }) // Disable Joi's TLD validation
-  //     .required()
-  //     .label('Email ID')
-  // });
-
   const handleInputChange = (event) => {
     const { name, value } = event.target;
 

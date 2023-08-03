@@ -1,4 +1,3 @@
-// clientFormSchema.js
 import Joi from 'joi';
 
 const clientFormSchema = Joi.object({

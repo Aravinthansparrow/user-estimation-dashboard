@@ -1,4 +1,3 @@
-// passwordSchema.js
 import Joi from 'joi';
 
 const passwordSchema = Joi.string()

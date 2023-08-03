@@ -64,7 +64,7 @@ const GeneralSettings = () => {
     dispatch(updateGeneralSettings(updatedValues))
       .unwrap()
       .then(() => {
-        // The Redux store will automatically update with the new values
+        // Redux store will automatically update with the new values
         setModal(false);
       });
   };
