@@ -13,4 +13,6 @@ router.get('/', clientController.getClients);
 // Update client status
 router.put('/:id', clientController.updateClientStatus);
 
+router.get('/bar', clientController.getClientData);
+
 module.exports = router;

@@ -79,8 +79,31 @@ const updateClientStatus = async (req, res) => {
   }
 };
 
+const getClientData = async (req, res) => {
+  try {
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+    const startDate = new Date(currentYear, currentMonth, 1);
+    const endDate = new Date(currentYear, currentMonth + 1, 0);
+    
+
+    const query = `SELECT createdAt, COUNT(*) as created, status FROM clients WHERE createdAt BETWEEN ? AND ? GROUP BY createdAt`;
+    const clientData = await Client.sequelize.query(query, {
+      replacements: [startDate, endDate],
+      type: Client.sequelize.QueryTypes.SELECT,
+    });
+
+    res.json(clientData);
+  } catch (error) {
+    console.error('Error retrieving client data:', error);
+    res.status(500).json({ error: 'An error occurred while retrieving client data.' });
+  }
+};
+
 module.exports = {
   createClient,
   getClients,
   updateClientStatus,
+  getClientData,
 };
