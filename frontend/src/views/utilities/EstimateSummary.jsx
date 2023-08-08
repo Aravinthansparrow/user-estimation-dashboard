@@ -16,10 +16,13 @@ import SubCard from 'ui-component/cards/SubCard';
 import MainCard from 'ui-component/cards/MainCard';
 import dayjs from 'dayjs';
 import 'dayjs/locale/en';
-import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Button, Paper, Box, Typography, InputBase } from '@mui/material';
+import { useTheme } from '@emotion/react';
+import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Button, Paper, Box, Typography } from '@mui/material';
 
 const EstimateSummary = () => {
   const { id } = useParams();
+  const theme = useTheme();
+  const themeMode = useSelector((state) => state.customization.themeMode);
   const [sendByEmail, setSendByEmail] = useState(false);
   const [download, setDownload] = useState(false);
   const [createNew, setCreateNew] = useState(false);
@@ -51,7 +54,7 @@ const EstimateSummary = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     let totalCosting = 0;
     let totalDevEffort = 0;
@@ -78,7 +81,7 @@ const EstimateSummary = () => {
     setModularComponents(false);
     setEstimateSummary(false);
     navigate('/utils/generate-estimation'); // Navigates to '/generate-estimate' route
-    window.location.reload(true)
+    window.location.reload(true);
   };
 
   const handleEstimateSummary = () => {
@@ -140,23 +143,22 @@ const EstimateSummary = () => {
     }
   }, [getworkitemloading]);
 
-  useEffect(()=>{
+  useEffect(() => {
     let totalSecondColumn = 0;
     activityData.forEach((row) => {
-      const percentagesplit = parseFloat(row.percentagesplit) || 0
-      
-      totalSecondColumn += Math.round(((percentagesplit* totalDevEffortStoryPoints)/100))
-    })
-    setTotalSecondColumn(totalSecondColumn)
-      console.log(totalSecondColumn)
+      const percentagesplit = parseFloat(row.percentagesplit) || 0;
+
+      totalSecondColumn += Math.round((percentagesplit * totalDevEffortStoryPoints) / 100);
+    });
+    setTotalSecondColumn(totalSecondColumn);
+    console.log(totalSecondColumn);
   });
-  
+
   useEffect(() => {
-    
     console.log(activitiesloading, 'activitiesloading');
     if (activitiesloading === API_STATUS.FULFILLED) {
-      setActivityData(activitiesLoadData)
-      }
+      setActivityData(activitiesLoadData);
+    }
     if (activitiesloading === API_STATUS.REJECTED) {
       console.log('general settings data not got');
     }
@@ -214,18 +216,18 @@ const EstimateSummary = () => {
       ...modularComponentsData
     ]);
     XLSX.utils.book_append_sheet(workbook, modularComponentsSheet, 'Modular Components');
-      // Add the data for the "Activities" table
-  const activitiesData = activitiesLoadData.map((activity) => [
-    activity.activity,
-    Math.round((activity.percentagesplit * totalDevEffortStoryPoints) / 100),
-    Math.round((activity.percentagesplit * totalDevEffortStoryPoints) / 100) * hoursPerStoryPoint
-  ]);
-  const activitiesSheet = XLSX.utils.aoa_to_sheet([
-    ['Activities', 'Effort in story points/(person days)', 'Total effort in hrs'],
-    ...activitiesData,
-    ['Total', totalSecondColumn, totalThirdColumn]
-  ]);
-  XLSX.utils.book_append_sheet(workbook, activitiesSheet, 'Activities');
+    // Add the data for the "Activities" table
+    const activitiesData = activitiesLoadData.map((activity) => [
+      activity.activity,
+      Math.round((activity.percentagesplit * totalDevEffortStoryPoints) / 100),
+      Math.round((activity.percentagesplit * totalDevEffortStoryPoints) / 100) * hoursPerStoryPoint
+    ]);
+    const activitiesSheet = XLSX.utils.aoa_to_sheet([
+      ['Activities', 'Effort in story points/(person days)', 'Total effort in hrs'],
+      ...activitiesData,
+      ['Total', totalSecondColumn, totalThirdColumn]
+    ]);
+    XLSX.utils.book_append_sheet(workbook, activitiesSheet, 'Activities');
     XLSX.writeFile(workbook, 'estimate_summary.xlsx');
   };
 
@@ -237,7 +239,51 @@ const EstimateSummary = () => {
 
   // Calculate the total for the third column of the "Activities" table
   const totalThirdColumn = totalSecondColumn * hoursPerStoryPoint;
-
+  const lightButton = (
+    <div>
+      <Button
+        variant="contained"
+        className="tab-btn"
+        onClick={handleEstimateSummary}
+        style={{ backgroundColor: estimateSummary ? 'rgb(203 187 235)' : '#ede7f6' }}
+      >
+        Estimate Summary
+      </Button>
+      <Button
+        className="tab-btn"
+        variant="contained"
+        onClick={handleModularComponents}
+        style={{
+          backgroundColor: modularComponents ? 'rgb(203 187 235)' : '#ede7f6'
+        }}
+      >
+        Modular Components
+      </Button>
+    </div>
+  );
+  const darkButton = (
+    <div>
+      <Button
+        variant="contained"
+        className="themes-btn"
+        onClick={handleEstimateSummary}
+        style={{ backgroundColor: estimateSummary ? theme.palette.common.title2 : '' }}
+      >
+        Estimate Summary
+      </Button>
+      <Button
+        variant="contained"
+        className="themes-btn"
+        onClick={handleModularComponents}
+        style={{
+          backgroundColor: estimateSummary ? theme.palette.common.title2 : ''
+        }}
+      >
+        Modular Components
+      </Button>
+    </div>
+  );
+  const conditionThemeBtns = themeMode === 'dark' ? darkButton : lightButton;
   return (
     <MainCard style={{ height: '100%' }} className="" title="Estimate Summary">
       <Box display="flex" mb={3} justifyContent="end" gap="10px">
@@ -254,131 +300,147 @@ const EstimateSummary = () => {
           <AddCircleOutlineIcon />
         </Button>
       </Box>
-      <Box display="flex"  padding="0px 25px">
-        <Button
-          variant="contained"
-          className="tab-btn"
-          onClick={handleEstimateSummary}
-          style={{ backgroundColor: estimateSummary ? 'rgb(0, 168, 171)' : 'rgba(189, 232, 233, 0.7)' }}
-        >
-          Estimate Summary
-        </Button>
-        <Button
-          className="tab-btn"
-          variant="contained"
-          onClick={handleModularComponents}
-          style={{
-            backgroundColor: modularComponents ? 'rgb(0, 168, 171)' : 'rgba(189, 232, 233, 0.7)'
-          }}
-        >
-          Modular Components
-        </Button>
+      <Box display="flex" padding="0px 25px">
+        {conditionThemeBtns}
       </Box>
       {sendByEmail && <p>Send by Email functionality is displayed</p>}
       {download && <p>Download functionality is displayed</p>}
       {createNew && <p>New functionality is displayed</p>}
       {estimateSummary && (
-        <Box  padding="0px 25px">
+        <Box padding="0px 25px">
           <Typography variant="h3" style={{ margin: '25px 0px' }}>
             {' '}
             Estimate Summary
           </Typography>
-          
+
           <SubCard style={{ maxWidth: '630px' }}>
-            <TableContainer component={Paper}>
+            <TableContainer
+              style={{ background: themeMode === 'dark' ? theme.palette.darkbg.blue2 : '', padding: themeMode === 'dark' ? '15px' : '0px' }}
+              component={Paper}
+            >
               <Table className="work-item-table">
                 <TableBody>
                   <TableRow className="workitem-tab table-rows">
-                    <TableCell style={{ padding: '0px' }} className="border-none">
+                    <TableCell style={{ padding: '0px' }} className={themeMode === 'dark' ? 'theme-border' : 'border-none'}>
                       Project Name
                     </TableCell>
                     <TableCell className="border-none" style={{ padding: '5px 0px' }}>
-                      <InputBase fullWidth type="text" value={projectName} readOnly />
+                      <input className={themeMode === 'dark' ? 'theme-input' : 'fader-input'} type="text" value={projectName} readOnly />
                     </TableCell>
                   </TableRow>
                   <TableRow className="workitem-tab table-rows">
-                    <TableCell style={{ padding: '0px' }} className="border-none">
+                    <TableCell style={{ padding: '0px' }} className={themeMode === 'dark' ? 'theme-border' : 'border-none'}>
                       Estimated By
                     </TableCell>
-                    <TableCell className="border-none" style={{ padding: '5px 0px' }}>
-                      <InputBase fullWidth type="text" value={estimatedBy} readOnly />
+                    <TableCell className={themeMode === 'dark' ? 'theme-border' : 'border-none'} style={{ padding: '5px 0px' }}>
+                      <input className={themeMode === 'dark' ? 'theme-input' : 'fader-input'} type="text" value={estimatedBy} readOnly />
                     </TableCell>
                   </TableRow>
                   <TableRow className="workitem-tab table-rows">
-                    <TableCell style={{ padding: '0px' }} className="border-none">
+                    <TableCell style={{ padding: '0px' }} className={themeMode === 'dark' ? 'theme-border' : 'border-none'}>
                       Estimated On
                     </TableCell>
-                    <TableCell className="border-none" style={{ padding: '5px 0px' }}>
-                      <InputBase fullWidth type="text"value={dayjs(estimatedOn).locale('en').format('DD-MM-YYYY')} readOnly />
+                    <TableCell className={themeMode === 'dark' ? 'theme-border' : 'border-none'} style={{ padding: '5px 0px' }}>
+                      <input
+                        className={themeMode === 'dark' ? 'theme-input' : 'fader-input'}
+                        type="text"
+                        value={dayjs(estimatedOn).locale('en').format('DD-MM-YYYY')}
+                        readOnly
+                      />
                     </TableCell>
                   </TableRow>
                   <TableRow className="workitem-tab table-rows">
-                    <TableCell style={{ padding: '0px' }} className="border-none">
+                    <TableCell style={{ padding: '0px' }} className={themeMode === 'dark' ? 'theme-border' : 'border-none'}>
                       Version
                     </TableCell>
-                    <TableCell className="border-none" style={{ padding: '5px 0px' }}>
-                      <InputBase fullWidth type="text" value={version} readOnly />
+                    <TableCell className={themeMode === 'dark' ? 'theme-border' : 'border-none'} style={{ padding: '5px 0px' }}>
+                      <input className={themeMode === 'dark' ? 'theme-input' : 'fader-input'} type="text" value={version} readOnly />
                     </TableCell>
                   </TableRow>
                   <TableRow className="workitem-tab table-rows">
-                    <TableCell style={{ padding: '0px' }} className="border-none">
+                    <TableCell style={{ padding: '0px' }} className={themeMode === 'dark' ? 'theme-border' : 'border-none'}>
                       Document Version
                     </TableCell>
-                    <TableCell className="border-none" style={{ padding: '5px 0px' }}>
-                      <InputBase fullWidth type="number" value={documentVersion} readOnly />
+                    <TableCell className={themeMode === 'dark' ? 'theme-border' : 'border-none'} style={{ padding: '5px 0px' }}>
+                      <input
+                        className={themeMode === 'dark' ? 'theme-input' : 'fader-input'}
+                        type="number"
+                        value={documentVersion}
+                        readOnly
+                      />
                     </TableCell>
                   </TableRow>
                   <TableRow className="workitem-tab table-rows">
-                    <TableCell style={{ padding: '0px' }} className="border-none">
+                    <TableCell style={{ padding: '0px' }} className={themeMode === 'dark' ? 'theme-border' : 'border-none'}>
                       Hours per Story Point
                     </TableCell>
-                    <TableCell className="border-none" style={{ padding: '5px 0px' }}>
-                      <InputBase fullWidth type="number" value={hoursPerStoryPoint} readOnly />
+                    <TableCell className={themeMode === 'dark' ? 'theme-border' : 'border-none'} style={{ padding: '5px 0px' }}>
+                      <input
+                        className={themeMode === 'dark' ? 'theme-input' : 'fader-input'}
+                        type="number"
+                        value={hoursPerStoryPoint}
+                        readOnly
+                      />
                     </TableCell>
                   </TableRow>
                   <TableRow className="workitem-tab table-rows">
-                    <TableCell style={{ padding: '0px' }} className="border-none">
+                    <TableCell style={{ padding: '0px' }} className={themeMode === 'dark' ? 'theme-border' : 'border-none'}>
                       Rate per Hour
                     </TableCell>
-                    <TableCell className="border-none" style={{ padding: '5px 0px' }}>
-                      <InputBase fullWidth type="number" value={ratePerHour} readOnly />
+                    <TableCell className={themeMode === 'dark' ? 'theme-border' : 'border-none'} style={{ padding: '5px 0px' }}>
+                      <input className={themeMode === 'dark' ? 'theme-input' : 'fader-input'} type="number" value={ratePerHour} readOnly />
                     </TableCell>
                   </TableRow>
                   <TableRow className="workitem-tab table-rows">
-                    <TableCell style={{ padding: '0px' }} className="border-none">
+                    <TableCell style={{ padding: '0px' }} className={themeMode === 'dark' ? 'theme-border' : 'border-none'}>
                       Overall Costing
                     </TableCell>
-                    <TableCell className="border-none" style={{ padding: '5px 0px' }}>
-                      <InputBase fullWidth type="text" value={`$${overallCosting}`} readOnly />
+                    <TableCell className={themeMode === 'dark' ? 'theme-border' : 'border-none'} style={{ padding: '5px 0px' }}>
+                      <input
+                        className={themeMode === 'dark' ? 'theme-input' : 'fader-input'}
+                        type="text"
+                        value={`$${overallCosting}`}
+                        readOnly
+                      />
                     </TableCell>
                   </TableRow>
                   <TableRow className="workitem-tab table-rows">
-                    <TableCell style={{ padding: '0px' }} className="border-none">
+                    <TableCell style={{ padding: '0px' }} className={themeMode === 'dark' ? 'theme-border' : 'border-none'}>
                       Total Dev Effort (in Hours)
                     </TableCell>
-                    <TableCell className="border-none" style={{ padding: '5px 0px' }}>
-                      <InputBase fullWidth type="number" value={totalDevEffortHours} readOnly />
+                    <TableCell className={themeMode === 'dark' ? 'theme-border' : 'border-none'} style={{ padding: '5px 0px' }}>
+                      <input
+                        className={themeMode === 'dark' ? 'theme-input' : 'fader-input'}
+                        type="number"
+                        value={totalDevEffortHours}
+                        readOnly
+                      />
                     </TableCell>
                   </TableRow>
                   <TableRow className="workitem-tab table-rows">
-                    <TableCell style={{ padding: '0px' }} className="border-none">
+                    <TableCell style={{ padding: '0px' }} className={themeMode === 'dark' ? 'theme-border' : 'border-none'}>
                       Total Dev Effort (in Story Points)
                     </TableCell>
-                    <TableCell className="border-none" style={{ padding: '5px 0px' }}>
-                      <InputBase fullWidth type="number" value={totalDevEffortStoryPoints} readOnly />
+                    <TableCell className={themeMode === 'dark' ? 'theme-border' : 'border-none'} style={{ padding: '5px 0px' }}>
+                      <input
+                        className={themeMode === 'dark' ? 'theme-input' : 'fader-input'}
+                        type="number"
+                        value={totalDevEffortStoryPoints}
+                        readOnly
+                      />
                     </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>
           </SubCard>
-          <Box className="activities-table" style={{maxWidth:"800px"}}>
+          <Box className="activities-table" style={{ maxWidth: '800px' }}>
             <Typography variant="h3" style={{ margin: '20px 0px' }}>
               Activities
             </Typography>
             <TableContainer component={Paper}>
               <Table className="activities-Table">
-                <TableHead className="activity-head">
+                <TableHead className={themeMode === 'dark' ? 'theme-head' : 'activity-head'}>
                   <TableRow>
                     <TableCell style={{ width: '32%', padding: '9px 13px' }}>Activities</TableCell>
                     <TableCell style={{ width: '32%', textAlign: 'center' }}>Effort in story points/(person days)</TableCell>
@@ -387,13 +449,24 @@ const EstimateSummary = () => {
                 </TableHead>
                 <TableBody>
                   {activitiesLoadData.map((activity, index) => (
-                    <TableRow key={index}>
-                      <TableCell style={{ padding:"9px" }}>{activity.activity}</TableCell>
-                      <TableCell style={{ textAlign: 'center',padding:"9px" }}>{Math.round((activity.percentagesplit * totalDevEffortStoryPoints) / 100)}</TableCell>
-                      <TableCell style={{ textAlign: 'center',padding:"9px" }}>{Math.round((activity.percentagesplit * totalDevEffortStoryPoints) / 100) * hoursPerStoryPoint}</TableCell>
+                    <TableRow style={{ background: themeMode === 'dark' ? 'rgb(70 80 92)' : '' }} key={index}>
+                      <TableCell
+                        style={{
+                          color:themeMode === 'dark' ? '#fff' : '' ,
+                          padding: '9px'
+                        }}
+                      >
+                        {activity.activity}
+                      </TableCell>
+                      <TableCell style={{color:themeMode === 'dark' ? '#fff' : '' , textAlign: 'center', padding: '9px' }}>
+                        {Math.round((activity.percentagesplit * totalDevEffortStoryPoints) / 100)}
+                      </TableCell>
+                      <TableCell style={{color:themeMode === 'dark' ? '#fff' : '' , textAlign: 'center', padding: '9px' }}>
+                        {Math.round((activity.percentagesplit * totalDevEffortStoryPoints) / 100) * hoursPerStoryPoint}
+                      </TableCell>
                     </TableRow>
                   ))}
-                  <TableRow className="total-box">
+                  <TableRow className={themeMode === 'dark' ? 'theme-total' : 'total-box'}>
                     <TableCell className="tot-para">Total</TableCell>
                     <TableCell style={{ textAlign: 'center' }}>{totalSecondColumn}</TableCell>
                     <TableCell style={{ textAlign: 'center' }}>{totalThirdColumn}</TableCell>
@@ -405,13 +478,19 @@ const EstimateSummary = () => {
         </Box>
       )}
       {modularComponents && (
-        <Box className="work-item-container">
+        <Box className="work-item-container" style={{ marginLeft: '25px' }}>
           <Typography variant="h3" style={{ margin: '25px 0px' }}>
             Modular Components
           </Typography>
-          <TableContainer className="work-item-container" component={Paper}>
+          <TableContainer
+            style={{
+              backgroundColor: themeMode === 'dark' ? theme.palette.darkbg.blue1 : theme.palette.background.paper
+            }}
+            className="work-item-container"
+            component={Paper}
+          >
             <Table>
-              <TableHead>
+              <TableHead style={{ backgroundColor: themeMode === 'dark' ? theme.palette.common.subtitle : theme.palette.common.light2 }}>
                 <TableRow className="">
                   <TableCell className="workitem-data">S.No</TableCell>
                   <TableCell className="workitem-data">Module</TableCell>
@@ -431,41 +510,41 @@ const EstimateSummary = () => {
                 {tableData.map((row, index) => (
                   <TableRow key={row.id}>
                     <TableCell className="workitem-data ">
-                      <Typography variant="Body1">{index + 1}</Typography>{' '}
+                      <Typography variant="themevary">{index + 1}</Typography>{' '}
                     </TableCell>
                     <TableCell style={{ minWidth: '145px' }} className="workitem-data">
-                      <Typography variant="Body1">{row.module}</Typography>{' '}
+                      <Typography variant="themevary">{row.module}</Typography>{' '}
                     </TableCell>
                     <TableCell style={{ minWidth: '125px' }} className="workitem-data ">
-                      <Typography variant="Body1">{row.userType}</Typography>
+                      <Typography variant="themevary">{row.userType}</Typography>
                     </TableCell>
                     <TableCell style={{ minWidth: '125px' }} className="workitem-data ">
-                      <Typography variant="Body1">{row.appType}</Typography>
+                      <Typography variant="themevary">{row.appType}</Typography>
                     </TableCell>
                     <TableCell style={{ minWidth: '160px' }} className="workitem-data">
-                      <Typography variant="Body1">{row.componentName}</Typography>
+                      <Typography variant="themevary">{row.componentName}</Typography>
                     </TableCell>
                     <TableCell style={{ minWidth: '120px' }} className="workitem-data ">
-                      <Typography variant="Body1">{row.comments}</Typography>
+                      <Typography variant="themevary">{row.comments}</Typography>
                     </TableCell>
                     <TableCell style={{ minWidth: '180px' }} className="workitem-data ">
                       {' '}
-                      <Typography variant="Body1">{row.description}</Typography>
+                      <Typography variant="themevary">{row.description}</Typography>
                     </TableCell>
                     <TableCell style={{ minWidth: '140px' }} className="workitem-data ">
-                      <Typography variant="Body1">{row.componentType}</Typography>
+                      <Typography variant="themevary">{row.componentType}</Typography>
                     </TableCell>
                     <TableCell style={{ minWidth: '100px' }} className="workitem-data ">
-                      <Typography variant="Body1">{row.complexity}</Typography>
+                      <Typography variant="themevary">{row.complexity}</Typography>
                     </TableCell>
                     <TableCell style={{ minWidth: '120px' }} className="workitem-data">
-                      <Typography variant="Body1">{row.buildEffort}</Typography>
+                      <Typography variant="themevary">{row.buildEffort}</Typography>
                     </TableCell>
                     <TableCell style={{ minWidth: '130px' }} className="workitem-data">
-                      <Typography variant="Body1">{row.effortOverride}</Typography>
+                      <Typography variant="themevary">{row.effortOverride}</Typography>
                     </TableCell>
                     <TableCell style={{ minWidth: '120px' }} className="workitem-data">
-                      <Typography variant="Body1">{row.finalEffort}</Typography>
+                      <Typography variant="themevary">{row.finalEffort}</Typography>
                     </TableCell>
                   </TableRow>
                 ))}

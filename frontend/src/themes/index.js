@@ -8,17 +8,20 @@ import componentStyleOverrides from './compStyleOverride';
 import themePalette from './palette';
 import themeTypography from './typography';
 
+
 /**
  * Represent theme style and structure as per Material-UI
  * @param {JsonObject} customization customization parameter object
  */
 
 export const theme = (customization) => {
+
   const color = colors;
+  const themeMode = customization.themeMode || 'light'; 
 
   const themeOption = {
     colors: color,
-    heading: color.grey900,
+    heading:themeMode === 'dark' ? color.title2 : color.grey900,
     paper: color.paper,
     backgroundDefault: color.paper,
     background: color.primaryLight,

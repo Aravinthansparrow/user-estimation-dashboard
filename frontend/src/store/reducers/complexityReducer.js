@@ -15,7 +15,7 @@ export const fetchComplexity = createAsyncThunk(
     async (payload,{ rejectWithValue }) => {
       try {
         const response = await getComplexity(); 
-        console.log("getScanCount--> ", response);// Replace 'fetchData' with your actual API function call
+        console.log("getScanCount--> ", response);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);
@@ -28,7 +28,7 @@ export const fetchComplexity = createAsyncThunk(
     async ({complexityId, complexity, days}, { rejectWithValue }) => {
       try {
         const response = await complexitySubmit(complexityId,complexity, days); 
-        console.log("getScanCount--> ", response);// Replace 'fetchData' with your actual API function call
+        console.log("getScanCount--> ", response);
         return response.data;
       } catch (error) {
         return rejectWithValue(error.response.data);

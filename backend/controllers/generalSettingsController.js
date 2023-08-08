@@ -1,5 +1,3 @@
-// generalSettingsController.js
-
 const GeneralSettings = require('../models/GeneralSettings');
 
 // Get general settings

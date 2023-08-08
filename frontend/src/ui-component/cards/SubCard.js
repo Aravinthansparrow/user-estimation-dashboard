@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
-
+import { useSelector } from 'react-redux';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import { Card, CardContent, CardHeader, Divider, Typography } from '@mui/material';
@@ -9,13 +9,16 @@ import { Card, CardContent, CardHeader, Divider, Typography } from '@mui/materia
 
 const SubCard = forwardRef(({ children, content, contentClass, darkTitle, secondary, sx = {}, contentSX = {}, title, ...others }, ref) => {
   const theme = useTheme();
-
+  const themeMode = useSelector((state) => state.customization.themeMode);  
   return (
     <Card
       ref={ref}
       sx={{
         border: '1px solid',
         borderColor: theme.palette.primary.light,
+        color: themeMode === 'dark' ? theme.palette.common.title2 :theme.palette.background.paper ,
+        backgroundColor:
+          themeMode === 'dark' ? theme.palette.darkbg.blue1 :theme.palette.background.paper ,
         ':hover': {
           boxShadow: '0 2px 14px 0 rgb(32 40 45 / 8%)'
         },

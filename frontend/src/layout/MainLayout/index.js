@@ -16,6 +16,7 @@ import { SET_MENU } from 'store/actions';
 
 // assets
 import { IconChevronRight } from '@tabler/icons';
+// import { bgcolor } from '@mui/system';
 
 // styles
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open }) => ({
@@ -56,6 +57,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({
 const MainLayout = () => {
   const theme = useTheme();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
+  const themeMode = useSelector((state) => state.customization.themeMode);
   // Handle left drawer
   const leftDrawerOpened = useSelector((state) => state.customization.opened);
   const dispatch = useDispatch();
@@ -63,8 +65,9 @@ const MainLayout = () => {
     dispatch({ type: SET_MENU, opened: !leftDrawerOpened });
   };
 
+
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex',bgcolor:`${themeMode === 'dark' ? theme.palette.darkbg.blue1 : theme.palette.background.paper}` }}>
       <CssBaseline />
       {/* header */}
       <AppBar
@@ -77,7 +80,7 @@ const MainLayout = () => {
           transition: leftDrawerOpened ? theme.transitions.create('width') : 'none'
         }}
       >
-        <Toolbar>
+        <Toolbar style={{ backgroundColor: themeMode === 'dark' ? theme.palette.darkbg.blue1 : theme.palette.background.paper }}>
           <Header handleLeftDrawerToggle={handleLeftDrawerToggle} />
         </Toolbar>
       </AppBar>
@@ -86,7 +89,7 @@ const MainLayout = () => {
       <Sidebar drawerOpen={!matchDownMd ? leftDrawerOpened : !leftDrawerOpened} drawerToggle={handleLeftDrawerToggle} />
 
       {/* main content */}
-      <Main theme={theme} style={{background:"rgb(189 191 193 / 28%)"}} open={leftDrawerOpened}>
+      <Main style={{ backgroundColor: themeMode === 'dark' ? theme.palette.darkbg.blue1 : 'rgba(189, 191, 193, 0.4705882353)' }} theme={theme} open={leftDrawerOpened}>
         {/* breadcrumb */}
         <Breadcrumbs separator={IconChevronRight} navigation={navigation} icon title rightAlign />
         <Outlet />

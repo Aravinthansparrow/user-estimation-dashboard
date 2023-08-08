@@ -13,6 +13,7 @@ import { complexitySelector, fetchComplexity, submitComplexity } from '../..//st
 import { API_STATUS } from '../../utils/constants';
 
 function Complexity() {
+  const themeMode = useSelector((state) => state.customization.themeMode);
   const [selectedValue, setSelectedValue] = useState('');
   const [selectedDays, setSelectedDays] = useState(1);
   const [showPopup, setShowPopup] = useState(false);
@@ -114,7 +115,7 @@ function Complexity() {
           </FormControl>
 
           <FormControl className="form-control">
-            <InputLabel id="days-select-label">Number of Days</InputLabel>
+            <InputLabel  id="days-select-label">Number of Days</InputLabel>
             <Select id="days-select" value={selectedDays} onChange={handleDaysSelect}>
               {defaultValues.days && <MenuItem value={defaultValues.days}>{defaultValues.days}</MenuItem>}
               <MenuItem value={1}>1</MenuItem>
@@ -135,21 +136,21 @@ function Complexity() {
           className="modal"
           overlayClassName="modal-overlay"
         >
-          <DialogActions className="modal-content flex-column gap-0">
+          <DialogActions style={{background:themeMode==='dark' ? '#191f45' : "#fff"}} className="modal-content flex-column gap-0">
             <Typography variant="h3" className="confirm-header">
               Confirmation
             </Typography>
             <Box display="flex" width="100%" alignItems="center">
-              <Typography variant="body1" className="confirm-para">
+              <Typography style={{color:themeMode==='dark' ? '#FFF6E0' : ""}} variant="body1" className="confirm-para">
                 Complexity:
               </Typography>{' '}
-              <p className='content-para'>{selectedValue} </p>
+              <p style={{color:themeMode==='dark' ? '#FFF6E0' : ""}} className='content-para'>{selectedValue} </p>
             </Box>
             <Box display="flex" ml={0} alignItems="center" width="100%" justifyContent='space-between'>
-              <Typography variant="body1" className="confirm-para">
+              <Typography  style={{color:themeMode==='dark' ? '#FFF6E0' : ""}} variant="body1" className="confirm-para">
                 Number of Days:
               </Typography>{' '}
-              <p className='content-para'>{selectedDays} </p>
+              <p  style={{color:themeMode==='dark' ? '#FFF6E0' : ""}} className='content-para'>{selectedDays} </p>
             </Box>
             <DialogActions>
               <Button variant="contained" className="primary-btn" onClick={handlePopupClose}>

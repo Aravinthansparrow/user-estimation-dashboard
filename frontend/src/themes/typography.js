@@ -3,7 +3,7 @@
  * @param {JsonObject} theme theme customization object
  */
 
-export default function themeTypography(theme) {
+export default function themeTypography(theme,themeMode) {
   return {
     fontFamily: theme?.customization?.fontFamily,
     h6: {
@@ -13,7 +13,7 @@ export default function themeTypography(theme) {
     },
     h5: {
       fontSize: '0.875rem',
-      color: theme.heading,
+      color:  theme.heading,
       fontWeight: 500
     },
     h4: {
@@ -23,7 +23,7 @@ export default function themeTypography(theme) {
     },
     h3: {
       fontSize: '1.25rem',
-      color: theme.heading,
+      color: themeMode==='dark' ? '#fff': theme.heading,
       fontWeight: 600
     },
     h2: {
@@ -41,6 +41,9 @@ export default function themeTypography(theme) {
       fontWeight: 500,
       color: theme.textDark
     },
+    themevary:{
+      color:themeMode==='dark' ? 'black': theme.heading
+    },
     subtitle2: {
       fontSize: '0.75rem',
       fontWeight: 400,
@@ -53,7 +56,7 @@ export default function themeTypography(theme) {
     },
     body1: {
       fontSize: '0.875rem',
-      fontWeight: 400,
+      fontWeight: 600,
       lineHeight: '1.334em'
     },
     body2: {

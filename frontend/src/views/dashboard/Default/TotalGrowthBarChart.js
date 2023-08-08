@@ -1,91 +1,3 @@
-// import React, { useState, useEffect } from 'react';
-// import CanvasJSReact from '@canvasjs/react-charts';
-// var CanvasJSChart = CanvasJSReact.CanvasJSChart;
-// import { useSelector, useDispatch } from 'react-redux';
-// import { setCreated, setApproved, setUnApproved, setRejected } from '../../../store/reducers/clientReducer';
-// import { fetchEstimateList, estimateListSelector } from '../../../store/reducers/clientReducer';
-// import { API_STATUS } from '../../../utils/constants';
-// import SubCard from 'ui-component/cards/SubCard';
-
-// const TotalGrowthBarChart = () => {
-//   const [clients, setClients] = useState([]);
-//   const loading = useSelector(estimateListSelector).loading;
-
-//   const data = useSelector(estimateListSelector).loadData;
-//   const dispatch = useDispatch();
-//   const reduxCreated = useSelector((state) => state.estimateList.created);
-//   const reduxApproved = useSelector((state) => state.estimateList.approved);
-//   const reduxUnApproved = useSelector((state) => state.estimateList.notapproved);
-//   const reduxRejected = useSelector((state) => state.estimateList.rejected);
-
-//   console.log(reduxCreated);
-//   useEffect(() => {
-//     // Count the number of rejected and not approved estimates
-//     const rejectedEstimates = clients.filter((client) => client.status === 'rejected');
-//     const notApprovedEstimates = clients.filter((client) => client.status !== 'approved');
-//     const approvedEstimates = clients.filter((client) => client.status === 'approved');
-//     const createdCount = clients.length;
-//     const rejectedCount = rejectedEstimates.length;
-//     const notApprovedCount = notApprovedEstimates.length;
-//     const approvedCount = approvedEstimates.length;
-//     dispatch(setCreated(createdCount));
-//     dispatch(setApproved(approvedCount));
-//     dispatch(setRejected(rejectedCount));
-//     dispatch(setUnApproved(notApprovedCount));
-//   }, [clients, dispatch]);
-
-//   useEffect(() => {
-//     dispatch(fetchEstimateList()); 
-//   }, [dispatch]);
-
-//   useEffect(() => {
-//     console.log(loading, 'loading');
-//     if (loading === API_STATUS.FULFILLED) {
-//       console.log('data got Successfully!');
-//       setClients(data);
-//     }
-//     if (loading === API_STATUS.REJECTED) {
-//       console.log('data got failed');
-//     }
-//   }, [loading]);
-//   const options = {
-//     animationEnabled: true,
-//     theme: 'light3',
-// 	title: {
-// 		text: 'Estimations',
-// 		fontSize: 22,
-// 		padding:20,
-// 		fontColor: '#364152',
-// 	},
-//     axisX: {
-//       title: 'Status',
-//       reversed: true,	  
-//     },
-//     axisY: {
-//       title: 'No of Estimations',
-//       includeZero: true
-//     },
-//     data: [
-//       {
-//         type: 'bar',
-//         dataPoints: [
-//           { y: reduxCreated, label: 'Created',color:'rgb(37 198 112 / 91%)' },
-//           { y: reduxUnApproved, label: 'Pending',color:"rgb(255 171 0 / 90%)" },
-//           { y: reduxApproved, label: 'Accepted',color:'rgb(0, 184, 217 )' },
-//           { y: reduxRejected, label: 'Rejected',color:'rgb(255, 86, 48)' }
-//         ]
-//       }
-//     ]
-//   };
-//   return (
-//     <SubCard className='bar-container'>
-//       <CanvasJSChart options={options} />
-//     </SubCard>
-//   );
-// };
-
-
-
 // export default TotalGrowthBarChart;
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
@@ -128,33 +40,74 @@ const TotalGrowthBarChart = ({ isLoading }) => {
   const [value, setValue] = useState('today');
   const theme = useTheme();
   const customization = useSelector((state) => state.customization);
-
+  const themeMode = useSelector((state) => state.customization.themeMode);
   const { navType } = customization;
   const { primary } = theme.palette.text;
   const darkLight = theme.palette.dark.light;
+  const darkmode = theme.palette.common.title1
   const grey200 = theme.palette.grey[200];
   const grey500 = theme.palette.grey[500];
-
-  const primary200 = theme.palette.primary[200];
+  const ligth2 = theme.palette.common.subtitle;
+  const darkViolet = theme.palette.dark.dark2;
+  const primary200 = theme.palette.primary.light1;
   const primaryDark = theme.palette.primary.dark;
   const secondaryMain = theme.palette.secondary.main;
-  const secondaryLight = theme.palette.secondary.light;
+  const secondaryLight = theme.palette.secondary.dark;
+  const secondaryLight1 = theme.palette.secondary.light;
  
   useEffect(() => {
     const newChartData = {
       ...chartData.options,
-      colors: [primary200, primaryDark, secondaryMain, secondaryLight],
+      colors: 
+      [
+        themeMode === 'dark' ? darkmode : darkViolet,
+        themeMode === 'dark' ? grey500 :  secondaryMain,
+        themeMode === 'dark' ? secondaryLight1 :primary200 ,
+        themeMode === 'dark' ? ligth2 : primaryDark,
+      ],
       xaxis: {
         labels: {
           style: {
-            colors: [primary, primary, primary, primary, primary, primary, primary, primary, primary, primary, primary, primary]
+            colors: [
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+              themeMode === 'dark' ? darkmode : primary,
+            ]
           }
         }
       },
       yaxis: {
         labels: {
           style: {
-            colors: [primary]
+            colors: [themeMode === 'dark' ? darkmode : primary]
           }
         }
       },
@@ -162,7 +115,7 @@ const TotalGrowthBarChart = ({ isLoading }) => {
         borderColor: grey200
       },
       tooltip: {
-        theme: 'light'
+        theme: 'dark'
       },
       legend: {
         labels: {
@@ -175,24 +128,24 @@ const TotalGrowthBarChart = ({ isLoading }) => {
     if (!isLoading) {
       ApexCharts.exec(`bar-chart`, 'updateOptions', newChartData);
     }
-  }, [navType, primary200, primaryDark, secondaryMain, secondaryLight, primary, darkLight, grey200, isLoading, grey500]);
+  }, [navType,themeMode,darkmode, primary200, primaryDark, secondaryMain, secondaryLight, primary, darkLight, grey200, isLoading, grey500]);
 
   return (
     <>
       {isLoading ? (
         <SkeletonTotalGrowthBarChart />
       ) : (
-        <MainCard>
+        <MainCard style={{position:'relative',zIndex:1000}}>
           <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
               <Grid container alignItems="center" justifyContent="space-between">
                 <Grid item>
                   <Grid container direction="column" spacing={1}>
                     <Grid item>
-                      <Typography variant="subtitle2">Total Growth</Typography>
+                      <Typography variant="subtitle2">Total Estimation</Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant="h3">$2,324.00</Typography>
+                      {/* <Typography variant="h3">$2,324.00</Typography> */}
                     </Grid>
                   </Grid>
                 </Grid>

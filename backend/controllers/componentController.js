@@ -1,5 +1,3 @@
-// componentController.js
-
 const Component = require('../models/Component');
 
 // Fetch all components

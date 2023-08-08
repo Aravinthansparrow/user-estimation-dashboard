@@ -21,7 +21,7 @@ export const fetchEstimateList = createAsyncThunk(`${namespace}/fetchEstimateLis
   try {
     console.log('hi');
     const response = await getEstimateList();
-    console.log('getScanCount--> ', response); // Replace 'fetchData' with your actual API function call
+    console.log('getScanCount--> ', response); 
     return response.data;
   } catch (error) {
     return rejectWithValue(error.response.data);
@@ -33,7 +33,7 @@ export const getClientData = createAsyncThunk(
   async (clientId, { rejectWithValue }) => {
     try {
       const response = await getClientDetails(clientId);
-      console.log('getScanCount--> ', response); // Replace 'fetchData' with your actual API function call
+      console.log('getScanCount--> ', response);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -50,7 +50,7 @@ export const changeStatus = createAsyncThunk(
       console.log(selectedClientId);
       console.log(confirmationAction);
       const response = await updateStatus(selectedClientId, confirmationAction);
-      console.log('getScanCount--> ', response); // Replace 'fetchData' with your actual API function call
+      console.log('getScanCount--> ', response);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -73,7 +73,6 @@ const mySlice = createSlice({
   name: namespace,
   initialState,
   reducers: {
-    //Your synchronous action creators here (if needed)
     setCreated(state, action) {
       state.created = action.payload;
       console.log(action.payload);

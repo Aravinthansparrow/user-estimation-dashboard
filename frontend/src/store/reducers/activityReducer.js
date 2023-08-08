@@ -20,7 +20,7 @@ export const fetchActivities = createAsyncThunk(
   `${namespace}/fetchActivities`,
   async (payload,{ rejectWithValue }) => {
     try {
-      const response = await getActivities(); // Replace 'getActivities' with your actual API function call
+      const response = await getActivities(); 
       console.log("getActivities--> ", response);
       return response.data;
     } catch (error) {
@@ -33,7 +33,7 @@ export const addActivityAction = createAsyncThunk(
   `${namespace}/addActivity`,
   async ({ activity, percentagesplit }, { rejectWithValue }) => {
     try {
-      const response = await addActivity(activity, percentagesplit); // Replace 'addActivity' with your actual API function call
+      const response = await addActivity(activity, percentagesplit); 
       console.log("addActivity--> ", response);
       return response.data;
     } catch (error) {
@@ -46,7 +46,7 @@ export const updateActivityAction = createAsyncThunk(
   `${namespace}/updateActivity`,
   async ({ id, name, percentagesplit }, { rejectWithValue }) => {
     try {
-      const response = await updateActivity(id, name, percentagesplit); // Replace 'updateActivity' with your actual API function call
+      const response = await updateActivity(id, name, percentagesplit); 
       console.log("updateActivity--> ", response);
       return response.data;
     } catch (error) {
@@ -60,7 +60,7 @@ export const deleteActivityAction = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       console.log(id);
-      const response = await deleteActivity(id); // Replace 'deleteActivity' with your actual API function call
+      const response = await deleteActivity(id); 
       console.log("deleteActivity--> ", response);
       return response.data;
     } catch (error) {

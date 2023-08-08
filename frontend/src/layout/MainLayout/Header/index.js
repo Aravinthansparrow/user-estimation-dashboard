@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-
+import { useSelector } from 'react-redux';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import { Avatar, Box, ButtonBase } from '@mui/material';
@@ -17,11 +17,12 @@ import { IconMenu2 } from '@tabler/icons';
 
 const Header = ({ handleLeftDrawerToggle }) => {
   const theme = useTheme();
+  const themeMode = useSelector((state) => state.customization.themeMode);
 
   return (
     <>
       {/* logo & toggler button */}
-      <Box
+      <Box 
         sx={{
           width: 228,
           display: 'flex',
@@ -40,11 +41,12 @@ const Header = ({ handleLeftDrawerToggle }) => {
               ...theme.typography.commonAvatar,
               ...theme.typography.mediumAvatar,
               transition: 'all .2s ease-in-out',
-              background: theme.palette.secondary.light,
-              color: theme.palette.secondary.dark,
+              background: themeMode === 'dark' ? 'transparent' : theme.palette.secondary.light,
+             
+              color:themeMode === 'dark' ? theme.palette.background.paper : theme.palette.secondary.dark,
               '&:hover': {
-                background: theme.palette.secondary.dark,
-                color: theme.palette.secondary.light
+                background: themeMode === 'dark' ? theme.palette.darkbg.blue2 : theme.palette.secondary.dark,
+                color:themeMode === 'dark' ? theme.palette.background.paper : theme.palette.secondary.light
               }
             }}
             onClick={handleLeftDrawerToggle}

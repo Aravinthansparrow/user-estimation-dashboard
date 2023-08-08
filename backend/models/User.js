@@ -52,7 +52,10 @@ User.sync({ force: true })
       { username: "elonmusk", email: 'admin002@gmail.com', password: '@Admin002', role: 'admin' },
       { username: "karthick", email: 'developer002@gmail.com', password: '@Developer002', role: 'developer' },
       { username: "harshini", email: 'admin003@gmail.com', password: '@Admin003', role: 'admin' },
-      { username: "logesh", email: 'developer003@gmail.com', password: '@Developer003', role: 'developer' }
+      { username: "logesh", email: 'developer004@gmail.com', password: '@Developer003', role: 'developer' },
+      { username: "Ismayil", email: 'developer005@gmail.com', password: '@Developer004', role: 'developer' },
+      { username: "salim", email: 'developer006@gmail.com', password: '@Developer005', role: 'developer' },
+      { username: "johnson", email: 'developer007@gmail.com', password: '@Developer006', role: 'developer' }
     ];
 
     // Generate hashed passwords for each user

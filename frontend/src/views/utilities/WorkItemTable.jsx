@@ -26,19 +26,21 @@ import {
   Tooltip,
   Box
 } from '@mui/material';
+import { useTheme } from '@emotion/react';
 
 const WorkItem = () => {
   const { id } = useParams();
-  console.log(id)
+  console.log(id);
   const [rows, setRows] = useState([{}]);
-  const [tooltipOpen, setTooltipOpen] = useState(false); 
+  const [tooltipOpen, setTooltipOpen] = useState(false);
   const [showEstimateSummary, setShowEstimateSummary] = useState(false);
   const [componentTypes, setComponentTypes] = useState([]);
   const [complexities, setComplexities] = useState([]);
   const [defaultComponent, setDefaultComponent] = useState('');
-
+  const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const themeMode = useSelector((state) => state.customization.themeMode);
   const complexityloading = useSelector(complexitySelector).complexityloading;
   const componentloading = useSelector(componentSelector).componentloading;
   const workitemloading = useSelector(workItemSelector).workitemloading;
@@ -137,9 +139,8 @@ const WorkItem = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
+    let allRowsValid = true;
     let isFormValid = true;
-    // Create an array to store the unfilled field names
     const unfilledFields = [];
     for (const row of rows) {
       const finalEffort = row.effortOverride || row.buildEffort || selectedBuildEffort;
@@ -177,24 +178,32 @@ const WorkItem = () => {
       for (const field of requiredFields) {
         if (!workItem[field]) {
           isFormValid = false;
-          // Handle the validation error appropriately (e.g., display error messages to the user)
-          unfilledFields.push(field); // Add the unfilled field to the array
-          console.error(`${field} is required`);
+          allRowsValid = false; 
+          
+          unfilledFields.push(field); 
+          
         }
       }
 
       if (isFormValid) {
         dispatch(submitWorkItem({ workItem }));
-        toast.success('Workitem submitted successfully !', {
-          autoClose: 2000
-        });
+        
       } else {
-        setTooltipOpen(true); // Show the tooltips for unfilled fields
+        setTooltipOpen(true); 
       }
     }
+    
+    if (allRowsValid) {
+      toast.success('All work items submitted successfully !', {
+        autoClose: 2000
+      });
+    } else {
+      setTooltipOpen(true); 
+      toast.error('Some fields are required. Please fill them in.');
+    }
+    
   };
   useEffect(() => {
-    // Update finalEffort when buildEffort changes
     setRows((prevRows) =>
       prevRows.map((row) => ({
         ...row,
@@ -235,7 +244,12 @@ const WorkItem = () => {
 
       return (
         <TableRow className="table-rows" key={index}>
-          <TableCell className="workitem-data">{index + 1}</TableCell>
+          <TableCell
+            style={{ color: themeMode === 'dark' ? theme.palette.background.paper : theme.palette.common.black }}
+            className="workitem-data"
+          >
+            {index + 1}
+          </TableCell>
 
           <TableCell className="workitem-data">
             <Tooltip
@@ -322,21 +336,22 @@ const WorkItem = () => {
             </Tooltip>
           </TableCell>
           <TableCell className="workitem-data">
-              <Select
-                name="comments"
-                style={{ minWidth: '120px' }}
-                value={row.comments || 'must'}
-                onChange={(e) => handleChange(e, index)}
-                required
-                fullWidth
-              >
-                <MenuItem value="must">Must to have</MenuItem>
-                <MenuItem value="good">Good to have</MenuItem>
-                <MenuItem value="nice">Nice to have</MenuItem>
-              </Select>
+            <Select
+              name="comments"
+              style={{ minWidth: '120px' }}
+              value={row.comments || 'must'}
+              onChange={(e) => handleChange(e, index)}
+              required
+              fullWidth
+            >
+              <MenuItem value="must">Must to have</MenuItem>
+              <MenuItem value="good">Good to have</MenuItem>
+              <MenuItem value="nice">Nice to have</MenuItem>
+            </Select>
           </TableCell>
           <TableCell className="workitem-data">
             <Tooltip
+            
               open={tooltipOpen && !row.description}
               title="Desription is required"
               arrow
@@ -353,62 +368,57 @@ const WorkItem = () => {
                 placeholder="Enter description"
                 sx={{}}
                 style={{
+                  color:themeMode === 'dark' ? theme.palette.background.paper:theme.palette.common.black,
+                  background:themeMode === 'dark' ? theme.palette.darkbg.blue2 :theme.palette.background.paper,
                   width: '100%',
                   minWidth: '175px',
                   resize: 'none',
                   height: '61px',
                   overflow: 'visible',
                   padding: '8px',
-                  border: '1px solid darkgrey',
+                  border: themeMode === 'dark' ? 'none' : '1px solid darkgrey',
                   borderRadius: '10px'
                 }}
               />
             </Tooltip>
           </TableCell>
           <TableCell className="workitem-data">
-            
-              <Select
-                name="componentType"
-                style={{ minWidth: '120px' }}
-                value={row.componentType || defaultComponent}
-                onChange={(e) => handleChange(e, index)}
-                required
-                fullWidth
-              >
-                {defaultComponent && <MenuItem value={defaultComponent}>{defaultComponent}</MenuItem>}
-                {componentTypes
-                  .filter((type) => type.name !== defaultComponent)
-                  .map((type) => (
-                    <MenuItem key={type.id} value={type.name}>
-                      {type.name}
-                    </MenuItem>
-                  ))}
-              </Select>
-           
-          </TableCell>
-          <TableCell className="workitem-data">
-            
-              <Select
-                name="complexity"
-                style={{ minWidth: '100px' }}
-                value={row.complexity || selectedComplexity}
-                onChange={(e) => handleChange(e, index)}
-                required
-                fullWidth
-              >
-              
-                {complexities.map((complexity) => (
-                  <MenuItem
-                    key={complexity.id}
-                    value={complexity.complexity === row.complexity ? complexity.complexity : selectedComplexity}
-                  >
-                    {complexity.complexity === row.complexity ? complexity.complexity : selectedComplexity}
+            <Select
+              name="componentType"
+              style={{ minWidth: '120px' }}
+              value={row.componentType || defaultComponent}
+              onChange={(e) => handleChange(e, index)}
+              required
+              fullWidth
+            >
+              {defaultComponent && <MenuItem value={defaultComponent}>{defaultComponent}</MenuItem>}
+              {componentTypes
+                .filter((type) => type.name !== defaultComponent)
+                .map((type) => (
+                  <MenuItem key={type.id} value={type.name}>
+                    {type.name}
                   </MenuItem>
                 ))}
-                {selectedComplexity !== 'Simple' && <MenuItem value="Simple">Simple</MenuItem>}
-                {selectedComplexity !== 'Medium' && <MenuItem value="Medium">Medium</MenuItem>}
-                {selectedComplexity !== 'Complex' && <MenuItem value="Complex">Complex</MenuItem>}
-              </Select>
+            </Select>
+          </TableCell>
+          <TableCell className="workitem-data">
+            <Select
+              name="complexity"
+              style={{ minWidth: '100px' }}
+              value={row.complexity || selectedComplexity}
+              onChange={(e) => handleChange(e, index)}
+              required
+              fullWidth
+            >
+              {complexities.map((complexity) => (
+                <MenuItem key={complexity.id} value={complexity.complexity === row.complexity ? complexity.complexity : selectedComplexity}>
+                  {complexity.complexity === row.complexity ? complexity.complexity : selectedComplexity}
+                </MenuItem>
+              ))}
+              {selectedComplexity !== 'Simple' && <MenuItem value="Simple">Simple</MenuItem>}
+              {selectedComplexity !== 'Medium' && <MenuItem value="Medium">Medium</MenuItem>}
+              {selectedComplexity !== 'Complex' && <MenuItem value="Complex">Complex</MenuItem>}
+            </Select>
           </TableCell>
           <TableCell className="workitem-data">
             <TextField
@@ -422,18 +432,19 @@ const WorkItem = () => {
             />
           </TableCell>
           <TableCell className="workitem-data">
-            
-              <TextField
-                fullWidth
-                style={{ minWidth: '100px' }}
-                type="number"
-                name="effortOverride"
-                value={row.effortOverride || ''}
-                onChange={(e) => handleChange(e, index)}
-              />
-           
+            <TextField
+              fullWidth
+              style={{ minWidth: '100px' }}
+              type="number"
+              name="effortOverride"
+              value={row.effortOverride || ''}
+              onChange={(e) => handleChange(e, index)}
+            />
           </TableCell>
-          <TableCell className="workitem-data">
+          <TableCell
+            style={{ color: themeMode === 'dark' ? theme.palette.background.paper : theme.palette.common.black }}
+            className="workitem-data"
+          >
             <div style={{ minWidth: '80px' }}>{finalEffort}</div>
           </TableCell>
           <TableCell className="workitem-data">
@@ -442,9 +453,9 @@ const WorkItem = () => {
                 <DeleteIcon />
               </Button>
             ) : (
-              <div className="disable-delete delete-row-button">
+              <Button className="disable-delete ">
                 <DeleteIcon />{' '}
-              </div>
+              </Button>
             )}
           </TableCell>
         </TableRow>
@@ -456,9 +467,15 @@ const WorkItem = () => {
     <div>
       {!showEstimateSummary && (
         <MainCard style={{ height: '100%' }} title="Workitem Table">
-          <TableContainer className="work-item-container " component={Paper}>
+          <TableContainer
+            style={{
+              backgroundColor: themeMode === 'dark' ? theme.palette.darkbg.blue1 : theme.palette.background.paper
+            }}
+            className="work-item-container"
+            component={Paper}
+          >
             <Table>
-              <TableHead>
+              <TableHead style={{ backgroundColor: themeMode === 'dark' ? theme.palette.common.subtitle : theme.palette.common.light2 }}>
                 <TableRow>{renderTableHeader()} </TableRow>
               </TableHead>
               <TableBody className="table-body-container">{renderTableBody()}</TableBody>

@@ -12,13 +12,14 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { clientDetails, estimateListSelector } from '../../store/reducers/clientReducer';
 import { API_STATUS } from '../../utils/constants';
 import clientFormSchema from 'Joi Schemas/clientFormSchema';
+import { useTheme } from '@emotion/react';
 
 const ClientForm = () => {
   const dispatch = useDispatch();
   const username = useSelector((state) => state.login.username);
   const clientdetails = useSelector(estimateListSelector).submitclients;
   const id = useSelector(estimateListSelector).id;
-
+  const theme = useTheme();
   const [formData, setFormData] = useState({
     clientName: '',
     clientAddress: '',
@@ -30,7 +31,7 @@ const ClientForm = () => {
     clientAddress: '',
     email: ''
   });
-
+  const themeMode = useSelector((state) => state.customization.themeMode);
   const [clientId, setClientId] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
@@ -143,7 +144,7 @@ const ClientForm = () => {
         <div style={{ height: '100%' }}>
           <Grid style={{ maxWidth: '550px', margin: 'auto' }} item xs={12} sm={6}>
             <SubCard>
-              <form onSubmit={handleSubmit}>
+              <form style={{color:themeMode === 'dark' ? theme.palette.common.title2 : theme.palette.common.black}} onSubmit={handleSubmit}>
                 <FormControl fullWidth>
                   <div>
                     <span style={{ display: 'block', marginBottom: '10px' }}>Client Name</span>
@@ -216,7 +217,7 @@ const ClientForm = () => {
                       size="large"
                       type="submit"
                       variant="contained"
-                      style={{ color: 'white', background: 'rgb(0, 168, 171)', borderRadius: '20px' }}
+                      style={{ borderRadius: '20px' }}
                     >
                       Save
                     </Button>

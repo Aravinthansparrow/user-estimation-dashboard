@@ -1,5 +1,3 @@
-// workItemController.js
-
 const WorkItem = require('../models/WorkItem');
 
 // Create a new work item

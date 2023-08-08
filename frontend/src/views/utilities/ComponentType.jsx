@@ -6,6 +6,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+// import { useTheme } from '@emotion/react';
 import {
   fetchComponents,
   addComponents,
@@ -20,6 +21,7 @@ import MainCard from 'ui-component/cards/MainCard';
 import SubCard from 'ui-component/cards/SubCard';
 
 const ComponentType = () => {
+  const themeMode = useSelector((state) => state.customization.themeMode);
   const [components, setComponents] = useState([]);
   const [newComponent, setNewComponent] = useState('');
   const [newComponentModalIsOpen, setNewComponentModalIsOpen] = useState(false);
@@ -227,12 +229,17 @@ const ComponentType = () => {
   return (
     <MainCard style={{ height: '100%' }} title="Component Type">
       <Box display="flex" mb={3} justifyContent="center">
-        <Button variant="outlined" className="component-title" onClick={handleAddComponent}>
+        <Button onClick={handleAddComponent}>
           Add Component
           <AddCircleOutlineIcon />
         </Button>
       </Box>
       <SubCard style={{ maxWidth: '700px', margin: 'auto' }}>
+        <Box  className={themeMode === 'dark' ? 'theme-head' : 'activity-head'} display="flex" color="black" padding="10px 24px">
+          <Typography style={{ width: '50%' }}>Component Name</Typography>
+          <Typography style={{ width: '30%', textAlign: 'center' }}>Set Option</Typography>
+          <Typography style={{ width: '20%', textAlign: 'center' }}>Actions</Typography>
+        </Box>
         {components.map((component, index) => (
           <Box
             display="flex"
@@ -242,8 +249,11 @@ const ComponentType = () => {
             alignItems="center"
             className={`component ${defaultComponent === index ? 'default' : ''}`}
           >
-            <Typography variant="body1">{component.name}</Typography>
-            <Box display="flex" gap="12px">
+            <Typography style={{ width: '50%' }} variant={themeMode === 'dark' ? 'body1' : 'h5'}>
+              {component.name}
+            </Typography>
+
+            <Box style={{ width: '30%',textAlign:'center' }} >
               {defaultComponent === index ? (
                 <Button variant="body1" className="default-badge">
                   Default
@@ -253,12 +263,14 @@ const ComponentType = () => {
                   Set as Default
                 </Button>
               )}
+            </Box>
 
+            <Box style={{ width: '20%',textAlign:'center'}} display='flex' gap='7px' justifyContent='center'>
               <Button className=" view-btn" onClick={() => openEditModal(index)}>
-                <EditIcon sx={{ color: 'black' }} />
+                <EditIcon />
               </Button>
               <Button className=" view-btn" onClick={() => deleteComponent(index)}>
-                <DeleteIcon sx={{ color: 'black' }} />
+                <DeleteIcon />
               </Button>
             </Box>
           </Box>
@@ -272,7 +284,7 @@ const ComponentType = () => {
         className="modal"
         overlayClassName="modal-overlay"
       >
-        <DialogActions className="modal-content flex-column">
+        <DialogActions style={{ background: themeMode === 'dark' ? '#191f45' : '#fff' }} className="modal-content flex-column">
           <Typography variant="h3">Add New Component</Typography>
           <TextField type="text" style={{ minWidth: '270px' }} value={newComponent} onChange={(e) => setNewComponent(e.target.value)} />
           <Box display="flex" justifyContent="space-between" alignSelf="end" gap="8px">
@@ -293,7 +305,7 @@ const ComponentType = () => {
         className="modal"
         overlayClassName="modal-overlay"
       >
-        <DialogActions className="modal-content flex-column">
+        <DialogActions style={{ background: themeMode === 'dark' ? '#191f45' : '#fff' }} className="modal-content flex-column">
           <Typography variant="h3">Edit Component Name</Typography>
           <TextField
             type="text"
@@ -319,9 +331,11 @@ const ComponentType = () => {
         className="modal"
         overlayClassName="modal-overlay"
       >
-        <DialogActions className="modal-content flex-column">
+        <DialogActions style={{ background: themeMode === 'dark' ? '#191f45' : '#fff' }} className="modal-content flex-column">
           <Typography variant="h3">Set as Default</Typography>
-          <Typography variant="body1">Are you sure you want to set this component as the default?</Typography>
+          <Typography variant="body1" style={{ color: themeMode === 'dark' ? '#FFF6E0' : '' }}>
+            Are you sure you want to set this component as the default?
+          </Typography>
           <Box display="flex" justifyContent="space-between" alignSelf="end" gap="8px">
             <Button variant="contained" className="primary-btn" onClick={handleConfirmDefault}>
               Yes
@@ -333,25 +347,24 @@ const ComponentType = () => {
         </DialogActions>
       </Modal>
       {/* Set Default Confirmation Modal */}
-      <Modal
-        className="modal modal-content"
-        overlayClassName="modal-overlay"
-        isOpen={showConfirmationModal}
-        onRequestClose={handleCancelDelete}
-      >
-        <Typography variant="h3" className="confirm-header">
-          Confirmation
-        </Typography>
-        <Typography variant="body1" className="confirm-para">
-          Are you sure you want to delete this component?
-        </Typography>
-        <DialogActions>
-          <Button variant="contained" className="primary-btn" onClick={handleConfirmDelete}>
-            Confirm
-          </Button>
-          <Button variant="contained" className="primary-btn" onClick={handleCancelDelete}>
-            Cancel
-          </Button>
+      <Modal className="modal" overlayClassName="modal-overlay" isOpen={showConfirmationModal} onRequestClose={handleCancelDelete}>
+        {' '}
+        <DialogActions style={{ background: themeMode === 'dark' ? '#191f45' : '#fff' }} className="modal-content flex-column">
+          <Typography variant="h2" style={{ marginBottom: '0px' }} className="confirm-header">
+            Confirmation
+          </Typography>
+          <Typography variant="body1" style={{ color: themeMode === 'dark' ? '#FFF6E0' : '' }} className="confirm-para">
+            Are you sure you want to delete this component?
+          </Typography>
+
+          <Box alignSelf="end" display="flex" gap="10px">
+            <Button variant="contained" className="primary-btn" onClick={handleConfirmDelete}>
+              Confirm
+            </Button>
+            <Button variant="contained" className="primary-btn" onClick={handleCancelDelete}>
+              Cancel
+            </Button>
+          </Box>
         </DialogActions>
       </Modal>
     </MainCard>

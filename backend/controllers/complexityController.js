@@ -1,5 +1,3 @@
-// complexityController.js
-
 const Complexity = require('../models/Complexity');
 
 // Update complexity

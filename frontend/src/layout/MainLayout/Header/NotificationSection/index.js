@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
+import { useSelector } from 'react-redux';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
@@ -27,7 +27,6 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
 import Transitions from 'ui-component/extended/Transitions';
-import NotificationList from './NotificationList';
 
 // assets
 import { IconBell } from '@tabler/icons';
@@ -57,7 +56,7 @@ const status = [
 const NotificationSection = () => {
   const theme = useTheme();
   const matchesXs = useMediaQuery(theme.breakpoints.down('md'));
-
+  const themeMode = useSelector((state) => state.customization.themeMode);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
   /**
@@ -106,11 +105,11 @@ const NotificationSection = () => {
               ...theme.typography.commonAvatar,
               ...theme.typography.mediumAvatar,
               transition: 'all .2s ease-in-out',
-              background: theme.palette.secondary.light,
-              color: theme.palette.secondary.dark,
+              background: themeMode === 'dark' ? 'transparent' : theme.palette.secondary.light,
+              color:themeMode === 'dark' ? theme.palette.background.paper : theme.palette.secondary.dark,
               '&[aria-controls="menu-list-grow"],&:hover': {
-                background: theme.palette.secondary.dark,
-                color: theme.palette.secondary.light
+                background:themeMode === 'dark' ? theme.palette.darkbg.blue2 : theme.palette.secondary.dark,
+                color:themeMode === 'dark' ? theme.palette.background.paper : theme.palette.secondary.light
               }
             }}
             ref={anchorRef}
@@ -145,19 +144,19 @@ const NotificationSection = () => {
           <Transitions position={matchesXs ? 'top' : 'top-right'} in={open} {...TransitionProps}>
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
-                <MainCard border={false} elevation={16} content={false} boxShadow shadow={theme.shadows[16]}>
+                <MainCard style={{background:themeMode === 'dark' ? theme.palette.darkbg.blue2 : '#fff'}} border={false} elevation={16} content={false} boxShadow shadow={theme.shadows[16]}>
                   <Grid container direction="column" spacing={2}>
                     <Grid item xs={12}>
                       <Grid container alignItems="center" justifyContent="space-between" sx={{ pt: 2, px: 2 }}>
                         <Grid item>
                           <Stack direction="row" spacing={2}>
-                            <Typography variant="subtitle1">All Notification</Typography>
+                            <Typography color={themeMode === 'dark' ? '#fff' : undefined} variant="subtitle1">All Notification</Typography>
                             <Chip
                               size="small"
                               label="01"
                               sx={{
                                 color: theme.palette.background.default,
-                                bgcolor: theme.palette.warning.dark
+                                bgcolor:theme.palette.warning.dark
                               }}
                             />
                           </Stack>
@@ -196,7 +195,6 @@ const NotificationSection = () => {
                             <Divider sx={{ my: 0 }} />
                           </Grid>
                         </Grid>
-                        <NotificationList />
                       </PerfectScrollbar>
                     </Grid>
                   </Grid>

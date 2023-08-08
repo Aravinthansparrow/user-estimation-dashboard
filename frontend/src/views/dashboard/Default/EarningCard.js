@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Tilt } from 'react-tilt';
+import {useTheme} from '@mui/material';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { Box, Typography } from '@mui/material';
@@ -10,7 +11,9 @@ import { API_STATUS } from '../../../utils/constants';
 import VerifiedUserOutlinedIcon from '@mui/icons-material/VerifiedUserOutlined';
 import SubCard from 'ui-component/cards/SubCard';
 
+
 const NumberCards = () => {
+  const theme = useTheme();
   const loading = useSelector(estimateListSelector).loading;
   const data = useSelector(estimateListSelector).loadData;
   const [clients, setClients] = useState([]);
@@ -18,13 +21,13 @@ const NumberCards = () => {
   const reduxApproved = useSelector((state) => state.estimateList.approved);
   const reduxUnApproved = useSelector((state) => state.estimateList.notapproved);
   const reduxRejected = useSelector((state) => state.estimateList.rejected);
-
+  const themeMode = useSelector((state) => state.customization.themeMode);
   const [cardAnimation, setCardAnimation] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
     // Count the number of rejected and not approved estimates
     const rejectedEstimates = clients.filter((client) => client.status === 'rejected');
-    const notApprovedEstimates = clients.filter((client) => client.status !== 'approved');
+    const notApprovedEstimates = clients.filter((client) => client.status == 'not approved');
     const approvedEstimates = clients.filter((client) => client.status === 'approved');
     const createdCount = clients.length;
     const rejectedCount = rejectedEstimates.length;
@@ -48,6 +51,7 @@ const NumberCards = () => {
     console.log(loading, 'loading');
     if (loading === API_STATUS.FULFILLED) {
       console.log('data got Successfully!');
+      console.log(data)
       setClients(data);
     }
     if (loading === API_STATUS.REJECTED) {
@@ -64,65 +68,91 @@ const NumberCards = () => {
 
   return (
     <Box className="card-container" display="flex" gap="25px" width="75%">
-      <SubCard className="card">
-        <Tilt className={`defaultcard ${cardAnimation ? 'animated slideIn' : ''}`} options={{ max: 25 }}>
-          <div className='card-hold'><VerifiedUserOutlinedIcon className='card-icon'/></div> 
-          <Typography className='count-create'>{reduxCreated}</Typography>
-          <Typography className='tag-name'>Created</Typography>
-        </Tilt>
+      <SubCard
+        style={{
+          backgroundColor:themeMode === 'dark' ? '': theme.palette.secondary.dark,
+          color: '#fff',
+          overflow: 'hidden',
+          position: 'relative',
+          '&:after': {
+            content: '""',
+            position: 'absolute',
+            width: 210,
+            height: 210,
+            background: theme.palette.secondary[800],
+            borderRadius: '50%',
+            top: -85,
+            right: -95,
+            [theme.breakpoints.down('sm')]: {
+              top: -105,
+              right: -140
+            }
+          }
+        }}
+        className={themeMode === 'dark' ? 'theme-card' : 'card'}
+      >
+        
+          <Tilt className={`defaultcard ${cardAnimation ? 'animated slideIn' : ''}`} options={{ max: 25 }}>
+            <div className="card-hold">
+              <VerifiedUserOutlinedIcon className="card-icon" />
+            </div>
+            <Typography className="count-create">{reduxCreated}</Typography>
+            <Typography className="tag-name">Created</Typography>
+          </Tilt>
+        
       </SubCard>
-      <SubCard className="card">
+      <SubCard className={themeMode === 'dark' ? 'theme-card' : 'card'}>
         <Tilt className={` defaultcard ${cardAnimation ? 'animated slideIn' : ''}`} options={{ max: 25 }}>
-          <div className='card-hold'>
+          <div className="card-hold">
             <CircularProgressbar
               value={percent1}
               text={`${reduxUnApproved}`}
               styles={{
                 root: {},
                 path: {
-                  stroke: 'rgb(122, 79, 1)'
+                  stroke: themeMode === 'dark' ? 'rgb(255, 232, 181)' : ' #1e88e5'
                 },
-                text: { fill: 'rgb(122, 79, 1)', fontWeight: '700', fontSize: '25px' }
+                text: { fill: themeMode === 'dark' ? 'rgb(255, 232, 181)' : '#ede7f6', fontWeight: '700', fontSize: '25px' }
               }}
             />
           </div>
-          <Typography className='split-tag'>Pending</Typography>
+          <Typography className="split-tag">Pending</Typography>
         </Tilt>
       </SubCard>
-      <SubCard className="card">
+      <SubCard className={themeMode === 'dark' ? 'theme-card' : 'card'}>
         <Tilt className={`defaultcard ${cardAnimation ? 'animated slideIn' : ''}`} options={{ max: 25 }}>
-        <div className='card-hold'>
+          <div className="card-hold">
             <CircularProgressbar
               value={percent2}
               text={`${reduxApproved}`}
               styles={{
                 root: {},
                 path: {
-                  stroke: 'rgb(0, 168, 171)'
+                  stroke: themeMode === 'dark' ? 'rgb(255, 232, 181)' : 'rgb(114 80 174)'
                 },
-                text: { fill: 'rgb(9 120 122)', fontWeight: 'bolder', fontSize: '25px' }
+                text: { fill: themeMode === 'dark' ? 'rgb(255, 232, 181)' : 'white', fontWeight: 'bolder', fontSize: '25px' }
               }}
             />
           </div>
-          <Typography className='split-tag'>Approved</Typography>
+          <Typography className="split-tag">Approved</Typography>
         </Tilt>
       </SubCard>
-      <SubCard className="card">
+      <SubCard className={themeMode === 'dark' ? 'theme-card' : 'card'}>
         <Tilt className={`defaultcard ${cardAnimation ? 'animated slideIn' : ''}`} options={{ max: 25 }}>
-        <div className='card-hold'>
+          <div className="card-hold">
             <CircularProgressbar
               value={percent3}
               text={`${reduxRejected}`}
               styles={{
                 root: {},
                 path: {
-                  stroke: 'rgb(122, 12, 46)'
+                  stroke: themeMode === 'dark' ? 'rgb(255, 232, 181)' : '#2e72c0'
                 },
-                text: { fill: 'rgb(122, 12, 46)', fontWeight: '700', fontSize: '25px' }
+                text: { fill: themeMode === 'dark' ? 'rgb(255, 232, 181)' : 'white', fontWeight: '700', fontSize: '25px' }
               }}
             />
           </div>
-          <Typography  className='split-tag'>Rejected</Typography>
+          <Typography className="split-tag">Rejected</Typography>
         </Tilt>
       </SubCard>
     </Box>

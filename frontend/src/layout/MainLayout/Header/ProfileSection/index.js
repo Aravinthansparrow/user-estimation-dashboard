@@ -44,12 +44,11 @@ const ProfileSection = () => {
   const customization = useSelector((state) => state.customization);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  // const { errorMessage } = useSelector(loginSelector);
 
   // Getting values from useSelector
   const username = useSelector(loginSelector).username;
   const user = username.charAt(0).toUpperCase() + username.slice(1);
-
+  const themeMode = useSelector((state) => state.customization.themeMode);
   const roledomain = useSelector((state) => state.login.role);
   const role = roledomain.charAt(0).toUpperCase() + roledomain.slice(1);
 
@@ -103,13 +102,13 @@ const ProfileSection = () => {
           borderRadius: '27px',
           transition: 'all .2s ease-in-out',
           borderColor: theme.palette.primary.light,
-          backgroundColor: theme.palette.primary.light,
+          backgroundColor: themeMode === 'dark' ? theme.palette.darkbg.blue2 :theme.palette.primary.light,
           '&[aria-controls="menu-list-grow"], &:hover': {
-            borderColor: theme.palette.primary.main,
-            background: `${theme.palette.primary.main}!important`,
-            color: theme.palette.primary.light,
+            borderColor:themeMode === 'dark' ? 'none' : theme.palette.primary.main,
+            background: `${themeMode === 'dark' ? theme.palette.darkbg.blue2 : theme.palette.primary.main}!important`,
+            color:themeMode === 'dark' ? theme.palette.background.paper : theme.palette.primary.light,
             '& svg': {
-              stroke: theme.palette.primary.light
+              stroke: themeMode === 'dark' ? theme.palette.background.paper : theme.palette.primary.light
             }
           },
           '& .MuiChip-label': {
@@ -130,7 +129,7 @@ const ProfileSection = () => {
             color="inherit"
           />
         }
-        label={<IconSettings stroke={1.5} size="1.5rem" color={theme.palette.primary.main} />}
+        label={<IconSettings stroke={1.5} size="1.5rem" color={themeMode === 'dark' ? theme.palette.background.paper:theme.palette.primary.main} />}
         variant="outlined"
         ref={anchorRef}
         aria-controls={open ? 'menu-list-grow' : undefined}
@@ -157,30 +156,30 @@ const ProfileSection = () => {
         }}
       >
         {({ TransitionProps }) => (
-          <Transitions in={open} {...TransitionProps}>
-            <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
-                <MainCard border={false} elevation={16} content={false} boxShadow shadow={theme.shadows[16]}>
+          <Transitions  in={open} {...TransitionProps}>
+            <Paper >
+              <ClickAwayListener  onClickAway={handleClose}>
+                <MainCard style={{ background:themeMode === 'dark' ? theme.palette.darkbg.blue2 : '#fff'}} border={false} elevation={16} content={false} boxShadow shadow={theme.shadows[16]}>
                   <Box sx={{ pt: 2, pl: 2 }}>
                     <Stack>
                       <Stack direction="row" spacing={0.5} alignItems="center">
                         <Typography variant="h4">
                           <GreetingMessage />
                         </Typography>
-                        <Typography color={theme.palette.darkPaper} component="span" variant="h4" sx={{ fontWeight: 400 }}>
+                        <Typography color={themeMode === 'dark' ? '#fff' :theme.palette.darkPaper} component="span" variant="h4" sx={{ fontWeight: 400 }}>
                           {user}
                         </Typography>
                       </Stack>
-                      <Typography my={0.5} style={{ fontSize: '15px' }} variant="subtitle2">
+                      <Typography color={themeMode === 'dark' ? theme.palette.grey[500] :theme.palette.darkPaper} my={0.5} style={{ fontSize: '15px' }} variant="subtitle2">
                         {' '}
                         {email}
                       </Typography>
-                      <Typography variant="subtitle2" color={theme.palette.dark.dark}>
+                      <Typography variant="subtitle2" color={themeMode === 'dark' ? '#fff' :theme.palette.dark.dark}>
                         Project {role}
                       </Typography>
                     </Stack>
                   </Box>
-                  <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
+                  <PerfectScrollbar style={{height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                     <Box sx={{ p: 2 }}>
                       <Divider />
                       <Divider />
@@ -190,8 +189,9 @@ const ProfileSection = () => {
                           width: '100%',
                           maxWidth: 350,
                           minWidth: 300,
-                          backgroundColor: theme.palette.background.paper,
+                          backgroundColor: themeMode === 'dark' ? 'transparent' : undefined,
                           borderRadius: '10px',
+                          color:'#fff',
                           [theme.breakpoints.down('md')]: {
                             minWidth: '100%'
                           },
@@ -206,9 +206,9 @@ const ProfileSection = () => {
                           onClick={(event) => handleListItemClick(event, 0, '#')}
                         >
                           <ListItemIcon>
-                            <IconSettings stroke={1.5} size="1.3rem" />
+                            <IconSettings color={themeMode === 'dark' ? '#fff' : undefined} stroke={1.5} size="1.3rem" />
                           </ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2">Account Settings</Typography>} />
+                          <ListItemText primary={<Typography variant="body2" color={themeMode === 'dark' ? '#fff' : undefined}>Account Settings</Typography>} />
                         </ListItemButton>
                         <ListItemButton
                           sx={{ borderRadius: `${customization.borderRadius}px` }}
@@ -216,12 +216,12 @@ const ProfileSection = () => {
                           onClick={(event) => handleListItemClick(event, 1, '/auth/change-password')}
                         >
                           <ListItemIcon>
-                            <KeyOutlinedIcon stroke={1.5} size="1.3rem" />
+                            <KeyOutlinedIcon style={{color:themeMode === 'dark' ? '#fff' : undefined}} stroke={1.5} size="1.3rem" />
                           </ListItemIcon>
 
                           <Grid container spacing={1} justifyContent="space-between">
                             <Grid item>
-                              <Typography variant="body2">Change Password</Typography>
+                              <Typography color={themeMode === 'dark' ? '#fff' : undefined} variant="body2">Change Password</Typography>
                             </Grid>
                           </Grid>
                         </ListItemButton>
@@ -231,9 +231,9 @@ const ProfileSection = () => {
                           onClick={handleLogout}
                         >
                           <ListItemIcon>
-                            <IconLogout stroke={1.5} size="1.3rem" />
+                            <IconLogout stroke={1.5} color={themeMode === 'dark' ? '#fff' : undefined} size="1.3rem" />
                           </ListItemIcon>
-                          <ListItemText primary={<Typography variant="body2">Logout</Typography>} />
+                          <ListItemText primary={<Typography color={themeMode === 'dark' ? '#fff' : undefined} variant="body2">Logout</Typography>} />
                         </ListItemButton>
                       </List>
                     </Box>

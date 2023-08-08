@@ -1,4 +1,3 @@
-// reducer/generalReducer.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { API_STATUS } from '../../utils/constants';
 import { getGeneralSettingsAPI, updateGeneralSettingsAPI } from '../../services/api';
@@ -10,7 +9,6 @@ const initialState = {
   error: null
 };
 
-// Async thunk to fetch general settings from the API
 export const fetchGeneralSettings = createAsyncThunk(`${namespace}/fetchGeneralSettings`, async () => {
   try {
     const response = await getGeneralSettingsAPI();
@@ -19,7 +17,6 @@ export const fetchGeneralSettings = createAsyncThunk(`${namespace}/fetchGeneralS
     throw new Error(error.message || API_STATUS.NETWORK_ERROR);
   }
 });
-
 
 export const updateGeneralSettings = createAsyncThunk(`${namespace}/updateGeneralSettings`, async (updatedValues, { rejectWithValue }) => {
   try {
@@ -43,7 +40,7 @@ const generalSettingsSlice = createSlice({
     [fetchGeneralSettings.fulfilled](state, action) {
       state.status = API_STATUS.FULFILLED;
       state.error = null;
-      state.data = action.payload; // Update the state with the new data from the API response
+      state.data = action.payload; 
     },
     [fetchGeneralSettings.rejected](state, action) {
       state.status = API_STATUS.REJECTED;
@@ -56,7 +53,7 @@ const generalSettingsSlice = createSlice({
     [updateGeneralSettings.fulfilled](state, action) {
       state.status = API_STATUS.FULFILLED;
       state.error = null;
-      state.data = action.payload; // Update the state with the new data from the API response
+      state.data = action.payload; 
     },
     [updateGeneralSettings.rejected](state, action) {
       state.status = API_STATUS.REJECTED;
@@ -64,7 +61,6 @@ const generalSettingsSlice = createSlice({
     },
   }
 });
-
 
 export const generalSettingsSelector = (state) => state.generalSetting;
 export default generalSettingsSlice.reducer;

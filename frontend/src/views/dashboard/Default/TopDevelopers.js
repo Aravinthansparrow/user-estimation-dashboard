@@ -7,12 +7,12 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 import avator_3 from 'assets/images/users/avatar_3.jpg';
 
-const TopClients = () => {
-  const [topClientNames, setTopClientNames] = useState([]);
+const TopDevelopers = () => {
+  const [topDeveloperNames, setTopDeveloperNames] = useState([]);
   const loading = useSelector(estimateListSelector).loading;
   const data = useSelector(estimateListSelector).loadData;
   const dispatch = useDispatch();
-  const themeMode = useSelector((state) => state.customization.themeMode);     
+  const themeMode = useSelector((state) => state.customization.themeMode);
   useEffect(() => {
     dispatch(fetchEstimateList());
   }, [dispatch]);
@@ -21,20 +21,20 @@ const TopClients = () => {
     console.log(loading, 'loading');
     if (loading === API_STATUS.FULFILLED) {
       console.log('data got Successfully!');
-      const allClients = data;
+      const allDevelopers = data;
       // Count the occurrence of each client name
-      const clientNameCounts = allClients.reduce((counts, client) => {
-        const { clientName } = client;
-        counts[clientName] = (counts[clientName] || 0) + 1;
+      const developerNameCounts = allDevelopers.reduce((counts, client) => {
+        const { createdBy } = client;
+        counts[createdBy] = (counts[createdBy] || 0) + 1;
         return counts;
       }, {});
 
       // Sort the client names based on their occurrence
-      const sortedClientNames = Object.keys(clientNameCounts).sort((a, b) => clientNameCounts[b] - clientNameCounts[a]);
+      const sortedDeveloperNames = Object.keys(developerNameCounts).sort((a, b) => developerNameCounts[b] - developerNameCounts[a]);
       
       // Get the top 3 most repeated client names
-      const topClientNames = sortedClientNames.slice(0, 3);
-      setTopClientNames(topClientNames);
+      const topDeveloperNames = sortedDeveloperNames.slice(0, 7);
+      setTopDeveloperNames(topDeveloperNames);
     }
     if (loading === API_STATUS.REJECTED) {
       console.log('data got failed');
@@ -42,19 +42,19 @@ const TopClients = () => {
   }, [loading]);
 
   return (
-    <Box className={themeMode === 'dark' ? 'theme-client': 'client-part'}>
+    <Box style={{width:'48%'}} className={themeMode === 'dark' ? 'theme-client': 'client-part'}>
       <Typography variant="h3" className="client-titles">
-        Top Clients
+        Top Developers
       </Typography>
       <ul className="client-names">
-        {topClientNames.map((clientName, index) => (
+        {topDeveloperNames.map((createdBy, index) => (
           <Box className="client-box" display="flex" justifyContent="space-between" alignItems="center" key={index}>
               <Box display="flex" gap="8px">
                 <div >
                   <img className="client-icon" src={avator_3} alt='client'/>
                 </div>
                 <Box>
-                  <li className="top-names">{clientName}</li>
+                  <li className="top-names">{createdBy}</li>
                   <FavoriteIcon className="favourite" />
                 </Box>
               </Box>
@@ -68,4 +68,4 @@ const TopClients = () => {
   );
 };
 
-export default TopClients;
+export default TopDevelopers;

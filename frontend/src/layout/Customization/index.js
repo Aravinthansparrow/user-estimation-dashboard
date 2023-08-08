@@ -20,12 +20,13 @@ import { IconSettings } from '@tabler/icons';
 
 // third-party
 import PerfectScrollbar from 'react-perfect-scrollbar';
-
+import DarkModeToggle from './darkModeToggle';
 // project imports
 import SubCard from 'ui-component/cards/SubCard';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import { SET_BORDER_RADIUS, SET_FONT_FAMILY } from 'store/actions';
 import { gridSpacing } from 'store/constant';
+// import Toggletheme from  "./toggletheme";
 
 // concat 'px'
 function valueText(value) {
@@ -38,7 +39,7 @@ const Customization = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
   const customization = useSelector((state) => state.customization);
-
+  const themeMode = useSelector((state) => state.customization.themeMode);
   // drawer on/off
   const [open, setOpen] = useState(false);
   const handleToggle = () => {
@@ -97,9 +98,11 @@ const Customization = () => {
           onClick={handleToggle}
           size="medium"
           variant="circular"
-          color="secondary"
+          color="primary"
           sx={{
+            background:themeMode === 'dark' ? theme.palette.common.title1 : theme.palette.primary.main,
             borderRadius: 0,
+            color:themeMode === 'dark' ? theme.palette.common.black : theme.palette.common.light2,
             borderTopLeftRadius: '50%',
             borderBottomLeftRadius: '50%',
             borderTopRightRadius: '50%',
@@ -107,7 +110,11 @@ const Customization = () => {
             top: '25%',
             position: 'fixed',
             right: 10,
-            zIndex: theme.zIndex.speedDial
+            zIndex: theme.zIndex.speedDial,
+            '&:hover' :{
+              background:themeMode === 'dark' ? theme.palette.common.title1 : theme.palette.common.light2,
+              color:themeMode === 'dark' ? theme.palette.common.black : theme.palette.primary.main,
+            }
           }}
         >
           <AnimateButton type="rotate">
@@ -128,9 +135,12 @@ const Customization = () => {
           }
         }}
       >
-        <PerfectScrollbar component="div">
+        <PerfectScrollbar style={{background:themeMode === 'dark' ? theme.palette.darkbg.blue1 : ''}} component="div">
           <Grid container spacing={gridSpacing} sx={{ p: 3 }}>
             <Grid item xs={12}>
+              <Grid item xs={12}>
+                <DarkModeToggle/>
+              </Grid>
               {/* font family */}
               <SubCard title="Font Family">
                 <FormControl>
@@ -143,7 +153,7 @@ const Customization = () => {
                     <FormControlLabel
                       value="Roboto"
                       control={<Radio />}
-                      label="Roboto"
+                      label={<span style={{color:themeMode === 'dark' ? theme.palette.common.title1 : ''}}>Roboto</span>}
                       sx={{
                         '& .MuiSvgIcon-root': { fontSize: 28 },
                         '& .MuiFormControlLabel-label': { color: theme.palette.grey[900] }
@@ -152,7 +162,7 @@ const Customization = () => {
                     <FormControlLabel
                       value="Poppins"
                       control={<Radio />}
-                      label="Poppins"
+                      label={<span style={{color:themeMode === 'dark' ? theme.palette.common.title1 : ''}}>Poppins</span>}
                       sx={{
                         '& .MuiSvgIcon-root': { fontSize: 28 },
                         '& .MuiFormControlLabel-label': { color: theme.palette.grey[900] }
@@ -161,7 +171,7 @@ const Customization = () => {
                     <FormControlLabel
                       value="Inter"
                       control={<Radio />}
-                      label="Inter"
+                      label={<span style={{color:themeMode === 'dark' ? theme.palette.common.title1 : ''}}>Inter</span>}
                       sx={{
                         '& .MuiSvgIcon-root': { fontSize: 28 },
                         '& .MuiFormControlLabel-label': { color: theme.palette.grey[900] }
@@ -176,7 +186,7 @@ const Customization = () => {
               <SubCard title="Border Radius">
                 <Grid item xs={12} container spacing={2} alignItems="center" sx={{ mt: 2.5 }}>
                   <Grid item>
-                    <Typography variant="h6" color="secondary">
+                    <Typography variant="h6" color={themeMode === 'dark' ? theme.palette.common.title1 : ''}>
                       4px
                     </Typography>
                   </Grid>
@@ -195,13 +205,13 @@ const Customization = () => {
                       color="secondary"
                       sx={{
                         '& .MuiSlider-valueLabel': {
-                          color: 'secondary.light'
+                          color:themeMode === 'dark' ? 'secondary.dark' : 'secondary.light',
                         }
                       }}
                     />
                   </Grid>
                   <Grid item>
-                    <Typography variant="h6" color="secondary">
+                    <Typography variant="h6" color={themeMode === 'dark' ? theme.palette.common.title1 : ''}>
                       24px
                     </Typography>
                   </Grid>

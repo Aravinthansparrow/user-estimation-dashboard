@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-
+import { useSelector } from 'react-redux';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import { Divider, List, Typography } from '@mui/material';
@@ -12,7 +12,7 @@ import NavCollapse from '../NavCollapse';
 
 const NavGroup = ({ item }) => {
   const theme = useTheme();
-
+  const themeMode = useSelector((state) => state.customization.themeMode); 
   // menu list collapse & items
   const items = item.children?.map((menu) => {
     switch (menu.type) {
@@ -31,13 +31,13 @@ const NavGroup = ({ item }) => {
 
   return (
     <>
-      <List
+      <List 
         subheader={
           item.title && (
-            <Typography variant="caption" sx={{ ...theme.typography.menuCaption }} display="block" gutterBottom>
+            <Typography variant="caption" className='mainmenu' sx={{color:`${themeMode === 'dark' ? theme.palette.common.subtitle :'inherit'}!important`}} display="block" gutterBottom>
               {item.title}
               {item.caption && (
-                <Typography variant="caption" sx={{ ...theme.typography.subMenuCaption }} display="block" gutterBottom>
+                <Typography variant="caption" sx={{ color:themeMode === 'dark' ? theme.palette.common.title2 :'inherit',...theme.typography.subMenuCaption }} display="block" gutterBottom>
                   {item.caption}
                 </Typography>
               )}

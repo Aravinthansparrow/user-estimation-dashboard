@@ -33,6 +33,7 @@ import {
 } from '@mui/material';
 const YourComponent = () => {
   const [data, setData] = useState([]);
+  const themeMode = useSelector((state) => state.customization.themeMode);
   const [newActivity, setNewActivity] = useState('');
   const [newPercentage, setNewPercentage] = useState('');
   const [showPopup, setShowPopup] = useState(false);
@@ -115,47 +116,41 @@ const YourComponent = () => {
     // Check if both newActivity and newPercentage are filled
     if (newActivity.trim() !== '' && newPercentage.trim() !== '') {
       const parsedPercentage = parseFloat(newPercentage);
-      if (parsedPercentage !== 0) {
-        // Calculate the current total percentage
-        const currentTotalPercentage = calculateTotalPercentage();
-        // Calculate the total percentage after adding the new activity
-        const updatedTotalPercentage = currentTotalPercentage + parsedPercentage;
-        if (updatedTotalPercentage <= 100) {
-          // If the updated total is less than or equal to 100, add the new activity
-          dispatch(
-            addActivityAction({
-              activity: newActivity,
-              percentagesplit: newPercentage
-            })
-          );
-        } else {
-          // Show a toast notification when the total percentage exceeds 100
-          toast.error('Total percentage cannot exceed 100%.', {
-            position: 'top-right',
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined
-          });
-        }
+      
+      // Calculate the current total percentage
+      const currentTotalPercentage = calculateTotalPercentage();
+  
+      // Calculate the total percentage after adding the new activity
+      const updatedTotalPercentage = currentTotalPercentage + parsedPercentage;
+  
+      // Check if the updated total percentage is less than or equal to 100
+      if (updatedTotalPercentage <= 100) {
+        // If the percentage is valid, add the new activity
+        dispatch(
+          addActivityAction({
+            activity: newActivity,
+            percentagesplit: newPercentage
+          })
+        );
+        // Reset the input fields and close the popup
+        setNewActivity('');
+        setNewPercentage('');
+        setShowPopup(false);
       } else {
-        // Show a toast notification when the entered percentage is 0
-        toast.error('Percentage split cannot be 0.', {
+        // Calculate the remaining available percentage to add
+        const remainingPercentage = 100 - currentTotalPercentage;
+  
+        // Show a toast notification with the remaining available percentage
+        toast.error(`Total percentage cannot exceed 100%. Remaining: ${remainingPercentage.toFixed(2)}%`, {
           position: 'top-right',
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined
+          autoClose: 3000
         });
       }
     } else {
       console.log('Please fill in both Activity and Percentage Split fields before adding.');
     }
   };
+  
   const handlePercentageChange = (event) => {
     let enteredValue = event.target.value;
 
@@ -265,15 +260,15 @@ const YourComponent = () => {
   return (
     <MainCard style={{ height: '100%' }} title="Activities and Percentage Split">
       <Box display="flex" mb={3} justifyContent="end">
-        <Button variant="contained" className="component-title" onClick={() => setShowPopup(true)}>
+        <Button className="component-title" onClick={() => setShowPopup(true)}>
           Add
           <AddCircleOutlineIcon />
         </Button>
       </Box>
       <TableContainer component={Paper}>
         <Table>
-          <TableHead className="activity-head">
-            <TableRow>
+        <TableHead className={themeMode === 'dark' ? 'theme-head' : 'activity-head'}>
+            <TableRow >
               <TableCell style={{ width: '40%', padding: '9px 13px' }}>Activities</TableCell>
               <TableCell style={{ width: '20%', textAlign: 'center' }}>Percentage Split</TableCell>
               <TableCell style={{ width: '40%', textAlign: 'center' }}>Actions</TableCell>
@@ -281,9 +276,9 @@ const YourComponent = () => {
           </TableHead>
           <TableBody>
             {data.map((item) => (
-              <TableRow key={item.id} className="act-row">
-                <TableCell className="activity-title border-null">{item.activity}</TableCell>
-                <TableCell className="border-null" style={{ textAlign: 'center' }}>
+              <TableRow style={{ background: themeMode === 'dark' ? '#191f45' : '' }}  key={item.id} className="act-row">
+                <TableCell className="activity-title border-null" style={{color:themeMode === 'dark' ? '#fff' : '' }}>{item.activity}</TableCell>
+                <TableCell className="border-null" style={{color:themeMode === 'dark' ? '#fff' : '' , textAlign: 'center' }}>
                   {item.percentagesplit}
                 </TableCell>
 
@@ -295,10 +290,10 @@ const YourComponent = () => {
                       className=" view-btn"
                       onClick={() => handleEditClick(item.id, item.activity, item.percentagesplit)}
                     >
-                      <EditIcon sx={{ color: 'black' }} />
+                      <EditIcon  />
                     </Button>
                     <Button variant="contained" className=" view-btn" onClick={() => handleDeleteConfirm(item.id)}> 
-                      <DeleteIcon sx={{ color: 'black' }} />
+                      <DeleteIcon  />
                     </Button>{' '}
                   </Box>
                 </TableCell>
@@ -306,7 +301,7 @@ const YourComponent = () => {
             ))}
           </TableBody>
         </Table>
-        <Box display="flex" alignItems="center" className="total-box">
+        <Box display="flex" alignItems="center" className={themeMode === 'dark' ? 'theme-total' : 'total-box'}>
           <Typography style={{ width: '40%' }} className="tot-para" variant="h3">
             Total Percentage Split:
           </Typography>
@@ -318,10 +313,10 @@ const YourComponent = () => {
       </TableContainer>
       {/* Set Add Activity Modal */}
       <Dialog isOpen={showPopup} contentLabel="Complexity Level Modal" className="modal" overlayClassName="modal-overlay">
-        <DialogActions className="modal-content flex-column">
+        <DialogActions style={{background:themeMode==='dark' ? '#191f45' : "#fff"}} className="modal-content flex-column">
           <Typography variant="h3">Add New Entry</Typography>
           <Box display="flex">
-            <InputLabel className="content-label">Activity</InputLabel>
+            <InputLabel style={{color:themeMode==='dark' ? '#FFF6E0' : ""}} className="content-label">Activity</InputLabel>
             <TextField
               fullWidth
               required
@@ -332,7 +327,7 @@ const YourComponent = () => {
             />
           </Box>
           <Box display="flex">
-            <InputLabel className="content-label">Percentage Split</InputLabel>
+            <InputLabel style={{color:themeMode==='dark' ? '#FFF6E0' : ""}} className="content-label">Percentage Split</InputLabel>
             <TextField
               fullWidth
               required
@@ -356,10 +351,10 @@ const YourComponent = () => {
       </Dialog>
       {/* Edit Activity percentage Modal */}
       <Dialog isOpen={showEditPopup} contentLabel="Complexity Level Modal" className="modal" overlayClassName="modal-overlay">
-        <DialogActions className="modal-content flex-column">
+        <DialogActions style={{background:themeMode==='dark' ? '#191f45' : "#fff"}} className="modal-content flex-column">
           <Typography variant="h3">Edit Entry</Typography>
           <Box display="flex">
-            <InputLabel className="content-label">Activity</InputLabel>
+            <InputLabel style={{color:themeMode==='dark' ? '#FFF6E0' : ""}} className="content-label">Activity</InputLabel>
             <TextField
               fullWidth
               required
@@ -370,7 +365,7 @@ const YourComponent = () => {
             />
           </Box>
           <Box display="flex">
-            <InputLabel className="content-label">Percentage Split</InputLabel>
+            <InputLabel style={{color:themeMode==='dark' ? '#FFF6E0' : ""}} className="content-label">Percentage Split</InputLabel>
             <TextField
               fullWidth
               required
@@ -400,9 +395,9 @@ const YourComponent = () => {
         className="modal"
         overlayClassName="modal-overlay"
       >
-        <DialogActions className="modal-content flex-column">
+        <DialogActions  style={{background:themeMode==='dark' ? '#191f45' : "#fff"}}  className="modal-content flex-column">
           <Typography variant="h3">Confirmation</Typography>
-          <Typography variant="body1">Are you sure you want to delete this activity percentage?</Typography>
+          <Typography style={{color:themeMode==='dark' ? '#FFF6E0' : ""}} variant="body1">Are you sure you want to delete this activity percentage?</Typography>
           <Box display="flex" justifyContent="space-between" alignSelf="end" gap="8px">
             <Button variant="contained" className="primary-btn" onClick={handleDeleteConfirmAction}>
               Confirm

@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 // third party
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
-
+import {ThemeProvider} from './layout/Customization/themeProvider';
 // project imports
 import * as serviceWorker from 'serviceWorker';
 import App from 'App';
@@ -21,7 +21,9 @@ const root = createRoot(container); // createRoot(container!) if you use TypeScr
 root.render(
   <Provider store={store}>
     <BrowserRouter basename={config.basename}>
-      <App />
+    <ThemeProvider>
+        <App />
+      </ThemeProvider>
       <ToastContainer />
     </BrowserRouter>
   </Provider>

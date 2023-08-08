@@ -12,7 +12,7 @@ export const updateUserPassword = (userId, newPassword) => {
   return Http.put(baseURL + `/user/${userId}`, { newPassword });
 };
 
-//CLients
+//Clients
 export const getEstimateList =  () => {
   const baseURL = getBaseEndpointUrl();
   return Http.get(baseURL + '/clients' )

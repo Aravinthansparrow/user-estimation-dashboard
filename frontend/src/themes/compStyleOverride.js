@@ -1,11 +1,19 @@
-export default function componentStyleOverrides(theme) {
+export default function componentStyleOverrides(theme,) {
+
   const bgColor = theme.colors?.grey50;
+  const themeMode = theme.customization.themeMode;
   return {
     MuiButton: {
       styleOverrides: {
         root: {
-          fontWeight: 500,
-          borderRadius: '4px'
+          fontWeight: 400,
+          borderRadius: '4px',
+          color:themeMode === 'dark' ? theme.colors?.darkbg1 : theme.colors?.primaryMain,
+          backgroundColor: themeMode === 'dark' ? theme.colors?.subtitle : theme.colors?.secondaryLight,
+          '&:hover': {
+            backgroundColor: themeMode === 'dark' ? theme.colors?.subtitle  :theme.colors?.primaryMain,
+            color:themeMode === 'dark' ? theme.colors?.darkgb1 :  theme.paper,
+          },
         }
       }
     },
@@ -43,31 +51,31 @@ export default function componentStyleOverrides(theme) {
     MuiCardActions: {
       styleOverrides: {
         root: {
-          padding: '24px'
+          padding: '24px',
         }
       }
     },
     MuiListItemButton: {
       styleOverrides: {
         root: {
-          color: theme.darkTextPrimary,
+          color:themeMode === 'dark' ? theme.colors?.subtitle  :  theme.darkTextPrimary,
           paddingTop: '10px',
           paddingBottom: '10px',
           '&.Mui-selected': {
-            color: theme.menuSelected,
-            backgroundColor: theme.menuSelectedBack,
+            color:themeMode === 'dark' ? theme.colors?.darkbg1 : theme.menuSelected,
+            backgroundColor: themeMode === 'dark' ? theme.colors?.darkbg1 : theme.colors?.secondaryLight,
             '&:hover': {
-              backgroundColor: theme.menuSelectedBack
+              backgroundColor: themeMode === 'dark' ? theme.colors?.darkbg1  :theme.colors?.secondaryLight
             },
             '& .MuiListItemIcon-root': {
-              color: theme.menuSelected
+              color:themeMode === 'dark' ? theme.colors?.subtitle : undefined
             }
           },
           '&:hover': {
-            backgroundColor: theme.menuSelectedBack,
-            color: theme.menuSelected,
+            backgroundColor:themeMode === 'dark' ? theme.colors?.darkbg1 : theme.colors?.secondaryLight,
+            color: themeMode === 'dark' ? theme.colors?.subtitle  : theme.colors?.secondaryMain,
             '& .MuiListItemIcon-root': {
-              color: theme.menuSelected
+              color: themeMode === 'dark' ? theme.colors?.subtitle  :undefined
             }
           }
         }
@@ -91,9 +99,9 @@ export default function componentStyleOverrides(theme) {
     MuiInputBase: {
       styleOverrides: {
         input: {
-          color: theme.textDark,
+          color:themeMode === 'dark' ? theme.paper : theme.textDark,
           '&::placeholder': {
-            color: theme.darkTextSecondary,
+            color:themeMode === 'dark' ? theme.colors?.light1 : theme.darkTextSecondary,
             fontSize: '0.875rem'
           }
         }
@@ -102,10 +110,10 @@ export default function componentStyleOverrides(theme) {
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          background: bgColor,
+          background:themeMode === 'dark' ? theme.colors?.darkbg2 :  bgColor,
           borderRadius: `${theme?.customization?.borderRadius}px`,
           '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.colors?.grey400
+            borderColor:themeMode === 'dark' ? theme.colors?.light1 :  theme.colors?.grey400
           },
           '&:hover $notchedOutline': {
             borderColor: theme.colors?.primaryLight
@@ -116,7 +124,7 @@ export default function componentStyleOverrides(theme) {
         },
         input: {
           fontWeight: 500,
-          background: bgColor,
+          background: themeMode === 'dark' ? theme.colors?.darkbg2 : bgColor,
           padding: '15.5px 14px',
           borderRadius: `${theme?.customization?.borderRadius}px`,
           '&.MuiInputBase-inputSizeSmall': {
@@ -138,15 +146,15 @@ export default function componentStyleOverrides(theme) {
       styleOverrides: {
         root: {
           '&.Mui-disabled': {
-            color: theme.colors?.grey300
+            color: themeMode === 'dark' ? theme.colors?.light1 : theme.colors?.grey300
           }
         },
         mark: {
-          backgroundColor: theme.paper,
+          backgroundColor:themeMode === 'dark' ? theme.colors?.light1 : theme.paper,
           width: '4px'
         },
         valueLabel: {
-          color: theme?.colors?.primaryLight
+          color:themeMode === 'dark' ? theme.colors?.blue1 : theme?.colors?.primaryLight
         }
       }
     },

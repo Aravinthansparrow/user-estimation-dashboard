@@ -18,10 +18,11 @@ import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 const NavItem = ({ item, level }) => {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const themeMode = useSelector((state) => state.customization.themeMode); 
   const { pathname } = useLocation();
   const customization = useSelector((state) => state.customization);
   const matchesSM = useMediaQuery(theme.breakpoints.down('lg'));
-
+  const isOpenArray = customization.isOpen.findIndex((id) => id === item.id) > -1;
   const Icon = item.icon;
   const itemIcon = item?.icon ? (
     <Icon stroke={1.5} size="1.3rem" />
@@ -76,19 +77,19 @@ const NavItem = ({ item, level }) => {
         py: level > 1 ? 1 : 1.25,
         pl: `${level * 24}px`
       }}
-      selected={customization.isOpen.findIndex((id) => id === item.id) > -1}
+      selected={isOpenArray}
       onClick={() => itemHandler(item.id)}
     >
-      <ListItemIcon sx={{ my: 'auto', minWidth: !item?.icon ? 18 : 36 }}>{itemIcon}</ListItemIcon>
+      <ListItemIcon sx={{ color:themeMode === 'dark' ? theme.palette.common.subtitle : 'inherit', my: 'auto', minWidth: !item?.icon ? 18 : 36 }}>{itemIcon}</ListItemIcon>
       <ListItemText
         primary={
-          <Typography variant={customization.isOpen.findIndex((id) => id === item.id) > -1 ? 'h5' : 'body1'} color="inherit">
+          <Typography  variant={customization.isOpen.findIndex((id) => id === item.id) > -1 ? 'h5' : 'body1'} color={themeMode === 'dark' ? theme.palette.common.title2 :'inherit'}>
             {item.title}
           </Typography>
         }
         secondary={
           item.caption && (
-            <Typography variant="caption" sx={{ ...theme.typography.subMenuCaption }} display="block" gutterBottom>
+            <Typography variant="caption" sx={{color:themeMode === 'dark' ? theme.palette.common.subtitle : 'inherit', ...theme.typography.subMenuCaption }} display="block" gutterBottom>
               {item.caption}
             </Typography>
           )

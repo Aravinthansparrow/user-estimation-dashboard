@@ -1,7 +1,9 @@
 import React from 'react';
 import { Button, Box } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+  const themeMode = useSelector((state) => state.customization.themeMode);
   const handlePreviousPage = () => {
     onPageChange(currentPage - 1);
   };
@@ -20,7 +22,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       >
         Previous
       </Button>
-      <Box mx={2}>
+      <Box mx={2} style={{color:themeMode==='dark' ? '#fff' : "black"}}>
         Page {currentPage} of {totalPages}
       </Box>
       <Button

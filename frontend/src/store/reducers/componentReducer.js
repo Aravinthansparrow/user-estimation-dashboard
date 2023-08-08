@@ -20,7 +20,7 @@ export const fetchComponents = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     try {
       const response = await getComponents();
-      console.log("getScanCount--> ", response);// Replace 'fetchData' with your actual API function call
+      console.log("getScanCount--> ", response);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -34,7 +34,7 @@ export const addComponents = createAsyncThunk(
     try {
 
       const response = await addingComponent(name, isDefault);
-      console.log("getScanCount--> ", response);// Replace 'fetchData' with your actual API function call
+      console.log("getScanCount--> ", response);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -62,7 +62,7 @@ export const deleteComponents = createAsyncThunk(
     try {
       console.log(id)
       const response = await deletingComponent(id);
-      console.log("getScanCount--> ", response);// Replace 'fetchData' with your actual API function call
+      console.log("getScanCount--> ", response);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

@@ -1,5 +1,3 @@
-// clientController.js
-
 const Client = require('../models/Client');
 const WorkItem = require('../models/WorkItem');
 

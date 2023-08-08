@@ -1,7 +1,11 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
+import { useSelector } from 'react-redux';
+// import { useTheme } from '@mui/material/styles';
 
 const GreetingMessage = () => {
+  const themeMode = useSelector((state) => state.customization.themeMode);
+  // const theme = useTheme();
   const getGreetingMessage = () => {
     const currentHour = new Date().getHours();
 
@@ -17,7 +21,7 @@ const GreetingMessage = () => {
   const greeting = getGreetingMessage();
 
   return (
-    <Typography variant="h4">
+    <Typography variant="h4" color={themeMode === 'dark' ? '#fff' : undefined}>
       {greeting},
     </Typography>
   );

@@ -9,6 +9,7 @@ export const initialState = {
   defaultId: 'default',
   fontFamily: config.fontFamily,
   borderRadius: config.borderRadius,
+  themeMode: 'light',
   opened: true
 };
 
@@ -38,6 +39,15 @@ const customizationReducer = (state = initialState, action) => {
         ...state,
         borderRadius: action.borderRadius
       };
+    case actionTypes.TOGGLE_THEME_MODE:
+      {
+        const newThemeMode = action.themeMode;
+        localStorage.setItem('themeMode', newThemeMode); // Update the local storage
+        return {
+          ...state,
+          themeMode: newThemeMode
+        };
+      }
     default:
       return state;
   }

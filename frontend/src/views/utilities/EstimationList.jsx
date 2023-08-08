@@ -17,6 +17,7 @@ import 'dayjs/locale/en';
 
 const EstimateList = () => {
   const [clients, setClients] = useState([]);
+  const themeMode = useSelector((state) => state.customization.themeMode);
   const [selectedClientId, setSelectedClientId] = useState(null);
   const [showEstimateSummary, setShowEstimateSummary] = useState(false);
   const [filterByDate, setFilterByDate] = useState('');
@@ -215,7 +216,7 @@ const EstimateList = () => {
           </div>
         )}
         <div>
-          <div className="list-headers">
+          <div className={themeMode==='dark' ? 'theme-headers': "list-headers"}>
             <div className="head-serial mr-14">S.No</div>
             <div className="head-date">Date</div>
             <div className="head-name">Client Name</div>
@@ -228,7 +229,7 @@ const EstimateList = () => {
           <div className="list-tabs">
             {currentClients.map((client, index) => {
               return (
-                <Paper key={client.id} elevation={3} className="field-set">
+                <Paper key={client.id} elevation={3} className={themeMode === 'dark' ? 'theme-field' : "field-set"}>
                   <Typography variant="body1" className="head-serial index-num">
                     {calculateSerialNumber(index)}
                   </Typography>
@@ -246,21 +247,21 @@ const EstimateList = () => {
                   </Typography>
                   <div className="head-action">
                     {client.status === 'approved' ? (
-                      <Button variant="outlined" className="disable-app" disabled>
+                      <Box variant="outlined" className="disable-app" disabled>
                         Accepted
-                      </Button>
+                      </Box>
                     ) : client.status === 'rejected' ? (
-                      <Button variant="outlined" className="disable-rej" disabled>
+                      <Box variant="outlined" className="disable-rej" disabled>
                         Rejected
-                      </Button>
+                      </Box>
                     ) : (
                       <>
-                        <Button variant="contained" className="app-btn" onClick={() => handleStatusUpdate(client.id, 'approved')}>
+                        <Box variant="contained" className="app-btn" onClick={() => handleStatusUpdate(client.id, 'approved')}>
                           Accept
-                        </Button>
-                        <Button variant="contained" className="rej-btn" onClick={() => handleStatusUpdate(client.id, 'rejected')}>
+                        </Box>
+                        <Box variant="contained" className="rej-btn" onClick={() => handleStatusUpdate(client.id, 'rejected')}>
                           Reject
-                        </Button>
+                        </Box>
                       </>
                     )}
                   </div>
@@ -291,20 +292,20 @@ const EstimateList = () => {
         overlayClassName="modal-overlay"
         isOpen={showConfirmationModal}
         onRequestClose={() => setShowConfirmationModal(false)}
-      >
-        <Typography variant="h3" className="confirm-header">
+      > <DialogActions style={{background:themeMode==='dark' ? '#191f45' : "#fff"}} className="modal-content flex-column">
+        <Typography  style={{marginBottom:"0px"}} variant="h3" className="confirm-header">
           Confirmation
         </Typography>
-        <Typography variant="body1" className="confirm-para">
+        <Typography variant="body1"  style={{color:themeMode==='dark' ? '#FFF6E0' : ""}} className="confirm-para">
           Are you sure you want to {confirmationAction === 'approved' ? 'approve' : 'reject'} this estimate?
         </Typography>
-        <DialogActions>
+        <Box display="flex" justifyContent="space-between" alignSelf="end" gap="8px">
           <Button variant="contained" className="primary-btn" onClick={() => handleConfirmation(selectedClientId)}>
             Confirm
           </Button>
           <Button variant="contained" className="primary-btn" onClick={() => setShowConfirmationModal(false)}>
             Cancel
-          </Button>
+          </Button></Box>
         </DialogActions>
       </Modal>
     </MainCard>

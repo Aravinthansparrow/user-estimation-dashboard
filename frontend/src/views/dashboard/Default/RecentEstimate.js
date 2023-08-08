@@ -11,18 +11,19 @@ import SubCard from 'ui-component/cards/SubCard';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime'; 
 import 'dayjs/locale/en';
+import { useTheme } from '@emotion/react';
 
 const SmallEstimateList = () => {
+  const theme = useTheme()
   const [clients, setClients] = useState([]);
   const [filteredClients, setFilteredClients] = useState([]);
   const loading = useSelector(estimateListSelector).loading;
   const data = useSelector(estimateListSelector).loadData;
+  const themeMode = useSelector((state) => state.customization.themeMode);     
   dayjs.extend(relativeTime); 
   dayjs.locale('en'); 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-
 // Dispatch the async thunk to fetch data from the table
   useEffect(() => {
     dispatch(fetchEstimateList());
@@ -51,12 +52,16 @@ const SmallEstimateList = () => {
   };
 
   return (
-    <SubCard className="recent-estimate">
+    <SubCard style={{width:'48%'}} className={themeMode === 'dark' ? 'theme-estimate': 'recent-estimate'}>
       <Box>
-        <Typography variant='h2' mb={1.5}>Recent Estimations</Typography>
+        <Typography style={{fontSize:'20px'}} color={themeMode === 'dark' ? theme.palette.common.title1 : 'black'} variant='h2' mb={1.5}>Recent Estimations</Typography>
         <div>
-          <Paper  className="recent-header">
-            <div className="head-date   mr-29">Date</div>
+          <Paper style={{
+            background:themeMode === 'dark' ? theme.palette.common.title2 : theme.palette.common.light1,
+            color:themeMode === 'dark' ? theme.palette.common.black : theme.palette.secondary.main,
+            }}  
+            className="recent-header">
+            <div className="head-date mr-29">Date</div>
             <div className="head-name mr-29">Client Name</div>
             <div className="head-by mr-29">Estimated By</div>
             <div className="head-status mr-29">Status</div>
@@ -65,13 +70,19 @@ const SmallEstimateList = () => {
         </div>
         <div className="list-tabs">
           {filteredClients.map((client) => (
-            <div className="field-set estimate-new" key={client.id}>
+            <div style={{
+              color:themeMode === 'dark' ? theme.palette.common.title2 : theme.palette.common.black,
+              }} 
+              className="field-set estimate-new" key={client.id}
+            >
               <div className="head-date">{dayjs(client.createdAt).fromNow()}</div>
               <div className="head-name">{client.clientName}</div>
               <div className="head-by">{client.createdBy}</div>
               <div className="head-status">{client.status}</div>
               <div className="head-view align-l-p">
-                <Button className="estimate-btn" onClick={() => handleView(client.id)}>
+                <Button 
+                  className={themeMode === 'dark' ? 'theme-btn':"estimate-btn" }
+                  onClick={() => handleView(client.id)}>
                   <VisibilityIcon />
                 </Button>
               </div>

@@ -13,11 +13,12 @@ import { API_STATUS } from '../../utils/constants';
 import MainCard from 'ui-component/cards/MainCard';
 import SubCard from 'ui-component/cards/SubCard';
 import passwordSchema from 'Joi Schemas/changePasswordSchema';
+
 const ChangePassword = () => {
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.login);
   const [userId, setUserId] = useState(null); // Local state for user ID
-
+  const themeMode = useSelector((state) => state.customization.themeMode);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [newPassword, setNewPassword] = useState('');
@@ -97,13 +98,15 @@ const ChangePassword = () => {
             InputProps={{
               endAdornment: (
                 <>
-                  <Button onClick={toggleShowPassword} className="visibility-button">
+                  <Box onClick={toggleShowPassword}>
                     {showPassword ? (
-                      <VisibilityIcon style={{ color: 'rgb(37, 167, 170)' }} />
+                      <VisibilityIcon 
+                      style={{ color:themeMode === 'dark' ? '#fff' :'#5e35b1',cursor:"pointer" }} />
                     ) : (
-                      <VisibilityOffIcon style={{ color: 'rgb(37, 167, 170)' }} />
+                      <VisibilityOffIcon
+                      style={{ color:themeMode === 'dark' ? '#fff' :'#5e35b1',cursor:"pointer" }} />
                     )}
-                  </Button>
+                  </Box>
                 </>
               )
             }}
@@ -119,13 +122,15 @@ const ChangePassword = () => {
             InputProps={{
               endAdornment: (
                 <>
-                  <Button onClick={toggleShowConfirmPassword} className="visibility-button">
+                  <Box onClick={toggleShowConfirmPassword}>
                     {showConfirmPassword ? (
-                      <VisibilityIcon style={{ color: 'rgb(37, 167, 170)' }} />
+                      <VisibilityIcon 
+                      style={{ color:themeMode === 'dark' ? '#fff' :'#5e35b1',cursor:"pointer" }} />
                     ) : (
-                      <VisibilityOffIcon style={{ color: 'rgb(37, 167, 170)' }} />
+                      <VisibilityOffIcon 
+                      style={{ color:themeMode === 'dark' ? '#fff' :'#5e35b1',cursor:"pointer" }} />
                     )}
-                  </Button>
+                  </Box>
                 </>
               )
             }}

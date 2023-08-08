@@ -33,7 +33,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const loading = useSelector(loginSelector).loading;
-
+  const themeMode = useSelector((state) => state.customization.themeMode);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -74,9 +74,9 @@ const Login = () => {
   }, [loading, navigate]);
 
   return (
-    <Box>
+    <Box >
       <Box textAlign="center" marginBottom="10px">
-        <AccountCircleIcon style={{ fontSize: '75', color: '#6d737c' }} />
+        <AccountCircleIcon style={{ fontSize: '75', color:themeMode === 'dark' ? 'rgb(182 190 203)' : '#6d737c' }} />
       </Box>
       <form onSubmit={handleLogin}>
         <FormControl fullWidth sx={{ ...theme.typography.customInput }}>
@@ -111,7 +111,8 @@ const Login = () => {
                   edge="end"
                   size="large"
                 >
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                  {showPassword ? <Visibility style={{ color:themeMode === 'dark' ? theme.palette.primary.main : ''}} /> 
+                  : <VisibilityOff style={{ color:themeMode === 'dark' ? theme.palette.primary.main : ''}}/>}
                 </IconButton>
               </InputAdornment>
             }
@@ -122,7 +123,7 @@ const Login = () => {
         <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={1}>
           <FormControlLabel
             control={<Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)} name="checked" color="primary" />}
-            label="Remember me"
+            label={<span style={{ color:themeMode === 'dark' ? theme.palette.primary.main : theme.palette.common.black}}>Remember me</span>}
           />
           <Typography variant="subtitle1" color="secondary" sx={{ textDecoration: 'none', cursor: 'pointer' }}>
             Forgot Password?
@@ -130,7 +131,7 @@ const Login = () => {
         </Stack>
         {!loader && (
           <Box sx={{ mt: 2 }}>
-            <Button fullWidth size="large" type="submit" variant="contained" style={{ color: 'white', background: 'rgb(0, 168, 171)' }}>
+            <Button fullWidth size="large" type="submit" variant="contained" style={{ color: 'white', background: theme.palette.primary.main }}>
               Sign in
             </Button>
           </Box>
